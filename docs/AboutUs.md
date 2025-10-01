@@ -21,12 +21,12 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Developer
 * Responsibilities: Software Engineering
 
-### Jane Doe
+### Hao Yang
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/hyhy987.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/hyhy987)]
+[[portfolio](team/hyhy987.md)]
 
 * Role: Team Lead
 * Responsibilities: UI
