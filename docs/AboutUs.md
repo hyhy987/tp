@@ -50,12 +50,12 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Developer
 * Responsibilities: Software Engineering
 
-### James Doe
+### Wu Chenxiao
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/wucx-0.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/wucx-0)]
+[[portfolio](team/wucx-0.md)]
 
 * Role: Developer
 * Responsibilities: UI
