@@ -9,8 +9,6 @@ FoodBook is a fast, reliable **CLI-first** address & delivery manager for small 
 
 ## 📸 UI Mockup
 
-> **Note:** Please keep exactly one image at this path and use roughly the same aspect ratio as AB3’s original image.
-
 ![FoodBook UI Mockup](docs/images/Ui.png)
 
 ---
