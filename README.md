@@ -1,11 +1,7 @@
-[![CI Status](https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml/badge.svg)](https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml)
-[![codecov](https://codecov.io/gh/AY2526S1-CS2103T-F14a-1/tp/graph/badge.svg?token=27R036D1CP)](https://codecov.io/gh/AY2526S1-CS2103T-F14a-1/tp)
-
 # FoodBook
 
-[![Build Status]
-(https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml/badge.svg)]
-(https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml)
+[![CI Status](https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml/badge.svg)](https://github.com/AY2526S1-CS2103T-F14a-1/tp/actions/workflows/gradle.yml)
+[![codecov](https://codecov.io/gh/AY2526S1-CS2103T-F14a-1/tp/graph/badge.svg?token=27R036D1CP)](https://codecov.io/gh/AY2526S1-CS2103T-F14a-1/tp)
 
 FoodBook is a fast, reliable **CLI-first** address & delivery manager for small food businesses (e.g., home-based caterers, micro-F&B doing deliveries). It helps you **store, search, schedule, and track** client and delivery info with minimal friction.
 
