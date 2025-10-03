@@ -1,21 +1,8 @@
----
-  layout: default.md
-  title: "Developer Guide"
-  pageNav: 3
----
-
 # FoodBook Developer Guide
-
-<!-- * Table of Contents -->
-<page-nav-print />
-
---------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
 
-This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org)._
-
---------------------------------------------------------------------------------------------------------------------
+This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
 
 ## **Product Scope** 
 
@@ -37,13 +24,9 @@ This project is based on the AddressBook-Level3 project created by the [SE-EDU i
 
 **Value proposition**: FoodBook provides a fast, reliable CLI to store, search, and manage clients and deliveries. Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter, validation & duplication warnings, status tracking, and simple reporting, improving delivery accuracy and day-to-day efficiency.
 
---------------------------------------------------------------------------------------------------------------------
-
-# User Stories (GFM)
+# User Stories
 
 **Legend:** High (must have) – ``***``  |  Medium (nice to have) – ``**``  |  Low (later/considered) – ``*``
-
-> Use the exact Markdown markers above when editing: e.g., type ``**bold**`` for **bold**, ``*italic*`` for *italic*, and use backticks `` ` `` to show the literal symbols like ``***`` in text.
 
 | Priority | As a …              | I want to …                                               | So that I can …                              |
 |:-------:|----------------------|------------------------------------------------------------|----------------------------------------------|
@@ -69,3 +52,99 @@ This project is based on the AddressBook-Level3 project created by the [SE-EDU i
 | ``*``   | food business owner  | generate delivery reports                                  | analyze business patterns and growth         |
 
 *Items marked ``*`` are considered but not required for MVP; keep if time permits.*
+
+# Use Cases
+
+_(For all use cases below, the System is FoodBook and the Actor is the user unless specified otherwise.)_
+
+## UC01 – Add a client
+
+**MSS:**
+
+1. User enters:  
+```add_client /n NAME /p PHONE /e EMAIL /u UNIT /zip POSTAL```
+2. System saves the client.
+4. System confirms success.  
+**Use case ends.**
+
+**Extensions**
+
+- **2a. Any field invalid**  
+→ 2a1. System shows specific error (e.g., “Postal code must be 6 digits only.”)  
+→ Use case resumes at **Step 1**.
+
+- **2a. Duplicate Client found**  
+→ 3a1. System warns “Duplicate client found.”  
+→ 3a2. User cancels or proceeds with a different name/phone.  
+→ Use case resumes at **Step 1**.
+
+## UC02 – Edit a client
+
+**Precondition:** Client exists.
+
+**MSS**
+
+1. User searches the client:
+```find_client /n Alice``` 
+2. System shows matching clients.
+3. User enters:  
+```edit_client Alice Tan /p 98765432 /u #03-04 /zip 654321```
+4. System validates new fields and updates the client.
+5. System confirms success.  
+**Use case ends.**
+
+**Extensions**
+
+- **2a. No matching client**  
+→ System shows “Client not found.” **Use case ends.**
+
+- **4a. New phone collides with another client’s phone**  
+→ 4a1. System warns potential duplicate.  
+→ Use case resumes at **Step 3**.
+
+# UC03 – Add a delivery for a client
+
+**Precondition:** Target client exists.
+
+**MSS**
+
+1. User confirms client (e.g., ```find_client /n Alice```)
+and notes the exact name.
+2. User enters:  
+```add_delivery Alice Tan /d 20-09-2025 /t 1300 /r 3x Bento /$ 7```
+3. System creates delivery with a unique ID.
+5. System confirms success and displays the new delivery ID.  
+**Use case ends.**
+
+**Extensions**
+
+- **2a. Client does not exist**  
+→ System shows “Client does not exist.” **Use case ends.**
+
+- **3a. Date in the past / invalid time / invalid price**  
+→ System shows specific error and does not create the delivery.  
+→ Use case resumes at **Step 2**.
+
+# UC04 – View and mark deliveries for a day
+
+**MSS**
+
+1. User enters:  
+```find_delivery 20-09-2025```
+2. System lists all deliveries on that date with IDs and status.
+3. User enters to mark a delivery completed:
+```mark 67```
+4. System updates status and confirms.  
+**Use case ends.**
+
+**Extensions**
+
+- **1a. Invalid date format**  
+→ System shows “Invalid date provided.” **Use case ends.**
+
+- **2a. No deliveries found**  
+→ System shows “No deliveries found.” **Use case ends.**
+
+- **3a. Delivery ID not found**  
+→ System shows “Delivery does not exist.” **Use case ends.**
+
