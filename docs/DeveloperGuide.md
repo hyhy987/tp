@@ -63,13 +63,9 @@ This project is based on the AddressBook-Level3 project created by the [SE-EDU i
 | ``**``  | food business owner  | merge duplicate orders                                     | keep my records clean                        |
 | ``**``  | food business owner  | search for client by address and or part of it             | observe customer base by region              |
 | ``**``  | food business owner  | add private notes to each delivery                         | keep track of special requests by clients    |
-| ``**``  | food business owner  | create command aliases                                     | so that frequent actions become faster       |
 | ``**``  | food business owner  | export clients to a backup file                            | avoid data loss                              |
 | ``**``  | food business owner  | sort clients alphabetically or by address                  | organize information better                  |
 | ``*``   | food business owner  | history log per client ( past orders & delivery dates)     | keep track of loyal customers                |
-| ``*``   | food business owner  | change log per client (who/what/when)                      | retain an audit trail                        |
-| ``*``   | food business owner  | set capacity limits per region per day                     | prevent overbooking on those days            |
 | ``*``   | food business owner  | generate delivery reports                                  | analyze business patterns and growth         |
 
 *Items marked ``*`` are considered but not required for MVP; keep if time permits.*
-                                           |
