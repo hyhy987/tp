@@ -148,3 +148,41 @@ and notes the exact name.
 - **3a. Delivery ID not found**  
 → System shows “Delivery does not exist.” **Use case ends.**
 
+# Non-Functional Requirements
+
+## Performance
+1. **Commands** should complete within **1 second** for up to **5,000 clients** and **20,000 deliveries**.
+2. **Search/filter** should return results in **< 500 ms** on typical laptops.
+
+## Usability
+1. **Clear, actionable error messages** (field-specific).
+
+## Reliability & Data Safety
+1. **Auto-save** after every successful command.
+2. **Undo** for most destructive operations.
+
+## Portability (Constraint-Portable)
+1. Runs on **Windows/macOS/Linux** with **Java 17+**.
+2. **No OS-specific paths** required.
+
+## Data Integrity & Validation
+1. **Enforce input formats** (phone, email, unit, postal).
+2. **Prevent accidental duplicates** via soft checks (same name + phone).
+
+## Security & Privacy
+1. **Store data locally**; **no external network** by default.
+
+## Maintainability
+1. Commands follow **AB3 command architecture**; **unit tests** for parsers and executors.
+
+
+
+# Glossary
+
+- **Client** — A customer who places orders.
+- **Delivery** — A scheduled job tied to a client (date/time/remarks/price).
+- **Delivery ID** — Unique identifier assigned by the system to a delivery.
+- **High-priority** — Tag indicating preferred servicing order.
+- **Capacity** — Daily/route limit to prevent overbooking.
+- **Validation** — Input checks (format/range/consistency) performed before saving.
+
