@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.person.Person;
 
 /**
@@ -13,6 +14,7 @@ import seedu.address.model.person.Person;
 public interface Model {
     /** {@code Predicate} that always evaluate to true */
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
+    Predicate<Delivery> PREDICATE_SHOW_ALL_DELIVERIES = unused -> true;
 
     /**
      * Replaces user prefs data with the data in {@code userPrefs}.
@@ -84,4 +86,38 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /**
+     * Returns true if a delivery with the same identity as {@code delivery} exists in the address book.
+     */
+    boolean hasDelivery(Delivery delivery);
+
+    /**
+     * Deletes the given delivery.
+     * The delivery must exist in the address book.
+     */
+    void deleteDelivery(Delivery delivery);
+
+    /**
+     * Adds the given delivery.
+     * {@code delivery} must not already exist in the address book.
+     */
+    void addDelivery(Delivery delivery);
+
+    /**
+     * Replaces the given delivery {@code target} with {@code editedDelivery}.
+     * {@code target} must exist in the address book.
+     * The delivery identity of {@code editedDelivery}
+     * must not be the same as another existing delivery in the address book.
+     */
+    void setDelivery(Delivery target, Delivery editedDelivery);
+
+    /** Returns an unmodifiable view of the filtered delivery list */
+    ObservableList<Delivery> getFilteredDeliveryList();
+
+    /**
+     * Updates the filter of the filtered person list to filter by the given {@code predicate}.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    void updateFilteredDeliveryList(Predicate<Delivery> predicate);
 }

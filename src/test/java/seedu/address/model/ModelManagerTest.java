@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 
@@ -91,6 +92,27 @@ public class ModelManagerTest {
     @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
+    }
+
+    @Test
+    public void hasDelivery_nullDelivery_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.hasDelivery(null));
+    }
+
+    @Test
+    public void hasDelivery_deliveryNotInAddressBook_returnsFalse() {
+        assertFalse(modelManager.hasDelivery(ALICE_DELIVERY));
+    }
+
+    @Test
+    public void hasDelivery_deliveryInAddressBook_returnsTrue() {
+        modelManager.addDelivery(ALICE_DELIVERY);
+        assertTrue(modelManager.hasDelivery(ALICE_DELIVERY));
+    }
+
+    @Test
+    public void getFilteredDeliveryList_modifyList_throwsUnsupportedOperationException() {
+        assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredDeliveryList().remove(0));
     }
 
     @Test
