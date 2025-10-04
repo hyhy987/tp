@@ -6,6 +6,8 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.UniqueDeliveryList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 
@@ -16,6 +18,7 @@ import seedu.address.model.person.UniquePersonList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
+    private final UniqueDeliveryList deliveries;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -26,6 +29,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         persons = new UniquePersonList();
+        deliveries = new UniqueDeliveryList();
     }
 
     public AddressBook() {}
@@ -41,23 +45,23 @@ public class AddressBook implements ReadOnlyAddressBook {
     //// list overwrite operations
 
     /**
-     * Replaces the contents of the person list with {@code persons}.
-     * {@code persons} must not contain duplicate persons.
-     */
-    public void setPersons(List<Person> persons) {
-        this.persons.setPersons(persons);
-    }
-
-    /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
      */
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
         setPersons(newData.getPersonList());
+        setDeliveries(newData.getDeliveryList());
     }
 
     //// person-level operations
+    /**
+     * Replaces the contents of the person list with {@code persons}.
+     * {@code persons} must not contain duplicate persons.
+     */
+    public void setPersons(List<Person> persons) {
+        this.persons.setPersons(persons);
+    }
 
     /**
      * Returns true if a person with the same identity as {@code person} exists in the address book.
@@ -94,18 +98,67 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
+    //// delivery-level operations
+
+    /**
+     * Replaces the contents of the delivery list with {@code deliveries}.
+     * {@code deliveries} must not contain duplicate deliveries.
+     */
+    public void setDeliveries(List<Delivery> deliveries) {
+        this.deliveries.setDeliveries(deliveries);
+    }
+
+    /**
+     * Returns true if a delivery with the same identity as {@code delivery} exists
+     */
+    public boolean hasDelivery(Delivery delivery) {
+        requireNonNull(delivery);
+        return deliveries.contains(delivery);
+    }
+
+    /**
+     * Adds a delivery to the food book.
+     */
+    public void addDelivery(Delivery d) {
+        deliveries.add(d);
+    }
+
+    /**
+     * Replaces the given delivery {@code target} in the list with {@code editedDelivery}.
+     * {@code target} must exist in the address book.
+     */
+    public void setDelivery(Delivery target, Delivery editedDelivery) {
+        requireNonNull(editedDelivery);
+
+        deliveries.setDelivery(target, editedDelivery);
+    }
+
+    /**
+     * Removes {@code key} from this {@code FoodBok}.
+     * {@code key} must exist in the address book.
+     */
+    public void removeDelivery(Delivery key) {
+        deliveries.remove(key);
+    }
+
     //// util methods
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("persons", persons)
+                .add("deliveries", deliveries)
                 .toString();
     }
 
     @Override
     public ObservableList<Person> getPersonList() {
         return persons.asUnmodifiableObservableList();
+    }
+
+    @Override
+    public ObservableList<Delivery> getDeliveryList() {
+        return deliveries.asUnmodifiableObservableList();
     }
 
     @Override
@@ -120,7 +173,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return persons.equals(otherAddressBook.persons) && deliveries.equals(otherAddressBook.deliveries);
     }
 
     @Override
