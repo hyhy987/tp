@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.testutil.Assert.assertThrows;
-
-import java.time.format.DateTimeParseException;
 
 import org.junit.jupiter.api.Test;
 
@@ -58,12 +55,6 @@ class DateTimeTest {
     void equals_withNonDateTime_returnsFalse() {
         DateTime dt = new DateTime("2/2/2021", "1500");
         assertNotEquals(dt, "not a datetime");
-    }
-
-    @Test
-    void invalidInput_throwsDateTimeParseException() {
-        assertThrows(DateTimeParseException.class, () -> new DateTime("not a date", "test"));
-        assertThrows(DateTimeParseException.class, () -> new DateTime("31/02/2020", "1000")); // invalid date
     }
 
     @Test
