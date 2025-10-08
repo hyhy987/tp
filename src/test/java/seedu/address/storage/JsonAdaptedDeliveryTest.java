@@ -24,7 +24,7 @@ public class JsonAdaptedDeliveryTest {
 
     private static final int VALID_ID = 1;
     private static final String VALID_NAME = "Alice Yeoh";
-    private static final String VALID_DATE = "15/10/2025";
+    private static final String VALID_DATE = "05/10/2025";
     private static final String VALID_TIME = "0930";
     private static final String VALID_REMARKS = "Breakfast order";
     private static final Double VALID_COST = 30.50;

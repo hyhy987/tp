@@ -58,10 +58,23 @@ public class DateTime {
     }
 
     /**
-     * Returns the underlying LocalDateTime object
+     * Returns the delivery date as a string in ISO-8601 format (yyyy-MM-dd).
+     * Example: "2025-10-08"
+     *
+     * @return String representation of the date
      */
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public String getDateString() {
+        return dateTime.toLocalDate().format(DateTimeFormatter.ofPattern("d/M/uuuu"));
+    }
+
+    /**
+     * Returns the delivery time as a string in ISO-8601 format (HH:mm).
+     * Example: "10:36"
+     *
+     * @return String representation of the time
+     */
+    public String getTimeString() {
+        return dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HHmm"));
     }
 
     /**

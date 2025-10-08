@@ -1,6 +1,5 @@
 package seedu.address.storage;
 
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -63,11 +62,8 @@ public class JsonAdaptedDelivery {
     public JsonAdaptedDelivery(Delivery source) {
         id = source.getId();
         clientName = source.getClient().getName().fullName;
-        date = source.getDeliveryDate().getDateTime()
-                .toLocalDate()
-                .format(DateTimeFormatter.ofPattern("d/M/uuuu"));
-        time = source.getDeliveryDate().getDateTime()
-                .format(DateTimeFormatter.ofPattern("HHmm"));
+        date = source.getDeliveryDate().getDateString();
+        time = source.getDeliveryDate().getTimeString();
         remarks = source.getRemarks();
         cost = source.getCost();
         isDelivered = source.getStatus();

@@ -49,8 +49,6 @@ public class Messages {
         return builder.toString();
     }
 
-    // Add this method to your existing Messages.java class
-
     /**
      * Formats a delivery into a readable string for display purposes.
      *
