@@ -10,7 +10,6 @@ import static seedu.address.testutil.TypicalFoodBook.getTypicalAddressBook;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -31,7 +30,7 @@ public class UnmarkCommandTest {
         // Create a test person and delivery
         Person testPerson = new PersonBuilder().withName("Test Person").build();
         model.addPerson(testPerson);
-        
+
         DateTime testDateTime = new DateTime("15/1/2025", "1000");
         Delivery testDelivery = new Delivery(1, testPerson, testDateTime, "Test delivery", 50.0);
         testDelivery.markAsDelivered(); // Mark as delivered first
@@ -39,7 +38,7 @@ public class UnmarkCommandTest {
 
         UnmarkCommand unmarkCommand = new UnmarkCommand(1);
 
-        String expectedMessage = String.format(UnmarkCommand.MESSAGE_UNMARK_DELIVERY_SUCCESS, 
+        String expectedMessage = String.format(UnmarkCommand.MESSAGE_UNMARK_DELIVERY_SUCCESS,
                 Messages.format(testDelivery));
 
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
@@ -61,7 +60,7 @@ public class UnmarkCommandTest {
         // Create a test person and delivery
         Person testPerson = new PersonBuilder().withName("Test Person").build();
         model.addPerson(testPerson);
-        
+
         DateTime testDateTime = new DateTime("15/1/2025", "1000");
         Delivery testDelivery = new Delivery(1, testPerson, testDateTime, "Test delivery", 50.0);
         // Don't mark as delivered - it's unmarked by default
