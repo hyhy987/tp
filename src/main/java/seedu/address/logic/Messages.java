@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.person.Person;
 
 /**
@@ -47,5 +48,29 @@ public class Messages {
         person.getTags().forEach(builder::append);
         return builder.toString();
     }
+
+    /**
+     * Formats a delivery into a readable string for display purposes.
+     *
+     * The formatted string includes the delivery ID, client name, date/time, and cost.
+     * Format: "Delivery ID: X; Client: Y; Date/Time: Z; Cost: $W"
+     *
+     * @param delivery The delivery to format.
+     * @return A formatted string representation of the delivery.
+     * @throws NullPointerException If {@code delivery} is null.
+     */
+    public static String format(Delivery delivery) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Delivery ID: ")
+                .append(delivery.getId())
+                .append("; Client: ")
+                .append(delivery.getClient().getName().fullName)
+                .append("; Date/Time: ")
+                .append(delivery.getDeliveryDate())
+                .append("; Cost: $")
+                .append(String.format("%.2f", delivery.getCost()));
+        return builder.toString();
+    }
+
 
 }

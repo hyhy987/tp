@@ -11,7 +11,9 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
  * An Immutable AddressBook that is serializable to JSON format.
@@ -20,15 +22,27 @@ import seedu.address.model.person.Person;
 class JsonSerializableAddressBook {
 
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
+    public static final String MESSAGE_DUPLICATE_DELIVERY = "Deliveries list contains duplicate delivery(s).";
 
     private final List<JsonAdaptedPerson> persons = new ArrayList<>();
+    private final List<JsonAdaptedDelivery> deliveries = new ArrayList<>();
 
     /**
-     * Constructs a {@code JsonSerializableAddressBook} with the given persons.
+     * Constructs a {@code JsonSerializableAddressBook} with the given persons and deliveries.
+     *
+     * @param persons    List of adapted persons.
+     * @param deliveries List of adapted deliveries.
      */
     @JsonCreator
-    public JsonSerializableAddressBook(@JsonProperty("persons") List<JsonAdaptedPerson> persons) {
-        this.persons.addAll(persons);
+    public JsonSerializableAddressBook(
+            @JsonProperty("persons") List<JsonAdaptedPerson> persons,
+            @JsonProperty("deliveries") List<JsonAdaptedDelivery> deliveries) {
+        if (persons != null) {
+            this.persons.addAll(persons);
+        }
+        if (deliveries != null) {
+            this.deliveries.addAll(deliveries);
+        }
     }
 
     /**
@@ -40,19 +54,34 @@ class JsonSerializableAddressBook {
         persons.addAll(source.getPersonList().stream().map(JsonAdaptedPerson::new).collect(Collectors.toList()));
     }
 
+    /** Creates an empty {@code JsonSerializableAddressBook}. */
+    public JsonSerializableAddressBook() {
+        // persons and deliveries are already initialized to empty lists
+    }
+
     /**
-     * Converts this address book into the model's {@code AddressBook} object.
+     * Converts this JSON-friendly address book into the model's {@code AddressBook} object.
      *
-     * @throws IllegalValueException if there were any data constraints violated.
+     * @return The populated AddressBook.
+     * @throws IllegalValueException If there are duplicate persons or deliveries,
+     *                               or any data constraints are violated.
      */
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
-        for (JsonAdaptedPerson jsonAdaptedPerson : persons) {
-            Person person = jsonAdaptedPerson.toModelType();
-            if (addressBook.hasPerson(person)) {
+        for (JsonAdaptedPerson jsonPerson : persons) {
+            Person person = jsonPerson.toModelType();
+            try {
+                addressBook.addPerson(person);
+            } catch (DuplicatePersonException e) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
-            addressBook.addPerson(person);
+        }
+        for (JsonAdaptedDelivery jsonDelivery : deliveries) {
+            Delivery delivery = jsonDelivery.toModelType(addressBook);
+            if (addressBook.hasDelivery(delivery)) {
+                throw new IllegalValueException(MESSAGE_DUPLICATE_DELIVERY);
+            }
+            addressBook.addDelivery(delivery);
         }
         return addressBook;
     }
