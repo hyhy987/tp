@@ -68,4 +68,5 @@ public class TypicalFoodBook {
             throw new AssertionError("Typical deliveries setup failed", e);
         }
     }
+
 }

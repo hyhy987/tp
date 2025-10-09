@@ -2,6 +2,7 @@ package seedu.address.ui;
 
 import java.util.logging.Logger;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -9,6 +10,7 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
@@ -16,6 +18,8 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.person.Person;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -32,6 +36,7 @@ public class MainWindow extends UiPart<Stage> {
 
     // Independent Ui parts residing in this Ui container
     private PersonListPanel personListPanel;
+    private DeliveryListPanel deliveryListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -42,7 +47,16 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
+    private VBox personList;
+
+    @FXML
+    private VBox deliveryList;
+
+    @FXML
     private StackPane personListPanelPlaceholder;
+
+    @FXML
+    private StackPane deliveryListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -110,8 +124,14 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
+        personList.managedProperty().bind(personList.visibleProperty());
+        deliveryList.managedProperty().bind(deliveryList.visibleProperty());
+
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+
+        deliveryListPanel = new DeliveryListPanel(logic.getFilteredDeliveryList());
+        deliveryListPanelPlaceholder.getChildren().add(deliveryListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -121,6 +141,60 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        // Default to persons on startup
+        showPersons();
+
+        // Auto-switch when filtered lists change
+        wireAutoSwitching();
+    }
+
+
+    /**
+     * Wires automatic UI switching between the person and delivery panels
+     * based on updates to their respective filtered lists.
+     * <p>
+     * When the filtered delivery list changes (e.g., due to a {@code find_delivery} command),
+     * the delivery panel is shown. When the filtered person list changes (e.g., due to a {@code find} command),
+     * the person panel is shown instead.
+     */
+    private void wireAutoSwitching() {
+        ObservableList<Delivery> deliveries = logic.getFilteredDeliveryList();
+        ObservableList<Person> persons = logic.getFilteredPersonList();
+
+        deliveries.addListener((javafx.collections.ListChangeListener<? super Delivery>) change -> {
+            // If deliveries were updated by a command like find_delivery, show the delivery panel
+            if (!deliveries.isEmpty()) {
+                showDeliveries();
+            }
+        });
+
+        persons.addListener((javafx.collections.ListChangeListener<? super Person>) change -> {
+            // If persons were updated by commands like find, show the person panel
+            if (!persons.isEmpty()) {
+                showPersons();
+            }
+        });
+    }
+
+    /**
+     * Displays the person list panel and hides the delivery list panel.
+     * <p>
+     * Called when person-related commands (e.g., {@code find}) update the UI.
+     */
+    private void showPersons() {
+        personList.setVisible(true);
+        deliveryList.setVisible(false);
+    }
+
+    /**
+     * Displays the delivery list panel and hides the person list panel.
+     * <p>
+     * Called when delivery-related commands (e.g., {@code find_delivery}) update the UI.
+     */
+    private void showDeliveries() {
+        deliveryList.setVisible(true);
+        personList.setVisible(false);
     }
 
     /**
