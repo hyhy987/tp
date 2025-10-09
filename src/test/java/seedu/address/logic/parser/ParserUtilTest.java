@@ -193,4 +193,42 @@ public class ParserUtilTest {
 
         assertEquals(expectedTagSet, actualTagSet);
     }
+
+    @Test
+    public void parseDeliveryId_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDeliveryId(null));
+    }
+
+    @Test
+    public void parseDeliveryId_invalidValue_throwsParseException() {
+        // empty string
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId(""));
+
+        // whitespace only
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId("   "));
+
+        // non-numeric
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId("abc"));
+
+        // negative number
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId("-1"));
+
+        // zero
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId("0"));
+
+        // decimal number
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryId("1.5"));
+    }
+
+    @Test
+    public void parseDeliveryId_validValue_returnsDeliveryId() throws Exception {
+        // valid positive integer
+        assertEquals(Integer.valueOf(1), ParserUtil.parseDeliveryId("1"));
+
+        // valid positive integer with whitespace
+        assertEquals(Integer.valueOf(123), ParserUtil.parseDeliveryId(" 123 "));
+
+        // large valid integer
+        assertEquals(Integer.valueOf(999999), ParserUtil.parseDeliveryId("999999"));
+    }
 }
