@@ -12,7 +12,7 @@ import seedu.address.model.person.ClientMatchesPredicate;
 
 /**
  * Finds and lists all clients in address book whose name, phone, or email matches the search criteria.
- * Keyword matching is case insensitive for names and emails.
+ * Keyword matching is case-insensitive for names and emails.
  */
 public class FindClientCommand extends Command {
 
