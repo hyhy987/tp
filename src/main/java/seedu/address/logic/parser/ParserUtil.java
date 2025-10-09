@@ -186,4 +186,28 @@ public class ParserUtil {
         }
         return trimmedRemarks;
     }
+
+    /**
+     * Parses a {@code String deliveryId} into an {@code Integer}.
+     * Leading and trailing whitespaces will be trimmed.
+     * The delivery ID must be a positive integer.
+     *
+     * @param deliveryId The delivery ID string to parse.
+     * @return An Integer representing the parsed delivery ID.
+     * @throws ParseException If the given delivery ID is not a valid positive integer.
+     * @throws NullPointerException If {@code deliveryId} is null.
+     */
+    public static Integer parseDeliveryId(String deliveryId) throws ParseException {
+        requireNonNull(deliveryId);
+        String trimmedId = deliveryId.trim();
+        try {
+            Integer parsedId = Integer.parseInt(trimmedId);
+            if (parsedId <= 0) {
+                throw new ParseException("Delivery ID must be a positive integer");
+            }
+            return parsedId;
+        } catch (NumberFormatException e) {
+            throw new ParseException("Delivery ID must be a valid positive integer");
+        }
+    }
 }
