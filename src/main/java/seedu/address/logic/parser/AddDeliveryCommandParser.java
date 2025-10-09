@@ -14,7 +14,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.delivery.DateTime;
 
 /**
- * Parses input arguments and creates a new AddDeliveryCommand object.
+ * Parses input arguments, creates a new AddDeliveryCommand object.
  */
 public class AddDeliveryCommandParser {
 
