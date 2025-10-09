@@ -53,4 +53,4 @@ FoodBook is a fast, reliable **CLI-first** address & delivery manager for small 
 
 ---
 
-* This project is a **part of the se-education.org** initiative. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more infols
+* This project is a **part of the se-education.org** initiative. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more info!
