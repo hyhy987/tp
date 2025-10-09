@@ -9,7 +9,9 @@ import seedu.address.model.person.Person;
  */
 public class DeliveryBuilder {
 
-    public static final int DEFAULT_ID = 0;
+    // We do not want the base delivery built to clash with any other deliveries (other than itself)
+    // Since -1 will never be used as an id in practice, we use it here instead
+    public static final int DEFAULT_ID = -1;
 
     public static final String DEFAULT_CLIENT = PersonBuilder.DEFAULT_NAME;
     public static final String DEFAULT_DATESTRING = "21/10/2003";
@@ -24,6 +26,8 @@ public class DeliveryBuilder {
     private String remarks;
     private Double cost;
 
+    private boolean isDelivered;
+
     /**
      * Creates a {@code DeliveryBuilder} with the default details.
      */
@@ -33,6 +37,8 @@ public class DeliveryBuilder {
         datetime = new DateTime(DEFAULT_DATESTRING, DEFAULT_TIMESTRING);
         remarks = DEFAULT_REMARKS;
         cost = DEFAULT_COST;
+
+        isDelivered = false;
     }
 
     /**
@@ -44,6 +50,8 @@ public class DeliveryBuilder {
         datetime = deliveryToCopy.getDeliveryDate();
         remarks = deliveryToCopy.getRemarks();
         cost = deliveryToCopy.getCost();
+
+        isDelivered = deliveryToCopy.getStatus();
     }
 
     /**
@@ -57,7 +65,7 @@ public class DeliveryBuilder {
     /**
      * Sets the {@code client} of the {@code Delivery} that we are building.
      */
-    public DeliveryBuilder withCliet(Person client) {
+    public DeliveryBuilder withClient(Person client) {
         this.client = client;
         return this;
     }
@@ -86,8 +94,25 @@ public class DeliveryBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code isDelivered} status of the {@code Delivery} that we are building to be true.
+     */
+    public DeliveryBuilder asDelivered() {
+        this.isDelivered = true;
+        return this;
+    }
+
+    /**
+     * Build the delivery object with the specificed params.
+     * @return The constructed delivery object.
+     */
     public Delivery build() {
-        return new Delivery(id, client, datetime, remarks, cost);
+        Delivery delivery = new Delivery(id, client, datetime, remarks, cost);
+
+        if (this.isDelivered) {
+            delivery.markAsDelivered();
+        }
+        return delivery;
     }
 
 }

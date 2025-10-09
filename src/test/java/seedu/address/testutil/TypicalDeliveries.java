@@ -12,29 +12,29 @@ import seedu.address.model.delivery.Delivery;
 public class TypicalDeliveries {
 
     public static final Delivery ALICE_DELIVERY = new DeliveryBuilder().withId(0)
-            .withCliet(TypicalPersons.ALICE).withDateTime("12/12/2023", "1200")
+            .withClient(TypicalPersons.ALICE).withDateTime("12/12/2023", "1200")
             .withRemarks("NIL").withCost(10.00).build();
     public static final Delivery BENSON_DELIVERY = new DeliveryBuilder().withId(1)
-            .withCliet(TypicalPersons.BENSON).withDateTime("13/12/2023", "1300")
+            .withClient(TypicalPersons.BENSON).withDateTime("13/12/2023", "1300")
             .withRemarks("NIL").withCost(20.00).build();
 
     public static final Delivery CARL_DELIVERY = new DeliveryBuilder().withId(2)
-            .withCliet(TypicalPersons.CARL).withDateTime("14/12/2023", "1400")
+            .withClient(TypicalPersons.CARL).withDateTime("14/12/2023", "1400")
             .withRemarks("NIL").withCost(30.00).build();
     public static final Delivery DANIEL_DELIVERY = new DeliveryBuilder().withId(3)
-            .withCliet(TypicalPersons.DANIEL).withDateTime("15/12/2023", "1500")
+            .withClient(TypicalPersons.DANIEL).withDateTime("15/12/2023", "1500")
             .withRemarks("NIL").withCost(40.00).build();
 
     public static final Delivery ELLE_DELIVERY = new DeliveryBuilder().withId(4)
-            .withCliet(TypicalPersons.ELLE).withDateTime("16/12/2023", "1600")
+            .withClient(TypicalPersons.ELLE).withDateTime("16/12/2023", "1600")
             .withRemarks("NIL").withCost(50.00).build();
 
     public static final Delivery FIONA_DELIVERY = new DeliveryBuilder().withId(5)
-            .withCliet(TypicalPersons.FIONA).withDateTime("17/12/2023", "1700")
+            .withClient(TypicalPersons.FIONA).withDateTime("17/12/2023", "1700")
             .withRemarks("NIL").withCost(60.00).build();
 
     public static final Delivery GEORGE_DELIVERY = new DeliveryBuilder().withId(6)
-            .withCliet(TypicalPersons.GEORGE).withDateTime("18/12/2023", "1800")
+            .withClient(TypicalPersons.GEORGE).withDateTime("18/12/2023", "1800")
             .withRemarks("NIL").withCost(70.00).build();
 
     private TypicalDeliveries() {} // prevents instantiation
