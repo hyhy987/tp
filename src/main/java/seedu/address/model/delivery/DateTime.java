@@ -3,6 +3,7 @@ package seedu.address.model.delivery;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -58,8 +59,24 @@ public class DateTime {
     }
 
     /**
-     * Returns the delivery date as a string in ISO-8601 format (yyyy-MM-dd).
-     * Example: "2025-10-08"
+     * Returns true if the given string is a valid date in d/M/yyyy format.
+     */
+    // Right now this is useful in the current implementation of FindDeliveryCommand,
+    // since we are only searching by date.
+    public static boolean isValidDate(String dateString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu")
+                    .withResolverStyle(ResolverStyle.STRICT);
+            LocalDate.parse(dateString, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the delivery date as a string in ISO-8601 format (d/MM/uuuu).
+     * Example: "08/10/2025"
      *
      * @return String representation of the date
      */
@@ -68,8 +85,8 @@ public class DateTime {
     }
 
     /**
-     * Returns the delivery time as a string in ISO-8601 format (HH:mm).
-     * Example: "10:36"
+     * Returns the delivery time as a string in ISO-8601 format (HHmm).
+     * Example: "1036"
      *
      * @return String representation of the time
      */
