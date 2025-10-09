@@ -28,7 +28,7 @@ public class FindClientCommand extends Command {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL]\n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "alice "
+            + PREFIX_NAME + "Alice "
             + PREFIX_PHONE + "98765 "
             + PREFIX_EMAIL + "example.com";
 
