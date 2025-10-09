@@ -13,10 +13,8 @@ import seedu.address.logic.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.delivery.DateTime;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Person;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.DeliveryBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for MarkCommand.
@@ -27,23 +25,20 @@ public class MarkCommandTest {
 
     @Test
     public void execute_validDeliveryId_success() throws Exception {
-        // Create a test person and delivery
-        Person testPerson = new PersonBuilder().withName("Test Person").build();
-        model.addPerson(testPerson);
 
-        DateTime testDateTime = new DateTime("15/1/2025", "1000");
-        Delivery testDelivery = new Delivery(1, testPerson, testDateTime, "Test delivery", 50.0);
+        Delivery testDelivery = new DeliveryBuilder().build();
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Delivery markedDelivery = new DeliveryBuilder().build();
+        markedDelivery.markAsDelivered();
+        expectedModel.addDelivery(markedDelivery);
+
         model.addDelivery(testDelivery);
 
-        MarkCommand markCommand = new MarkCommand(1);
+        MarkCommand markCommand = new MarkCommand(testDelivery.getId());
 
         String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_DELIVERY_SUCCESS,
                 Messages.format(testDelivery));
-
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        Delivery markedDelivery = new Delivery(1, testPerson, testDateTime, "Test delivery", 50.0);
-        markedDelivery.markAsDelivered();
-        expectedModel.setDelivery(testDelivery, markedDelivery);
 
         assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
     }
@@ -57,15 +52,12 @@ public class MarkCommandTest {
     @Test
     public void execute_alreadyMarkedDelivery_throwsCommandException() throws Exception {
         // Create a test person and delivery
-        Person testPerson = new PersonBuilder().withName("Test Person").build();
-        model.addPerson(testPerson);
 
-        DateTime testDateTime = new DateTime("15/1/2025", "1000");
-        Delivery testDelivery = new Delivery(1, testPerson, testDateTime, "Test delivery", 50.0);
+        Delivery testDelivery = new DeliveryBuilder().build();
         testDelivery.markAsDelivered(); // Mark as delivered first
         model.addDelivery(testDelivery);
 
-        MarkCommand markCommand = new MarkCommand(1);
+        MarkCommand markCommand = new MarkCommand(testDelivery.getId());
         assertCommandFailure(markCommand, model, MarkCommand.MESSAGE_DELIVERY_ALREADY_MARKED);
     }
 

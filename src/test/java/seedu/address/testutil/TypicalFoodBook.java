@@ -1,13 +1,9 @@
 package seedu.address.testutil;
 
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON;
-import static seedu.address.testutil.TypicalPersons.CARL;
-
-import java.util.List;
+import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveries;
+import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
 
 import seedu.address.model.AddressBook;
-import seedu.address.model.delivery.DateTime;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.person.Person;
 
@@ -20,15 +16,7 @@ public class TypicalFoodBook {
         for (Person p : getTypicalPersons()) {
             ab.addPerson(p);
         }
-        return ab;
-    }
-
-    /**
-     * Returns an AddressBook with typical persons and typical deliveries.
-     */
-    public static AddressBook getTypicalAddressBookWithDeliveries() {
-        AddressBook ab = getTypicalAddressBook();
-        for (Delivery d : getTypicalDeliveries(ab)) {
+        for (Delivery d : getTypicalDeliveries()) {
             ab.addDelivery(d);
         }
         return ab;
@@ -68,5 +56,4 @@ public class TypicalFoodBook {
             throw new AssertionError("Typical deliveries setup failed", e);
         }
     }
-
 }

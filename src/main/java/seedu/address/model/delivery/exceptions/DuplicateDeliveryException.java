@@ -6,6 +6,6 @@ package seedu.address.model.delivery.exceptions;
  */
 public class DuplicateDeliveryException extends RuntimeException {
     public DuplicateDeliveryException() {
-        super("Operation would result in duplicate Deliverys");
+        super("Operation would result in duplicate Deliveries");
     }
 }
