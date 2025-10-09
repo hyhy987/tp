@@ -7,6 +7,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TIME;
 
+import java.util.Optional;
+
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -40,6 +42,7 @@ public class AddDeliveryCommand extends Command {
 
     /** Success message template when a delivery is successfully added. */
     public static final String MESSAGE_SUCCESS = "New delivery added: %1$s";
+    public static final String MESSAGE_DUPLICATE_DELIVERY = "This delivery already exists in the address book";
 
     /** Error message template when the specified client is not found. */
     public static final String MESSAGE_CLIENT_NOT_FOUND = "Client not found: %1$s";
@@ -55,6 +58,10 @@ public class AddDeliveryCommand extends Command {
 
     /** The cost/price of this delivery. */
     private final Double cost;
+
+    // If delivery is provided directed via constructor
+    // Mainly used for testing
+    private Optional<Delivery> toAdd = Optional.empty();
 
     /**
      * Creates an AddDeliveryCommand to add a delivery with the specified details.
@@ -77,22 +84,49 @@ public class AddDeliveryCommand extends Command {
         this.cost = cost;
     }
 
+    /**
+     * Alternate constructor for AddDeliveryCommand to add a secific delivery.
+     * Mainly used for testing
+     *
+     * @param toAdd The delivery to be added.
+     * @throws NullPointerException If the delivery is null.
+     */
+    public AddDeliveryCommand(Delivery toAdd) {
+        requireNonNull(toAdd);
+
+        this.toAdd = Optional.of(toAdd);
+
+        this.clientName = toAdd.getClient().getName().fullName;
+        this.dateTime = toAdd.getDeliveryDate();
+        this.remarks = toAdd.getRemarks();
+        this.cost = toAdd.getCost();
+    }
+
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        //Find the client by name
-        Person client = model.getFilteredPersonList().stream()
-                .filter(person -> person.getName().fullName.equals(clientName))
-                .findFirst()
-                .orElseThrow(() -> new CommandException(
-                        String.format(MESSAGE_CLIENT_NOT_FOUND, clientName)));
+        Delivery delivery;
+        if (this.toAdd.isPresent()) {
+            delivery = this.toAdd.get();
+        } else {
+            //Find the client by name
+            Person client = model.getFilteredPersonList().stream()
+                    .filter(person -> person.getName().fullName.equals(clientName))
+                    .findFirst()
+                    .orElseThrow(() -> new CommandException(
+                            String.format(MESSAGE_CLIENT_NOT_FOUND, clientName)));
 
-        //Generate unique ID
-        Integer nextId = generateNextId(model);
+            //Generate unique ID
+            Integer nextId = generateNextId(model);
 
-        //Create delivery with the found client
-        Delivery delivery = new Delivery(nextId, client, dateTime, remarks, cost);
+            //Create delivery with the found client
+            delivery = new Delivery(nextId, client, dateTime, remarks, cost);
+        }
+
+        if (model.hasDelivery(delivery)) {
+            throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
+        }
 
         model.addDelivery(delivery);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(delivery)));
