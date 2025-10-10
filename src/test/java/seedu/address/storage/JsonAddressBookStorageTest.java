@@ -3,6 +3,8 @@ package seedu.address.storage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalDeliveries.HOON_DELIVERY;
+import static seedu.address.testutil.TypicalDeliveries.IDA_DELIVERY;
 import static seedu.address.testutil.TypicalFoodBook.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalPersons.HOON;
 import static seedu.address.testutil.TypicalPersons.IDA;
@@ -72,6 +74,7 @@ public class JsonAddressBookStorageTest {
 
         // Modify data, overwrite exiting file, and read back
         original.addPerson(HOON);
+        original.addDelivery(HOON_DELIVERY);
 
         /* TODO: Currently, we cannot delete a person with deliveries,
         *   as this creates a bug when we trying parsing the deliveries (since clients cannot be found)
@@ -85,6 +88,14 @@ public class JsonAddressBookStorageTest {
 
         // Save and read without specifying file path
         original.addPerson(IDA);
+        original.addDelivery(IDA_DELIVERY);
+        jsonAddressBookStorage.saveAddressBook(original); // file path not specified
+        readBack = jsonAddressBookStorage.readAddressBook().get(); // file path not specified
+        assertEquals(original, new AddressBook(readBack));
+
+        // Delete deliveries
+        original.removeDelivery(IDA_DELIVERY);
+        original.removeDelivery(HOON_DELIVERY);
         jsonAddressBookStorage.saveAddressBook(original); // file path not specified
         readBack = jsonAddressBookStorage.readAddressBook().get(); // file path not specified
         assertEquals(original, new AddressBook(readBack));

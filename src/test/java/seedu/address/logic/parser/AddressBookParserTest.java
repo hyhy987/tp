@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
+import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
@@ -21,7 +23,7 @@ import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindClientCommand;
-import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindDeliveryCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.MarkCommand;
@@ -95,18 +97,17 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_find() throws Exception {
-        List<String> keywords = Arrays.asList("foo", "bar", "baz");
-        FindCommand command = (FindCommand) parser.parseCommand(
-                FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
-        assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
+    public void parseCommand_findClient() throws Exception {
+        String findClientCommand = FindClientCommand.COMMAND_WORD + NAME_DESC_BOB + PHONE_DESC_BOB;
+        FindClientCommand command = (FindClientCommand) parser.parseCommand(findClientCommand);
+        assertTrue(command instanceof FindClientCommand);
     }
 
     @Test
-    public void parseCommand_findClient() throws Exception {
-        String findClientCommand = "find_client n/Alice p/12345678 e/alice@example.com";
-        FindClientCommand command = (FindClientCommand) parser.parseCommand(findClientCommand);
-        assertTrue(command instanceof FindClientCommand);
+    public void parseCommand_findDelivery() throws Exception {
+        String findDeliveryCommand = FindDeliveryCommand.COMMAND_WORD + " 12/10/2003";
+        FindDeliveryCommand command = (FindDeliveryCommand) parser.parseCommand(findDeliveryCommand);
+        assertTrue(command instanceof FindDeliveryCommand);
     }
 
     @Test

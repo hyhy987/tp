@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -54,7 +55,7 @@ public class FindClientCommandTest {
 
     @Test
     public void execute_phoneOnly_onePersonFound() {
-        String expectedMessage = "1 persons listed!";
+        String expectedMessage = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
         ClientMatchesPredicate predicate =
                 new ClientMatchesPredicate(Optional.empty(), Optional.of("9435"), Optional.empty());
         FindClientCommand command = new FindClientCommand(predicate);
@@ -65,7 +66,7 @@ public class FindClientCommandTest {
 
     @Test
     public void execute_emailOnly_onePersonFound() {
-        String expectedMessage = "1 persons listed!";
+        String expectedMessage = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
         ClientMatchesPredicate predicate =
                 new ClientMatchesPredicate(Optional.empty(), Optional.empty(), Optional.of("alice"));
         FindClientCommand command = new FindClientCommand(predicate);
@@ -76,7 +77,7 @@ public class FindClientCommandTest {
 
     @Test
     public void execute_multipleFields_onePersonFound() {
-        String expectedMessage = "1 persons listed!";
+        String expectedMessage = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
         ClientMatchesPredicate predicate =
                 new ClientMatchesPredicate(Optional.of("Alice"), Optional.of("9435"),
                         Optional.of("alice"));

@@ -1,10 +1,22 @@
 package seedu.address.testutil;
 
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.person.Person;
 
 /**
  * A utility class containing a list of {@code Delivery} objects to be used in tests.
@@ -36,6 +48,22 @@ public class TypicalDeliveries {
     public static final Delivery GEORGE_DELIVERY = new DeliveryBuilder().withId(6)
             .withClient(TypicalPersons.GEORGE).withDateTime("18/12/2023", "1800")
             .withRemarks("NIL").withCost(70.00).build();
+
+    public static final Delivery HOON_DELIVERY = new DeliveryBuilder().withId(7)
+            .withClient(TypicalPersons.HOON).withDateTime("19/12/2023", "1200")
+            .withRemarks("ABC").withCost(300.00).build();
+    public static final Delivery IDA_DELIVERY = new DeliveryBuilder().withId(8)
+            .withClient(TypicalPersons.IDA).withDateTime("20/12/2023", "1200")
+            .withRemarks("CAB").withCost(30.00).build();
+
+    // Manually added - Person's details found in {@code CommandTestUtil}
+    public static final Delivery AMY_DELIVERY = new DeliveryBuilder().withId(9)
+            .withClient(TypicalPersons.AMY).withDateTime("21/12/2023", "0300")
+            .withRemarks("TEST").withCost(40.00).build();
+    public static final Delivery BOB_DELIVERY = new DeliveryBuilder().withId(10)
+            .withClient(TypicalPersons.BOB).withDateTime("22/12/2023", "0800")
+            .withRemarks("TESTAGAIN").withCost(4000.00).build();
+
 
     private TypicalDeliveries() {} // prevents instantiation
 
