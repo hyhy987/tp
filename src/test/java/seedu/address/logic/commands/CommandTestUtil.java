@@ -26,7 +26,6 @@ import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.TypicalDeliveries;
 
 /**
  * Contains helper methods for testing commands.
@@ -61,13 +60,19 @@ public class CommandTestUtil {
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
 
-    public static final String DATE_DESC_AMY_DELIVERY = " " + PREFIX_DATE + AMY_DELIVERY.getDeliveryDate().getDateString();
-    public static final String DATE_DESC_BOB_DELIVERY = " " + PREFIX_DATE + BOB_DELIVERY.getDeliveryDate().getDateString();
-    public static final String INVALID_DATE_DESC = " " + PREFIX_DATE + "31/02/2023"; // Feb does not have 31 days
+    public static final String DATE_DESC_AMY_DELIVERY = " " + PREFIX_DATE
+            + AMY_DELIVERY.getDeliveryDate().getDateString();
+    public static final String DATE_DESC_BOB_DELIVERY = " "
+            + PREFIX_DATE + BOB_DELIVERY.getDeliveryDate().getDateString();
+    public static final String INVALID_DATE_DESC = " "
+            + PREFIX_DATE + "31/02/2023"; // Feb does not have 31 days
 
-    public static final String TIME_DESC_AMY_DELIVERY = " " + PREFIX_TIME + AMY_DELIVERY.getDeliveryDate().getTimeString();
-    public static final String TIME_DESC_BOB_DELIVERY = " " + PREFIX_TIME + BOB_DELIVERY.getDeliveryDate().getTimeString();
-    public static final String INVALID_TIME_DESC = " " + PREFIX_TIME + "2600";
+    public static final String TIME_DESC_AMY_DELIVERY = " "
+            + PREFIX_TIME + AMY_DELIVERY.getDeliveryDate().getTimeString();
+    public static final String TIME_DESC_BOB_DELIVERY = " "
+            + PREFIX_TIME + BOB_DELIVERY.getDeliveryDate().getTimeString();
+    public static final String INVALID_TIME_DESC = " "
+            + PREFIX_TIME + "2600";
 
     public static final String REMARKS_DESC_AMY_DELIVERY = " " + PREFIX_REMARKS + AMY_DELIVERY.getRemarks();
     public static final String REMARKS_DESC_BOB_DELIVERY = " " + PREFIX_REMARKS + BOB_DELIVERY.getRemarks();
