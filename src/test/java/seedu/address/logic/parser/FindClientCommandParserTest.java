@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -16,7 +17,7 @@ import seedu.address.model.person.ClientMatchesPredicate;
 
 public class FindClientCommandParserTest {
 
-    private FindClientCommandParser parser = new FindClientCommandParser();
+    private final FindClientCommandParser parser = new FindClientCommandParser();
 
     @Test
     public void parse_emptyArg_throwsParseException() {
@@ -26,7 +27,7 @@ public class FindClientCommandParserTest {
 
     @Test
     public void parse_noValidPrefix_throwsParseException() {
-        assertParseFailure(parser, "Alice Bob",
+        assertParseFailure(parser, VALID_NAME_BOB,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindClientCommand.MESSAGE_USAGE));
     }
 

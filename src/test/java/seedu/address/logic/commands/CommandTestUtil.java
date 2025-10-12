@@ -3,11 +3,17 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COST;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TIME;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalDeliveries.AMY_DELIVERY;
+import static seedu.address.testutil.TypicalDeliveries.BOB_DELIVERY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +59,26 @@ public class CommandTestUtil {
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
+
+    public static final String DATE_DESC_AMY_DELIVERY = " " + PREFIX_DATE
+            + AMY_DELIVERY.getDeliveryDate().getDateString();
+    public static final String DATE_DESC_BOB_DELIVERY = " "
+            + PREFIX_DATE + BOB_DELIVERY.getDeliveryDate().getDateString();
+    public static final String INVALID_DATE_DESC = " "
+            + PREFIX_DATE + "31/02/2023"; // Feb does not have 31 days
+
+    public static final String TIME_DESC_AMY_DELIVERY = " "
+            + PREFIX_TIME + AMY_DELIVERY.getDeliveryDate().getTimeString();
+    public static final String TIME_DESC_BOB_DELIVERY = " "
+            + PREFIX_TIME + BOB_DELIVERY.getDeliveryDate().getTimeString();
+    public static final String INVALID_TIME_DESC = " "
+            + PREFIX_TIME + "2600";
+
+    public static final String REMARKS_DESC_AMY_DELIVERY = " " + PREFIX_REMARKS + AMY_DELIVERY.getRemarks();
+    public static final String REMARKS_DESC_BOB_DELIVERY = " " + PREFIX_REMARKS + BOB_DELIVERY.getRemarks();
+
+    public static final String COST_DESC_AMY_DELIVERY = " " + PREFIX_COST + AMY_DELIVERY.getCost();
+    public static final String COST_DESC_BOB_DELIVERY = " " + PREFIX_COST + BOB_DELIVERY.getCost();
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
