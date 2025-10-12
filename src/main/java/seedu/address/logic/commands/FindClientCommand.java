@@ -52,11 +52,12 @@ public class FindClientCommand extends Command {
         int numClientsFound = model.getFilteredPersonList().size();
 
         if (numClientsFound == 0) {
-            return new CommandResult(MESSAGE_NO_CLIENTS_FOUND);
+            return new CommandResult(MESSAGE_NO_CLIENTS_FOUND, CommandResult.UiPanel.PERSONS);
         }
 
         return new CommandResult(
-                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, numClientsFound));
+                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, numClientsFound),
+                CommandResult.UiPanel.PERSONS);
     }
 
     @Override

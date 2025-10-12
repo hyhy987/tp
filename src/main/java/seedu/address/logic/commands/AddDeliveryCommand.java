@@ -129,7 +129,8 @@ public class AddDeliveryCommand extends Command {
         }
 
         model.addDelivery(delivery);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(delivery)));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(delivery)),
+                CommandResult.UiPanel.DELIVERIES);
     }
 
     /**

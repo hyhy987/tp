@@ -21,6 +21,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -93,7 +94,23 @@ public class EditClientCommand extends Command {
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+
+
+        // Update every delivery whose client == personToEdit
+        model.getFilteredDeliveryList().stream()
+                .filter(d -> d.getClient().isSamePerson(personToEdit)) // or .equals(personToEdit)
+                .forEach(d -> {
+                    Delivery updated = new Delivery(
+                            d.getId(),
+                            editedPerson, // <-- replace the old client details with new client details
+                            d.getDeliveryDate(),
+                            d.getRemarks(),
+                            d.getCost());
+                    model.setDelivery(d, updated); // replace in the model
+                });
+
+        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
+                CommandResult.UiPanel.PERSONS);
     }
 
     /**
@@ -119,7 +136,7 @@ public class EditClientCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof EditCommand)) {
+        if (!(other instanceof EditClientCommand)) {
             return false;
         }
 

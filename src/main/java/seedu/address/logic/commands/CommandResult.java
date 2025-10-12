@@ -11,6 +11,10 @@ import seedu.address.commons.util.ToStringBuilder;
  */
 public class CommandResult {
 
+    /** Different UI flags. */
+    public enum UiPanel { PERSONS, DELIVERIES }
+
+
     private final String feedbackToUser;
 
     /** Help information should be shown to the user. */
@@ -19,13 +23,35 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** The flag to show which page of information. */
+    private final UiPanel panelToShow;
+
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
-    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
+    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit , UiPanel panelToShow) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
+        this.panelToShow = panelToShow;
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser} & {@code panelToShow},
+     * and other fields set to their default value.
+     */
+    public CommandResult(String feedbackToUser, UiPanel panelToShow) {
+        this(feedbackToUser, false, false, panelToShow);
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser},
+     * {@code showHelp}, {@code exit}
+     * and other fields set to their default value.
+     */
+    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
+        this(feedbackToUser, showHelp, exit, UiPanel.PERSONS);
     }
 
     /**
@@ -33,11 +59,16 @@ public class CommandResult {
      * and other fields set to their default value.
      */
     public CommandResult(String feedbackToUser) {
-        this(feedbackToUser, false, false);
+        this(feedbackToUser, false, false, UiPanel.PERSONS);
     }
+
 
     public String getFeedbackToUser() {
         return feedbackToUser;
+    }
+
+    public UiPanel getPanelToShow() {
+        return panelToShow;
     }
 
     public boolean isShowHelp() {
