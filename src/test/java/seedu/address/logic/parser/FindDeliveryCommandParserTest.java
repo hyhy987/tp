@@ -32,4 +32,18 @@ public class FindDeliveryCommandParserTest {
         // multiple whitespaces between keywords
         assertParseSuccess(parser, " 25/12/2024 ", expectedFindDeliveryCommand);
     }
+
+    @Test
+    public void parse_blankArg_throwsParseException() {
+        // truly empty string (after trim still empty)
+        assertParseFailure(parser, "",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_invalidDate_throwsParseException() {
+        // clearly invalid date for your dd/MM/yyyy format (and should fail DateTime.isValidDate)
+        assertParseFailure(parser, "31/02/2024",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
+    }
 }
