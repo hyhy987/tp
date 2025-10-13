@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
@@ -71,6 +72,7 @@ public class EditClientCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         List<Person> lastShownList = model.getFilteredPersonList();
 
         Person target = lastShownList.stream()
@@ -93,9 +95,9 @@ public class EditClientCommand extends Command {
         }
 
         model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
 
+        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         // Update every delivery whose client == personToEdit
         model.getFilteredDeliveryList().stream()
                 .filter(d -> d.getClient().isSamePerson(personToEdit)) // or .equals(personToEdit)
@@ -108,6 +110,8 @@ public class EditClientCommand extends Command {
                             d.getCost());
                     model.setDelivery(d, updated); // replace in the model
                 });
+
+
 
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
                 CommandResult.UiPanel.PERSONS);
