@@ -3,6 +3,7 @@ package seedu.foodbook.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
@@ -33,12 +34,14 @@ public class AddDeliveryCommand extends Command {
             + PREFIX_TIME + "TIME "
             + PREFIX_REMARKS + "REMARKS "
             + PREFIX_COST + "COST\n"
+            + "[" + PREFIX_DELIVERY_TAG + "TAG]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_DATE + "25/12/2024 "
             + PREFIX_TIME + "1430 "
             + PREFIX_REMARKS + "Birthday cake delivery "
-            + PREFIX_COST + "50.00";
+            + PREFIX_COST + "50.00"
+            + PREFIX_DELIVERY_TAG + "Personal";
 
     /** Success message template when a delivery is successfully added. */
     public static final String MESSAGE_SUCCESS = "New delivery added: %1$s";
@@ -58,6 +61,9 @@ public class AddDeliveryCommand extends Command {
 
     /** The cost/price of this delivery. */
     private final Double cost;
+
+    /** Tag for this delivery */
+    private final String tag;
 
     // If delivery is provided directed via constructor
     // Mainly used for testing
@@ -82,10 +88,43 @@ public class AddDeliveryCommand extends Command {
         this.dateTime = dateTime;
         this.remarks = remarks;
         this.cost = cost;
+        this.tag = null;
     }
 
     /**
-     * Alternate constructor for AddDeliveryCommand to add a secific delivery.
+     * Creates an add-delivery command with an optional tag.
+     *
+     * @param clientName non-null client name string.
+     * @param dateTime non-null scheduled date/time.
+     * @param remarks non-null remarks (may be empty).
+     * @param cost non-null, non-negative cost.
+     * @param tag optional tag string; {@code null} or blank indicates no tag.
+     * @throws IllegalArgumentException if {@code cost} is negative (defensive check).
+     */
+    public AddDeliveryCommand(String clientName, DateTime dateTime, String remarks, Double cost, String tag) {
+        requireNonNull(clientName);
+        requireNonNull(dateTime);
+        requireNonNull(remarks);
+        requireNonNull(cost);
+
+        this.clientName = clientName.trim();
+        this.dateTime = dateTime;
+        this.remarks = remarks;
+
+        if (cost < 0) {
+            throw new IllegalArgumentException("Cost must be non-negative.");
+        }
+        this.cost = cost;
+
+        if (tag == null || tag.isBlank()) {
+            this.tag = null;
+        } else {
+            this.tag = tag.trim();
+        }
+    }
+
+    /**
+     * Alternate constructor for AddDeliveryCommand to add a specific delivery.
      * Mainly used for testing
      *
      * @param toAdd The delivery to be added.
@@ -95,13 +134,21 @@ public class AddDeliveryCommand extends Command {
         requireNonNull(toAdd);
 
         this.toAdd = Optional.of(toAdd);
-
         this.clientName = toAdd.getClient().getName().fullName;
         this.dateTime = toAdd.getDeliveryDate();
         this.remarks = toAdd.getRemarks();
         this.cost = toAdd.getCost();
+        this.tag = toAdd.getTag();
     }
 
+    /**
+     * Executes the command by creating and inserting a {@link Delivery} into the model.
+     * The created delivery preserves the user-specified tag (if any).
+     *
+     * @param model the model to mutate.
+     * @return command result containing a user-facing success message.
+     * @throws CommandException if the target model is unavailable or rejects the insertion.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -121,7 +168,7 @@ public class AddDeliveryCommand extends Command {
             Integer nextId = generateNextId(model);
 
             //Create delivery with the found client
-            delivery = new Delivery(nextId, client, dateTime, remarks, cost);
+            delivery = new Delivery(nextId, client, dateTime, remarks, cost, tag);
         }
 
         if (model.hasDelivery(delivery)) {
@@ -169,7 +216,8 @@ public class AddDeliveryCommand extends Command {
         return clientName.equals(otherCommand.clientName)
                 && dateTime.equals(otherCommand.dateTime)
                 && remarks.equals(otherCommand.remarks)
-                && cost.equals(otherCommand.cost);
+                && cost.equals(otherCommand.cost)
+                && ((tag == null && otherCommand.tag == null) || (tag != null && tag.equals(otherCommand.tag)));
     }
 
     /**
@@ -184,6 +232,7 @@ public class AddDeliveryCommand extends Command {
                 .add("dateTime", dateTime)
                 .add("remarks", remarks)
                 .add("cost", cost)
+                .add("tag", tag == null ? "(none)" : tag)
                 .toString();
     }
 }

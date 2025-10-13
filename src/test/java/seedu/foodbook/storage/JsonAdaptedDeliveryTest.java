@@ -28,6 +28,7 @@ public class JsonAdaptedDeliveryTest {
     private static final String VALID_TIME = "0930";
     private static final String VALID_REMARKS = "Breakfast order";
     private static final Double VALID_COST = 30.50;
+    private static final String VALID_TAG = "Personal";
     private static final Boolean VALID_STATUS = false;
 
     /**
@@ -46,7 +47,7 @@ public class JsonAdaptedDeliveryTest {
     public void toModelType_validDeliveryDetails_returnsDelivery() throws Exception {
         Person dummyClient = createDummyClient();
         DateTime dt = new DateTime(VALID_DATE, VALID_TIME);
-        Delivery source = new Delivery(VALID_ID, dummyClient, dt, VALID_REMARKS, VALID_COST);
+        Delivery source = new Delivery(VALID_ID, dummyClient, dt, VALID_REMARKS, VALID_COST, VALID_TAG);
 
         JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(source);
 
@@ -65,7 +66,7 @@ public class JsonAdaptedDeliveryTest {
     @Test
     public void toModelType_missingField_throwsIllegalValueException() throws Exception {
         JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(
-                null, VALID_NAME, VALID_DATE, VALID_TIME, VALID_REMARKS, VALID_COST, VALID_STATUS);
+                null, VALID_NAME, VALID_DATE, VALID_TIME, VALID_REMARKS, VALID_COST, VALID_STATUS, VALID_TAG);
 
         FoodBook foodBook = new FoodBook();
         assertThrows(IllegalValueException.class, () -> adapted.toModelType(foodBook));

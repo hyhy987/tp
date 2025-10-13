@@ -36,6 +36,7 @@
             <Label fx:id="remarks"    styleClass="cell_small_label"/>
             <Label fx:id="cost"       styleClass="cell_small_label"/>
             <Label fx:id="delivered"  styleClass="cell_small_label"/>
+            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-pill"/>
         </VBox>
     </GridPane>
 </HBox>
