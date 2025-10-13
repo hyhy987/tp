@@ -22,9 +22,9 @@ public class UnmarkCommand extends Command {
             + "Parameters: DELIVERY_ID (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 67";
 
-    public static final String MESSAGE_UNMARK_DELIVERY_SUCCESS = "Delivery unmarked as completed: %1$s";
+    public static final String MESSAGE_UNMARK_DELIVERY_SUCCESS = "Delivery unmarked: %1$s";
     public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: Delivery does not exist.";
-    public static final String MESSAGE_DELIVERY_ALREADY_UNMARKED = "Delivery is already unmarked as completed.";
+    public static final String MESSAGE_DELIVERY_ALREADY_UNMARKED = "Delivery is already unmarked.";
 
     private final Integer deliveryId;
 
