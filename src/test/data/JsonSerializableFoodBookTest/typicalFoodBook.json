@@ -1,0 +1,105 @@
+{
+  "_comment": "FoodBook save file which contains the same Person/Delivery values as in TypicalFoodBook#getTypicalAddressBook()",
+  "persons" : [ {
+    "name" : "Alice Pauline",
+    "phone" : "94351253",
+    "email" : "alice@example.com",
+    "address" : "123, Jurong West Ave 6, #08-111",
+    "tags" : [ "friends" ]
+  }, {
+    "name" : "Benson Meier",
+    "phone" : "98765432",
+    "email" : "johnd@example.com",
+    "address" : "311, Clementi Ave 2, #02-25",
+    "tags" : [ "owesMoney", "friends" ]
+  }, {
+    "name" : "Carl Kurz",
+    "phone" : "95352563",
+    "email" : "heinz@example.com",
+    "address" : "wall street",
+    "tags" : [ ]
+  }, {
+    "name" : "Daniel Meier",
+    "phone" : "87652533",
+    "email" : "cornelia@example.com",
+    "address" : "10th street",
+    "tags" : [ "friends" ]
+  }, {
+    "name" : "Elle Meyer",
+    "phone" : "9482224",
+    "email" : "werner@example.com",
+    "address" : "michegan ave",
+    "tags" : [ ]
+  }, {
+    "name" : "Fiona Kunz",
+    "phone" : "9482427",
+    "email" : "lydia@example.com",
+    "address" : "little tokyo",
+    "tags" : [ ]
+  }, {
+    "name" : "George Best",
+    "phone" : "9482442",
+    "email" : "anna@example.com",
+    "address" : "4th street",
+    "tags" : [ ]
+  } ],
+
+  "deliveries": [
+    {
+      "id": 0,
+      "clientName": "Alice Pauline",
+      "date": "12/12/2023",
+      "time": "1200",
+      "remarks": "NIL",
+      "cost": 10.0
+    },
+    {
+      "id": 1,
+      "clientName": "Benson Meier",
+      "date": "13/12/2023",
+      "time": "1300",
+      "remarks": "NIL",
+      "cost": 20.0
+    },
+    {
+      "id": 2,
+      "clientName": "Carl Kurz",
+      "date": "14/12/2023",
+      "time": "1400",
+      "remarks": "NIL",
+      "cost": 30.0
+    },
+    {
+      "id": 3,
+      "clientName": "Daniel Meier",
+      "date": "15/12/2023",
+      "time": "1500",
+      "remarks": "NIL",
+      "cost": 40.0
+    },
+    {
+      "id": 4,
+      "clientName": "Elle Meyer",
+      "date": "16/12/2023",
+      "time": "1600",
+      "remarks": "NIL",
+      "cost": 50.0
+    },
+    {
+      "id": 5,
+      "clientName": "Fiona Kunz",
+      "date": "17/12/2023",
+      "time": "1700",
+      "remarks": "NIL",
+      "cost": 60.0
+    },
+    {
+      "id": 6,
+      "clientName": "George Best",
+      "date": "18/12/2023",
+      "time": "1800",
+      "remarks": "NIL",
+      "cost": 70.0
+    }
+  ]
+}
