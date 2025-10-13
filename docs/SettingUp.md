@@ -29,7 +29,7 @@ If you plan to use Intellij IDEA (highly recommended):
    Note: Importing a Gradle project is slightly different from importing a normal Java project.
    </box>
 1. **Verify the setup**:
-   1. Run the `seedu.address.Main` and try a few commands.
+   1. Run the `seedu.foodbook.Main` and try a few commands.
    1. [Run the tests](Testing.md) to ensure they all pass.
 
 --------------------------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ If you plan to use Intellij IDEA (highly recommended):
 
 1. **Learn the design**
 
-   When you are ready to start coding, we recommend that you get some sense of the overall design by reading about [AddressBook’s architecture](DeveloperGuide.md#architecture).
+   When you are ready to start coding, we recommend that you get some sense of the overall design by reading about [FoodBook’s architecture](DeveloperGuide.md#architecture).
 
 1. **Do the tutorials**
    These tutorials will help you get acquainted with the codebase.

@@ -1,0 +1,35 @@
+{
+  "persons": [
+    {
+      "name": "Valid Person",
+      "phone": "9482424",
+      "email": "hans@example.com",
+      "address": "4th street"
+    },
+    {
+      "name": "Alice Pauline",
+      "phone": "94351253",
+      "email": "alice@example.com",
+      "address": "123, Jurong West Ave 6, #08-111",
+      "tags": [ "friends" ]
+    }
+  ],
+  "deliveries": [
+    {
+      "id": 2,
+      "clientName": "Valid Person",
+      "date": "13/10/2025",
+      "time": "1420",
+      "remarks": "-",
+      "cost": 8.0
+    },
+    {
+      "id": 2,
+      "clientName": "Alice Pauline",
+      "date": "15/10/2025",
+      "time": "1320",
+      "remarks": "Should fail, duplicate id",
+      "cost": 10.0
+    }
+  ]
+}

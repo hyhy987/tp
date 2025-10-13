@@ -1,0 +1,20 @@
+{
+  "persons": [
+    {
+      "name": "Valid Person",
+      "phone": "9482424",
+      "email": "hans@example.com",
+      "address": "4th street"
+    }
+  ],
+  "deliveries": [
+    {
+      "id": 2,
+      "clientName": "Non-existent Person",
+      "date": "13/10/2025",
+      "time": "1420",
+      "remarks": "Should fail: non-existing client",
+      "cost": 8.0
+    }
+  ]
+}
