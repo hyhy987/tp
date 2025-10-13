@@ -1,0 +1,29 @@
+{
+  "persons": [
+    {
+      "name": "Valid Person",
+      "phone": "9482424",
+      "email": "hans@example.com",
+      "address": "4th street"
+    }
+  ],
+  "deliveries": [
+    {
+      "id": 1,
+      "clientName": "Valid Person",
+      "date": "13/10/2025",
+      "time": "1430",
+      "remarks": "Leave at concierge",
+      "cost": 12.5,
+      "isDelivered": true
+    },
+    {
+      "id": 2,
+      "clientName": "Valid Person",
+      "date": "31-10-2025",
+      "time": "9:30",
+      "remarks": "Should fail: bad date/time format",
+      "cost": 8.0
+    }
+  ]
+}
