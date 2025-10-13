@@ -1,6 +1,7 @@
 package seedu.address.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.commands.AddClientCommand;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.ListCommand;
@@ -171,5 +173,80 @@ public class LogicManagerTest {
         ModelManager expectedModel = new ModelManager();
         expectedModel.addPerson(expectedPerson);
         assertCommandFailure(addCommand, CommandException.class, expectedMessage, expectedModel);
+    }
+
+    /**
+     * Verifies that {@link LogicManager#getAddressBook()} returns the exact
+     * {@link ReadOnlyAddressBook} instance held by the {@link Model}. This ensures that
+     * {@code LogicManager} correctly delegates the call to the model and does not keep a
+     * separate copy or cache.
+     *
+     * <p>Contract: The address book instance retrieved via {@code logic} must be
+     * {@code equals}-to the one in {@code model}.</p>
+     */
+    @Test
+    public void getAddressBook_returnsModelAddressBook() {
+        assertEquals(model.getAddressBook(), logic.getAddressBook());
+    }
+
+    /**
+     * Verifies that {@link LogicManager#getAddressBookFilePath()} is non-null and exactly
+     * matches the file path maintained by the {@link Model}. This ensures correct delegation
+     * and guards against regressions that return {@code null} or an unexpected path.
+     *
+     * <p>Contract: {@code logic.getAddressBookFilePath()} is non-null and equals
+     * {@code model.getAddressBookFilePath()}.</p>
+     */
+    @Test
+    public void getAddressBookFilePath_notNullAndDelegated() {
+        Path logicPath = logic.getAddressBookFilePath();
+        assertNotNull(logicPath);
+        assertEquals(model.getAddressBookFilePath(), logicPath);
+    }
+
+    /**
+     * Verifies that the delivery list returned by {@link LogicManager#getFilteredDeliveryList()}
+     * is unmodifiable. Attempting to mutate it (e.g., {@code remove(0)}) must throw
+     * {@link UnsupportedOperationException}.
+     *
+     * <p>Rationale: The logic layer must not expose internal model collections that callers
+     * can mutate directly.</p>
+     *
+     * @see LogicManagerTest#getFilteredPersonList_modifyList_throwsUnsupportedOperationException()
+     */
+    @Test
+    public void getFilteredDeliveryList_modifyList_throwsUnsupportedOperationException() {
+        assertThrows(UnsupportedOperationException.class, () -> logic.getFilteredDeliveryList().remove(0));
+    }
+
+    /**
+     * Verifies round-trip delegation of GUI settings:
+     * <ol>
+     *   <li>{@link LogicManager#setGuiSettings(GuiSettings)} forwards the new settings to the {@link Model}.</li>
+     *   <li>{@link LogicManager#getGuiSettings()} returns the updated settings.</li>
+     * </ol>
+     *
+     * <p>Contract: After calling {@code logic.setGuiSettings(newSettings)}, both
+     * {@code model.getGuiSettings()} and {@code logic.getGuiSettings()} must equal
+     * {@code newSettings}.</p>
+     */
+    @Test
+    public void guiSettings_roundTrip_delegatesToModel() {
+        GuiSettings newSettings = new GuiSettings(1024, 768, 150, 200);
+        logic.setGuiSettings(newSettings);
+        assertEquals(newSettings, model.getGuiSettings());
+        assertEquals(newSettings, logic.getGuiSettings());
+    }
+
+    /**
+     * Sanity test that {@link LogicManager#getGuiSettings()} never returns {@code null} under
+     * normal initialization (i.e., before any explicit {@code setGuiSettings} call).
+     *
+     * <p>Rationale: Guards against regressions where GUI settings are accidentally
+     * uninitialized or cleared.</p>
+     */
+    @Test
+    public void getGuiSettings_notNullByDefault() {
+        assertNotNull(logic.getGuiSettings());
     }
 }
