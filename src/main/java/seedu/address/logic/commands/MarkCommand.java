@@ -67,7 +67,8 @@ public class MarkCommand extends Command {
         // Update the model
         model.setDelivery(deliveryToMark, markedDelivery);
 
-        return new CommandResult(String.format(MESSAGE_MARK_DELIVERY_SUCCESS, Messages.format(markedDelivery)));
+        return new CommandResult(String.format(MESSAGE_MARK_DELIVERY_SUCCESS, Messages.format(markedDelivery)),
+                CommandResult.UiPanel.DELIVERIES);
     }
 
     @Override

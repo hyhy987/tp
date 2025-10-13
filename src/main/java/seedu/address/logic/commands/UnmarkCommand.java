@@ -67,7 +67,8 @@ public class UnmarkCommand extends Command {
         // Update the model
         model.setDelivery(deliveryToUnmark, unmarkedDelivery);
 
-        return new CommandResult(String.format(MESSAGE_UNMARK_DELIVERY_SUCCESS, Messages.format(unmarkedDelivery)));
+        return new CommandResult(String.format(MESSAGE_UNMARK_DELIVERY_SUCCESS, Messages.format(unmarkedDelivery)),
+                CommandResult.UiPanel.DELIVERIES);
     }
 
     @Override

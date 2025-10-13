@@ -2,7 +2,6 @@ package seedu.address.ui;
 
 import java.util.logging.Logger;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -18,8 +17,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Person;
+
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -145,37 +143,8 @@ public class MainWindow extends UiPart<Stage> {
         // Default to persons on startup
         showPersons();
 
-        // Auto-switch when filtered lists change
-        wireAutoSwitching();
     }
 
-
-    /**
-     * Wires automatic UI switching between the person and delivery panels
-     * based on updates to their respective filtered lists.
-     * <p>
-     * When the filtered delivery list changes (e.g., due to a {@code find_delivery} command),
-     * the delivery panel is shown. When the filtered person list changes (e.g., due to a {@code find} command),
-     * the person panel is shown instead.
-     */
-    private void wireAutoSwitching() {
-        ObservableList<Delivery> deliveries = logic.getFilteredDeliveryList();
-        ObservableList<Person> persons = logic.getFilteredPersonList();
-
-        deliveries.addListener((javafx.collections.ListChangeListener<? super Delivery>) change -> {
-            // If deliveries were updated by a command like find_delivery, show the delivery panel
-            if (!deliveries.isEmpty()) {
-                showDeliveries();
-            }
-        });
-
-        persons.addListener((javafx.collections.ListChangeListener<? super Person>) change -> {
-            // If persons were updated by commands like find, show the person panel
-            if (!persons.isEmpty()) {
-                showPersons();
-            }
-        });
-    }
 
     /**
      * Displays the person list panel and hides the delivery list panel.
@@ -251,6 +220,14 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
+
+            if (commandResult.getPanelToShow() == CommandResult.UiPanel.PERSONS) {
+                showPersons();
+            }
+
+            if (commandResult.getPanelToShow() == CommandResult.UiPanel.DELIVERIES) {
+                showDeliveries();
+            }
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
