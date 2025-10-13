@@ -36,14 +36,14 @@ public class DeliveryTest {
         Email emailA = new Email("alice@example.com");
         Address addressA = new Address("123 Orchard Road");
         Set<Tag> tagsA = new HashSet<>(Collections.emptySet());
-        clientA = new Person(nameA, phoneA, emailA, addressA, tagsA);
+        clientA = new Person(nameA, phoneA, emailA, addressA);
 
         Name nameB = new Name("Bob Tan");
         Phone phoneB = new Phone("92345678");
         Email emailB = new Email("bob@example.com");
         Address addressB = new Address("456 Bukit Timah");
         Set<Tag> tagsB = new HashSet<>(Collections.emptySet());
-        clientB = new Person(nameB, phoneB, emailB, addressB, tagsB);
+        clientB = new Person(nameB, phoneB, emailB, addressB);
 
         dt1 = new DateTime("01/01/2025", "1000");
         dt2 = new DateTime("02/01/2025", "1100");

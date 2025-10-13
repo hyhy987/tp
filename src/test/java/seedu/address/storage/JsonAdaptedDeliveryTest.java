@@ -39,7 +39,7 @@ public class JsonAdaptedDeliveryTest {
         Email email = new Email("alice@example.com");
         Address address = new Address("123 Orchard Road");
         Set<Tag> emptyTags = new HashSet<>(Collections.emptySet());
-        return new Person(name, phone, email, address, emptyTags);
+        return new Person(name, phone, email, address);
     }
 
     @Test
