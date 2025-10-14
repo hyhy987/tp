@@ -86,7 +86,8 @@ public class AddDeliveryCommandTest {
                 + "{clientName=" + ALICE_DELIVERY.getClient().getName() + ", "
                 + "dateTime=" + ALICE_DELIVERY.getDeliveryDate() + ", "
                 + "remarks=" + ALICE_DELIVERY.getRemarks() + ", "
-                + "cost=" + ALICE_DELIVERY.getCost() + "}";
+                + "cost=" + ALICE_DELIVERY.getCost() + ", "
+                + "tag=" + ALICE_DELIVERY.getTag() + "}";
         assertEquals(expected, addCommand.toString());
     }
 

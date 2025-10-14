@@ -273,7 +273,7 @@ public class EditClientCommandTest {
         for (Delivery d : new java.util.ArrayList<>(expectedModel.getFilteredDeliveryList())) {
             if (d.getClient().isSamePerson(aliceOldExpected)) {
                 Delivery updated = new Delivery(d.getId(),
-                        aliceNewExpected, d.getDeliveryDate(), d.getRemarks(), d.getCost());
+                        aliceNewExpected, d.getDeliveryDate(), d.getRemarks(), d.getCost(), d.getTag());
                 expectedModel.setDelivery(d, updated);
             }
         }
@@ -308,7 +308,8 @@ public class EditClientCommandTest {
         expectedModel.updateFilteredDeliveryList(d -> true);
         for (Delivery d : new ArrayList<>(expectedModel.getFilteredDeliveryList())) {
             if (d.getClient().isSamePerson(aliceInExpected)) {
-                Delivery updated = new Delivery(d.getId(), newAlice, d.getDeliveryDate(), d.getRemarks(), d.getCost());
+                Delivery updated = new Delivery(d.getId(), newAlice, d.getDeliveryDate(), d.getRemarks(),
+                        d.getCost(), d.getTag());
                 expectedModel.setDelivery(d, updated);
             }
         }
