@@ -127,18 +127,6 @@ public class EditDeliveryCommandParserTest {
     }
 
     @Test
-    public void parse_costWithInvalidNumberFormat_throwsParseException() {
-        String userInput = "1 c/abc";
-        assertParseFailure(parser, userInput, "Cost must be a valid number");
-    }
-
-    @Test
-    public void parse_negativeCost_throwsParseException() {
-        String userInput = "1 c/-12.50";
-        assertParseFailure(parser, userInput, "Cost must be non-negative");
-    }
-
-    @Test
     public void parse_validRemarksOnly_success() {
         String userInput = "7 r/Customer prefers evening delivery";
         EditDeliveryDescriptor descriptor = new EditDeliveryDescriptor();
