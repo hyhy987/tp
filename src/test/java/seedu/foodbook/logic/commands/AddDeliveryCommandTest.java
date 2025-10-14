@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.testutil.Assert.assertThrows;
 import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
+import static seedu.foodbook.testutil.TypicalPersons.ALICE;
+import static seedu.foodbook.testutil.TypicalPersons.BENSON;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -166,6 +168,8 @@ public class AddDeliveryCommandTest {
         // Constructor should not throw exception
     }
 
+
+
     @Test
     public void constructor_withTag_blankTag() {
         String clientName = "Alice Yeoh";
@@ -176,6 +180,37 @@ public class AddDeliveryCommandTest {
         AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, "   ");
         // Constructor should not throw exception
     }
+
+    @Test
+    public void execute_clientNotFound_throwsCommandException() {
+        String nonExistentClient = "NonExistent Client";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Test delivery";
+        Double cost = 25.50;
+
+        AddDeliveryCommand addCommand = new AddDeliveryCommand(nonExistentClient, dateTime, remarks, cost);
+        ModelStubWithoutClient modelStub = new ModelStubWithoutClient();
+
+        assertThrows(CommandException.class,
+                String.format(AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND, nonExistentClient), () ->
+                        addCommand.execute(modelStub));
+    }
+
+    @Test
+    public void execute_clientFound_addSuccessful() throws Exception {
+        ModelStubWithClient modelStub = new ModelStubWithClient();
+        String clientName = ALICE.getName().fullName;
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Test delivery";
+        Double cost = 25.50;
+
+        AddDeliveryCommand addCommand = new AddDeliveryCommand(clientName, dateTime, remarks, cost);
+        CommandResult commandResult = addCommand.execute(modelStub);
+
+        assertTrue(commandResult.getFeedbackToUser().contains("New delivery added"));
+        assertEquals(1, modelStub.deliveriesAdded.size());
+    }
+
 
     @Test
     public void toStringMethod() {
@@ -190,7 +225,7 @@ public class AddDeliveryCommandTest {
     }
 
     /**
-     * A default model stub that have all of the methods failing.
+     * A default model stub that have all the methods failing.
      */
     private class ModelStub implements Model {
         @Override
@@ -328,6 +363,59 @@ public class AddDeliveryCommandTest {
         public void addDelivery(Delivery delivery) {
             requireNonNull(delivery);
             deliveriesAdded.add(delivery);
+        }
+
+        @Override
+        public ReadOnlyFoodBook getFoodBook() {
+            return new FoodBook();
+        }
+    }
+
+    /**
+     * A Model stub that doesn't have any client.
+     */
+    private class ModelStubWithoutClient extends ModelStub {
+        @Override
+        public ObservableList<Person> getFilteredPersonList() {
+            return javafx.collections.FXCollections.observableArrayList();
+        }
+
+        @Override
+        public boolean hasDelivery(Delivery delivery) {
+            return false;
+        }
+
+        @Override
+        public ObservableList<Delivery> getFilteredDeliveryList() {
+            return javafx.collections.FXCollections.observableArrayList();
+        }
+    }
+
+    /**
+     * A Model stub that has a client.
+     */
+    private class ModelStubWithClient extends ModelStub {
+        final ArrayList<Delivery> deliveriesAdded = new ArrayList<>();
+
+        @Override
+        public ObservableList<Person> getFilteredPersonList() {
+            return javafx.collections.FXCollections.observableArrayList(ALICE, BENSON);
+        }
+
+        @Override
+        public boolean hasDelivery(Delivery delivery) {
+            return deliveriesAdded.stream().anyMatch(delivery::equals);
+        }
+
+        @Override
+        public void addDelivery(Delivery delivery) {
+            requireNonNull(delivery);
+            deliveriesAdded.add(delivery);
+        }
+
+        @Override
+        public ObservableList<Delivery> getFilteredDeliveryList() {
+            return javafx.collections.FXCollections.observableArrayList(deliveriesAdded);
         }
 
         @Override

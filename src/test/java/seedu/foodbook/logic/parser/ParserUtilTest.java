@@ -1,6 +1,7 @@
 package seedu.foodbook.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.foodbook.testutil.Assert.assertThrows;
@@ -148,6 +149,29 @@ public class ParserUtilTest {
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
     }
 
+
+    @Test
+    public void parseCost_validInput_success() throws Exception {
+        assertEquals(10.0, ParserUtil.parseCost("10"));
+        assertEquals(10.5, ParserUtil.parseCost(" 10.5 "));
+    }
+
+    @Test
+    public void parseCost_invalidInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("ten"));
+    }
+
+    @Test
+    public void parseCost_nullInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("null"));
+    }
+
+    @Test
+    public void parseCost_emptyInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(""));
+    }
+
     @Test
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
@@ -231,4 +255,27 @@ public class ParserUtilTest {
         // large valid integer
         assertEquals(Integer.valueOf(999999), ParserUtil.parseDeliveryId("999999"));
     }
+
+    // parseTagLoose
+    @Test
+    public void parseTagLoose_nullInput_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose(null));
+    }
+
+    @Test
+    public void parseTagLoose_empty_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose(""));
+    }
+
+    @Test
+    public void parseTagLoose_whitespace_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose("   "));
+    }
+
+    @Test
+    public void parseTagLoose_validInput_returnsTrimmed() {
+        assertEquals("Personal", ParserUtil.parseTagLoose("Personal"));
+        assertEquals("Work", ParserUtil.parseTagLoose("  Work  "));
+    }
+
 }
