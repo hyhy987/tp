@@ -55,7 +55,7 @@ public class DeliveryTest {
     }
 
     @Test
-    public void getTagKind_carlDelivery_noTag_returnsOther() {
+    public void getTagKind_carlDelivery_noTag() {
         assertEquals(OTHER, CARL_DELIVERY.getTagKind());
     }
 
