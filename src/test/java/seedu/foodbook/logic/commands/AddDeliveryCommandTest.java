@@ -22,6 +22,7 @@ import seedu.foodbook.model.FoodBook;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ReadOnlyFoodBook;
 import seedu.foodbook.model.ReadOnlyUserPrefs;
+import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.testutil.DeliveryBuilder;
@@ -77,6 +78,103 @@ public class AddDeliveryCommandTest {
 
         // different person -> returns false
         assertFalse(addCommand1.equals(addCommand2));
+    }
+
+    @Test
+    public void constructor_validParameters_success() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+
+        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost);
+        // Constructor should not throw exception
+    }
+
+    @Test
+    public void constructor_nullClientName_throwsNullPointerException() {
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+
+        assertThrows(NullPointerException.class, () ->
+                new AddDeliveryCommand(null, dateTime, remarks, cost));
+    }
+
+    @Test
+    public void constructor_nullDateTime_throwsNullPointerException() {
+        String clientName = "Alice Yeoh";
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+
+        assertThrows(NullPointerException.class, () ->
+                new AddDeliveryCommand(clientName, null, remarks, cost));
+    }
+
+    @Test
+    public void constructor_nullRemarks_throwsNullPointerException() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        Double cost = 25.50;
+
+        assertThrows(NullPointerException.class, () ->
+                new AddDeliveryCommand(clientName, dateTime, null, cost));
+    }
+
+    @Test
+    public void constructor_nullCost_throwsNullPointerException() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+
+        assertThrows(NullPointerException.class, () ->
+                new AddDeliveryCommand(clientName, dateTime, remarks, null));
+    }
+
+    @Test
+    public void constructor_withTag_success() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+        String tag = "Personal";
+
+        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag);
+        // Constructor should not throw exception
+    }
+
+    @Test
+    public void constructor_withTag_negativeCost() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = -25.50;
+        String tag = "Personal";
+
+        assertThrows(IllegalArgumentException.class, () ->
+                new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag));
+    }
+
+    @Test
+    public void constructor_withTag_nullTag() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+
+        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, null);
+        // Constructor should not throw exception
+    }
+
+    @Test
+    public void constructor_withTag_blankTag() {
+        String clientName = "Alice Yeoh";
+        DateTime dateTime = new DateTime("01/01/2025", "1000");
+        String remarks = "Pizza delivery";
+        Double cost = 25.50;
+
+        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, "   ");
+        // Constructor should not throw exception
     }
 
     @Test
