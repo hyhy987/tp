@@ -3,6 +3,9 @@ package seedu.foodbook.model.delivery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.foodbook.model.delivery.TagKind.CORPORATE;
+import static seedu.foodbook.model.delivery.TagKind.OTHER;
+import static seedu.foodbook.model.delivery.TagKind.PERSONAL;
 import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BENSON_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
@@ -39,6 +42,21 @@ public class DeliveryTest {
     @Test
     public void equals_differentType_returnsFalse() {
         assertFalse(ALICE_DELIVERY.equals("not a delivery"));
+    }
+
+    @Test
+    public void getTagKind_aliceDelivery_returnsPersonal() {
+        assertEquals(PERSONAL, ALICE_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_bensonDelivery_returnsCorporate() {
+        assertEquals(CORPORATE, BENSON_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_carlDelivery_noTag_returnsOther() {
+        assertEquals(OTHER, CARL_DELIVERY.getTagKind());
     }
 
     @Test
