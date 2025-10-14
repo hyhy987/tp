@@ -185,4 +185,3 @@ and notes the exact name.
 - **High-priority** — Tag indicating preferred servicing order.
 - **Capacity** — Daily/route limit to prevent overbooking.
 - **Validation** — Input checks (format/range/consistency) performed before saving.
-
