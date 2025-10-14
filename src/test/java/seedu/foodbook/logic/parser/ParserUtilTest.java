@@ -173,6 +173,67 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseCost_empty_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(""));
+    }
+
+    @Test
+    public void parseCost_whitespaceOnly_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("   "));
+    }
+
+    @Test
+    public void parseCost_nan_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("NaN"));
+    }
+
+    @Test
+    public void parseCost_infinite_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("Infinity"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-Infinity"));
+    }
+
+    @Test
+    public void parseCost_negative_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-0.01"));
+    }
+
+    @Test
+    public void parseCost_intValue_returnsDouble() throws Exception {
+        assertEquals(0.0, ParserUtil.parseCost("0"));
+        assertEquals(42.0, ParserUtil.parseCost("42"));
+    }
+
+    @Test
+    public void parseCost_decimalValue_returnsDouble() throws Exception {
+        assertEquals(3.14, ParserUtil.parseCost("3.14"));
+        assertEquals(2.5, ParserUtil.parseCost(" 2.50 "));
+    }
+
+    // parseRemarks tests
+    @Test
+    public void parseRemarks_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRemarks(null));
+    }
+
+    @Test
+    public void parseRemarks_empty_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRemarks(""));
+    }
+
+    @Test
+    public void parseRemarks_whitespace_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRemarks("   "));
+    }
+
+    @Test
+    public void parseRemarks_valid_returnsTrimmed() throws Exception {
+        assertEquals("Note", ParserUtil.parseRemarks("Note"));
+        assertEquals("Leading and trailing trimmed",
+                ParserUtil.parseRemarks("  Leading and trailing trimmed  "));
+    }
+
+    @Test
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
     }

@@ -10,11 +10,11 @@ import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BENSON_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.DELIVERY_SAME_ID_AS_ALICE;
+import static seedu.foodbook.testutil.TypicalDeliveries.ELLE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalPersons.ALICE;
 import static seedu.foodbook.testutil.TypicalPersons.CARL;
 
 import org.junit.jupiter.api.Test;
-
 
 public class DeliveryTest {
 
@@ -57,6 +57,11 @@ public class DeliveryTest {
     @Test
     public void getTagKind_carlDelivery_noTag() {
         assertEquals(OTHER, CARL_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_ellieDelivery_otherTag() {
+        assertEquals(OTHER, ELLE_DELIVERY.getTagKind());
     }
 
     @Test
