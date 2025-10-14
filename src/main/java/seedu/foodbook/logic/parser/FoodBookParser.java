@@ -14,6 +14,7 @@ import seedu.foodbook.logic.commands.ClearCommand;
 import seedu.foodbook.logic.commands.Command;
 import seedu.foodbook.logic.commands.DeleteCommand;
 import seedu.foodbook.logic.commands.EditClientCommand;
+import seedu.foodbook.logic.commands.EditDeliveryCommand;
 import seedu.foodbook.logic.commands.ExitCommand;
 import seedu.foodbook.logic.commands.FindClientCommand;
 import seedu.foodbook.logic.commands.FindDeliveryCommand;
@@ -87,6 +88,9 @@ public class FoodBookParser {
 
         case AddDeliveryCommand.COMMAND_WORD:
             return new AddDeliveryCommandParser().parse(arguments);
+
+        case EditDeliveryCommand.COMMAND_WORD:
+            return new EditDeliveryCommandParser().parse(arguments);
 
         case FindDeliveryCommand.COMMAND_WORD:
             return new FindDeliveryCommandParser().parse(arguments);
