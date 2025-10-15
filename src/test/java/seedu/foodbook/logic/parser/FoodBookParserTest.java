@@ -79,10 +79,12 @@ public class FoodBookParserTest {
 
     @Test
     public void parseCommand_deleteDelivery() throws Exception {
+        // Test with delivery ID 67 (as per specification)
         DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
-                DeleteDeliveryCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
-        assertEquals(new DeleteDeliveryCommand(INDEX_FIRST_PERSON), command);
+                DeleteDeliveryCommand.COMMAND_WORD + " 67");
+        assertEquals(new DeleteDeliveryCommand(67), command);
     }
+
 
     @Test
     public void parseCommand_edit() throws Exception {

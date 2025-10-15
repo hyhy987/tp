@@ -2,14 +2,13 @@ package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.Delivery;
 
 /**
- * Deletes a delivery identified using its delivery ID from the address book.
+ * Deletes a delivery identified using its delivery ID from the food book.
  */
 public class DeleteDeliveryCommand extends Command {
 
@@ -23,14 +22,14 @@ public class DeleteDeliveryCommand extends Command {
     public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Delivery deleted.";
     public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: No delivery found with id %1$d";
 
-    private final Index deliveryId;
+    private final Integer deliveryId;
 
     /**
      * Creates a DeleteDeliveryCommand to delete the delivery with the specified {@code deliveryId}.
      *
      * @param deliveryId The ID of the delivery to delete.
      */
-    public DeleteDeliveryCommand(Index deliveryId) {
+    public DeleteDeliveryCommand(Integer deliveryId) {
         requireNonNull(deliveryId);
         this.deliveryId = deliveryId;
     }
