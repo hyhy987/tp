@@ -16,6 +16,7 @@ import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
 import seedu.foodbook.logic.commands.DeleteCommand;
+import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 import seedu.foodbook.logic.commands.EditClientCommand;
 import seedu.foodbook.logic.commands.ExitCommand;
 import seedu.foodbook.logic.commands.FindClientCommand;
@@ -74,6 +75,13 @@ public class FoodBookParserTest {
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
                 DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_deleteDelivery() throws Exception {
+        DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
+                DeleteDeliveryCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+        assertEquals(new DeleteDeliveryCommand(INDEX_FIRST_PERSON), command);
     }
 
     @Test
