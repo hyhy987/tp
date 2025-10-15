@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
+import seedu.foodbook.logic.Messages;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.Delivery;
 
@@ -46,7 +47,9 @@ public class DeleteDeliveryCommand extends Command {
                         String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId)));
 
         model.deleteDelivery(deliveryToDelete);
-        return new CommandResult(MESSAGE_DELETE_DELIVERY_SUCCESS);
+        return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS,
+                Messages.format(deliveryToDelete)),
+                CommandResult.UiPanel.DELIVERIES);
     }
 
     @Override

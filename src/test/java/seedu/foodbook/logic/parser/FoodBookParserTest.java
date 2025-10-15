@@ -12,6 +12,7 @@ import static seedu.foodbook.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
