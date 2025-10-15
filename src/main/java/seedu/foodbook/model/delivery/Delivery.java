@@ -15,27 +15,31 @@ public class Delivery {
 
     // Identity fields
     private final Integer id;
-
     private boolean isDelivered;
     private final Person client;
-
     private final DateTime datetime;
-
     private final String remarks;
-
     private final Double cost;
+
+    //Optional delivery tag
+    private final String tag;
 
     /**
      * Every field must be present and not null.
      */
     public Delivery(Integer id, Person client, DateTime datetime,
-                  String remarks, Double cost) {
+                  String remarks, Double cost, String tag) {
         requireAllNonNull(id, client, datetime, remarks, cost);
         this.id = id;
         this.client = client;
         this.datetime = datetime;
         this.remarks = remarks;
         this.cost = cost;
+        if (tag == null || tag.isBlank()) {
+            this.tag = null;
+        } else {
+            this.tag = tag;
+        }
 
         this.isDelivered = false;
     }
@@ -72,6 +76,34 @@ public class Delivery {
         return this.cost;
     }
 
+    public String getTag() {
+        return this.tag;
+    }
+
+    /**
+     * Classifies the current {@link #getTag()} value into a {@link TagKind} for UI coloring and logic.
+     * <ul>
+     *   <li>Returns {@link TagKind#PERSONAL} when tag equals "personal" (case-insensitive).</li>
+     *   <li>Returns {@link TagKind#CORPORATE} when tag equals "corporate" (case-insensitive).</li>
+     *   <li>Returns {@link TagKind#OTHER} for all other values, including {@code null}.</li>
+     * </ul>
+     *
+     * @return corresponding {@link TagKind}.
+     */
+    public TagKind getTagKind() {
+        if (tag == null) {
+            return TagKind.OTHER;
+        }
+        String s = tag.trim().toLowerCase();
+        if (s.equals("personal")) {
+            return TagKind.PERSONAL;
+        }
+        if (s.equals("corporate")) {
+            return TagKind.CORPORATE;
+        }
+        return TagKind.OTHER;
+    }
+
     /**
      * Returns true if both deliveries have the same id.
      */
@@ -103,6 +135,7 @@ public class Delivery {
                 .add("datetime", datetime.toString())
                 .add("remarks", remarks)
                 .add("cost", cost)
+                .add("tag", tag == null ? "(none)" : tag)
                 .toString();
     }
 

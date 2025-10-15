@@ -12,7 +12,8 @@ import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
 
 /**
- * Jackson-friendly version of {@link Delivery}.
+ * JSON representation of a {@link Delivery}.
+ * <p>Backwards compatible: older saves without {@code tag} will deserialize with {@code tag == null}.</p>
  */
 public class JsonAdaptedDelivery {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Delivery's %s field is missing!";
@@ -24,6 +25,7 @@ public class JsonAdaptedDelivery {
     private final String remarks;
     private final Double cost;
     private final Boolean isDelivered;
+    private final String tag;
 
     /**
      * Constructs a {@code JsonAdaptedDelivery} with the given delivery details.
@@ -35,6 +37,7 @@ public class JsonAdaptedDelivery {
      * @param remarks      Additional notes for the delivery.
      * @param cost         The cost of the delivery.
      * @param isDelivered  Delivery completion status.
+     * @param tag          Optional tag string.
      */
     @JsonCreator
     public JsonAdaptedDelivery(
@@ -44,7 +47,8 @@ public class JsonAdaptedDelivery {
             @JsonProperty("time") String time,
             @JsonProperty("remarks") String remarks,
             @JsonProperty("cost") Double cost,
-            @JsonProperty("isDelivered") Boolean isDelivered) {
+            @JsonProperty("isDelivered") Boolean isDelivered,
+            @JsonProperty("tag") String tag) {
         this.id = id;
         this.clientName = clientName;
         this.date = date;
@@ -52,6 +56,7 @@ public class JsonAdaptedDelivery {
         this.remarks = remarks;
         this.cost = cost;
         this.isDelivered = isDelivered;
+        this.tag = tag;
     }
 
     /**
@@ -66,6 +71,7 @@ public class JsonAdaptedDelivery {
         time = source.getDeliveryDate().getTimeString();
         remarks = source.getRemarks();
         cost = source.getCost();
+        tag = source.getTag();
         isDelivered = source.getStatus();
     }
 
@@ -108,7 +114,14 @@ public class JsonAdaptedDelivery {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "cost"));
         }
 
-        Delivery delivery = new Delivery(id, client, dateTime, remarks, cost);
+        String modelTag;
+        if (tag == null || tag.isBlank()) {
+            modelTag = null;
+        } else {
+            modelTag = tag.trim();
+        }
+
+        Delivery delivery = new Delivery(id, client, dateTime, remarks, cost, modelTag);
         if (Boolean.TRUE.equals(isDelivered)) {
             delivery.markAsDelivered();
         }
