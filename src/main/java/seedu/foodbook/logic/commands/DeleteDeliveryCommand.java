@@ -2,42 +2,50 @@ package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.List;
-
 import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.commons.util.ToStringBuilder;
-import seedu.foodbook.logic.Messages;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.Delivery;
 
+/**
+ * Deletes a delivery identified using its delivery ID from the address book.
+ */
 public class DeleteDeliveryCommand extends Command {
 
     public static final String COMMAND_WORD = "delete_delivery";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the delivery identified by the index number used in the displayed delivery list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+            + ": Deletes the delivery identified by its delivery ID.\n"
+            + "Parameters: DELIVERY_ID (must be a positive integer)\n"
+            + "Example: " + COMMAND_WORD + " 67";
 
     public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Delivery deleted.";
+    public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: No delivery found with id %1$d";
 
-    private final Index targetIndex;
+    private final Index deliveryId;
 
-    public DeleteDeliveryCommand(Index targetIndex) {
-        this.targetIndex = targetIndex;
+    /**
+     * Creates a DeleteDeliveryCommand to delete the delivery with the specified {@code deliveryId}.
+     *
+     * @param deliveryId The ID of the delivery to delete.
+     */
+    public DeleteDeliveryCommand(Index deliveryId) {
+        requireNonNull(deliveryId);
+        this.deliveryId = deliveryId;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Delivery> lastShownList = model.getFilteredDeliveryList();
 
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX);
-        }
+        // Find the delivery with the matching ID
+        Delivery deliveryToDelete = model.getFilteredDeliveryList().stream()
+                .filter(delivery -> delivery.getId().equals(deliveryId))
+                .findFirst()
+                .orElseThrow(() -> new CommandException(
+                        String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId)));
 
-        Delivery deliveryToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteDelivery(deliveryToDelete);
         return new CommandResult(MESSAGE_DELETE_DELIVERY_SUCCESS);
     }
@@ -47,17 +55,20 @@ public class DeleteDeliveryCommand extends Command {
         if (other == this) {
             return true;
         }
+
+        // instanceof handles nulls
         if (!(other instanceof DeleteDeliveryCommand)) {
             return false;
         }
-        DeleteDeliveryCommand otherCmd = (DeleteDeliveryCommand) other;
-        return targetIndex.equals(otherCmd.targetIndex);
+
+        DeleteDeliveryCommand otherDeleteDeliveryCommand = (DeleteDeliveryCommand) other;
+        return deliveryId.equals(otherDeleteDeliveryCommand.deliveryId);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("targetIndex", targetIndex)
+                .add("deliveryId", deliveryId)
                 .toString();
     }
 }
