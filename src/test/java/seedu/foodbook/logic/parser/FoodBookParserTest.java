@@ -83,7 +83,7 @@ public class FoodBookParserTest {
         // Test with delivery ID 67 (as per specification)
         DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
                 DeleteDeliveryCommand.COMMAND_WORD + " 67");
-        assertEquals(new DeleteDeliveryCommand(67), command);
+        assertEquals(new DeleteDeliveryCommand(Index.fromOneBased(67)), command);
     }
 
 
