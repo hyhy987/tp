@@ -2,7 +2,6 @@ package seedu.foodbook.logic.parser;
 
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 
@@ -25,7 +24,7 @@ public class DeleteDeliveryCommandParser implements Parser<DeleteDeliveryCommand
                         String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteDeliveryCommand.MESSAGE_USAGE));
             }
 
-            Integer deliveryId = ParserUtil.parseDeliveryId(trimmedArgs);  // ✅ Using it here!
+            Integer deliveryId = ParserUtil.parseDeliveryId(trimmedArgs);
             return new DeleteDeliveryCommand(deliveryId);
         } catch (ParseException pe) {
             throw new ParseException(
