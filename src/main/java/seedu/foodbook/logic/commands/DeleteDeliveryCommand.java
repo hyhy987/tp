@@ -9,25 +9,23 @@ import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
+import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
 
-/**
- * Deletes a person identified using it's displayed index from the food book.
- */
-public class DeleteCommand extends Command {
-
-    public static final String COMMAND_WORD = "delete_client";
+public class DeleteDeliveryCommand {
+    public static final String COMMAND_WORD = "delete_delivery";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the client identified by the index number used in the displayed person list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+            + ": Deletes the delivery identified by its delviery ID.\n"
+            + "Parameters: DELIVERY_ID (must be a positive integer)\n"
+            + "Example: " + COMMAND_WORD + " 67";
 
-    public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
+    public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Deleted Delivery: %1$s";
+    public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: No delivery found with id"
 
     private final Index targetIndex;
 
-    public DeleteCommand(Index targetIndex) {
+    public DeleteDeliveryCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -42,7 +40,7 @@ public class DeleteCommand extends Command {
 
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deletePerson(personToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)),
+        return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS, Messages.format(personToDelete)),
                 CommandResult.UiPanel.PERSONS);
     }
 
@@ -67,4 +65,5 @@ public class DeleteCommand extends Command {
                 .add("targetIndex", targetIndex)
                 .toString();
     }
+
 }
