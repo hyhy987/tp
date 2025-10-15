@@ -22,6 +22,8 @@ import seedu.foodbook.model.tag.Tag;
 public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_COST =
+            "Cost must be a non-negative number (e.g., 0, 3, 12.50).";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
@@ -124,6 +126,25 @@ public class ParserUtil {
     }
 
     /**
+     * Returns a trimmed tag string or {@code null} when input is null/blank.
+     * <p>No validation is performed; callers may impose their own policies.</p>
+     *
+     * @param raw tag text as entered by the user.
+     * @return trimmed tag, or {@code null} if empty.
+     */
+    public static String parseTagLoose(String raw) {
+        if (raw == null) {
+            return null;
+        }
+        String s = raw.trim();
+        if (s.isEmpty()) {
+            return null;
+        } else {
+            return s;
+        }
+    }
+
+    /**
      * Parses date and time strings into a {@code DateTime}.
      * Leading and trailing whitespaces will be trimmed from both inputs.
      *
@@ -149,22 +170,27 @@ public class ParserUtil {
      * Leading and trailing whitespaces will be trimmed.
      * The cost must be a non-negative number.
      *
-     * @param cost The cost string to parse (e.g., "50.00", "150").
+     * @param raw The cost string to parse (e.g., "50.00", "150").
      * @return A Double representing the parsed cost.
      * @throws ParseException If the given cost is not a valid non-negative number.
      * @throws NullPointerException If {@code cost} is null.
      */
-    public static Double parseCost(String cost) throws ParseException {
-        requireNonNull(cost);
-        String trimmedCost = cost.trim();
+    public static Double parseCost(String raw) throws ParseException {
+        if (raw == null) {
+            throw new ParseException(MESSAGE_INVALID_COST);
+        }
+        String s = raw.trim();
+        if (s.isEmpty()) {
+            throw new ParseException(MESSAGE_INVALID_COST);
+        }
         try {
-            Double parsedCost = Double.parseDouble(trimmedCost);
-            if (parsedCost < 0) {
-                throw new ParseException("Cost must be non-negative");
+            double value = Double.parseDouble(s);
+            if (Double.isNaN(value) || Double.isInfinite(value) || value < 0) {
+                throw new ParseException(MESSAGE_INVALID_COST);
             }
-            return parsedCost;
-        } catch (NumberFormatException e) {
-            throw new ParseException("Cost must be a valid number");
+            return value;
+        } catch (NumberFormatException ex) {
+            throw new ParseException(MESSAGE_INVALID_COST);
         }
     }
 

@@ -60,7 +60,8 @@ public class MarkCommand extends Command {
                 deliveryToMark.getClient(),
                 deliveryToMark.getDeliveryDate(),
                 deliveryToMark.getRemarks(),
-                deliveryToMark.getCost()
+                deliveryToMark.getCost(),
+                deliveryToMark.getTag()
         );
         markedDelivery.markAsDelivered();
 

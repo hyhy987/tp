@@ -21,6 +21,7 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML private Label datetime;
     @FXML private Label remarks;
     @FXML private Label cost;
+    @FXML private Label tagLabel;
     @FXML private Label delivered;
 
     /**
@@ -38,6 +39,34 @@ public class DeliveryCard extends UiPart<Region> {
         remarks.setText("Remarks: " + delivery.getRemarks());
         cost.setText("Cost: $" + delivery.getCost().toString());
         delivered.setText("Delivered: " + (delivery.getStatus() ? "True" : "False"));
+
+        String tag = delivery.getTag();
+        if (tag != null) {
+            tagLabel.setText(tag);
+
+            // Reset any previous styling before setting the new one
+            tagLabel.getStyleClass().removeAll("tag-personal", "tag-corporate", "tag-generic");
+
+            switch (delivery.getTagKind()) {
+            case PERSONAL:
+                tagLabel.getStyleClass().add("tag-personal");
+                break;
+            case CORPORATE:
+                tagLabel.getStyleClass().add("tag-corporate");
+                break;
+            default:
+                tagLabel.getStyleClass().add("tag-generic");
+                break;
+            }
+
+            // Show the pill and let layout allocate space for it
+            tagLabel.setManaged(true);
+            tagLabel.setVisible(true);
+        } else {
+            // Hide and remove from layout flow when there’s no tag
+            tagLabel.setManaged(false);
+            tagLabel.setVisible(false);
+        }
 
     }
 }

@@ -12,9 +12,11 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.NAME_DESC_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.foodbook.logic.commands.CommandTestUtil.REMARKS_DESC_AMY_DELIVERY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.REMARKS_DESC_BOB_DELIVERY;
+import static seedu.foodbook.logic.commands.CommandTestUtil.TAG_DESC_PERSONAL;
 import static seedu.foodbook.logic.commands.CommandTestUtil.TIME_DESC_AMY_DELIVERY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.TIME_DESC_BOB_DELIVERY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_NAME_BOB;
+import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_PERSONAL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
@@ -30,6 +32,7 @@ import seedu.foodbook.logic.Messages;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.testutil.DeliveryBuilder;
 
 public class AddDeliveryCommandParserTest {
     private AddDeliveryCommandParser parser = new AddDeliveryCommandParser();
@@ -105,6 +108,34 @@ public class AddDeliveryCommandParserTest {
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_TIME));
     }
 
+    @Test
+    public void parse_allFieldsPresentWithTag_success() {
+        Delivery expected = new DeliveryBuilder(BOB_DELIVERY)
+                .withTag(VALID_TAG_PERSONAL)
+                .build();
+        String userInput = PREAMBLE_WHITESPACE
+                + NAME_DESC_BOB
+                + DATE_DESC_BOB_DELIVERY
+                + TIME_DESC_BOB_DELIVERY
+                + REMARKS_DESC_BOB_DELIVERY
+                + COST_DESC_BOB_DELIVERY
+                + TAG_DESC_PERSONAL;
+        assertParseSuccess(parser, userInput, new AddDeliveryCommand(expected));
+    }
+
+    @Test
+    public void parse_noTag_success() {
+        Delivery expected = new DeliveryBuilder(BOB_DELIVERY)
+                .withTag(null)
+                .build();
+        String userInput = PREAMBLE_WHITESPACE
+                + NAME_DESC_BOB
+                + DATE_DESC_BOB_DELIVERY
+                + TIME_DESC_BOB_DELIVERY
+                + REMARKS_DESC_BOB_DELIVERY
+                + COST_DESC_BOB_DELIVERY;
+        assertParseSuccess(parser, userInput, new AddDeliveryCommand(expected));
+    }
     @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddDeliveryCommand.MESSAGE_USAGE);

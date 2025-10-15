@@ -107,7 +107,8 @@ public class EditClientCommand extends Command {
                             editedPerson, // <-- replace the old client details with new client details
                             d.getDeliveryDate(),
                             d.getRemarks(),
-                            d.getCost());
+                            d.getCost(),
+                            d.getTag());
                     model.setDelivery(d, updated); // replace in the model
                 });
 

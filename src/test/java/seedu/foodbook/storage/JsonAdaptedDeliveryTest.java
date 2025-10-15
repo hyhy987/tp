@@ -2,10 +2,7 @@ package seedu.foodbook.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,61 +10,129 @@ import seedu.foodbook.commons.exceptions.IllegalValueException;
 import seedu.foodbook.model.FoodBook;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
-import seedu.foodbook.model.person.Address;
-import seedu.foodbook.model.person.Email;
-import seedu.foodbook.model.person.Name;
-import seedu.foodbook.model.person.Person;
-import seedu.foodbook.model.person.Phone;
-import seedu.foodbook.model.tag.Tag;
+import seedu.foodbook.testutil.TypicalPersons;
 
 public class JsonAdaptedDeliveryTest {
 
-    private static final int VALID_ID = 1;
-    private static final String VALID_NAME = "Alice Yeoh";
-    private static final String VALID_DATE = "05/10/2025";
-    private static final String VALID_TIME = "0930";
-    private static final String VALID_REMARKS = "Breakfast order";
-    private static final Double VALID_COST = 30.50;
-    private static final Boolean VALID_STATUS = false;
+    private static final String INVALID_CLIENT_NAME = "R@chel";
+    private static final String INVALID_DATE = "32/12/2026"; // Invalid day
+    private static final String INVALID_TIME = "2500"; // Invalid hour
 
-    /**
-     * Helper to create a dummy Person matching VALID_NAME.
-     */
-    private Person createDummyClient() {
-        Name name = new Name(VALID_NAME);
-        Phone phone = new Phone("91234567");
-        Email email = new Email("alice@example.com");
-        Address address = new Address("123 Orchard Road");
-        Set<Tag> emptyTags = new HashSet<>(Collections.emptySet());
-        return new Person(name, phone, email, address, emptyTags);
-    }
+    // Use a fixed future date to ensure tests remain valid over time.
+    private static final String VALID_FUTURE_DATE = "01/01/2027";
+    private static final String VALID_FUTURE_TIME = "1200";
+    private static final DateTime VALID_FUTURE_DATETIME = new DateTime(VALID_FUTURE_DATE, VALID_FUTURE_TIME);
 
     @Test
     public void toModelType_validDeliveryDetails_returnsDelivery() throws Exception {
-        Person dummyClient = createDummyClient();
-        DateTime dt = new DateTime(VALID_DATE, VALID_TIME);
-        Delivery source = new Delivery(VALID_ID, dummyClient, dt, VALID_REMARKS, VALID_COST);
+        // Create a test delivery object with a future date
+        Delivery testDelivery = new Delivery(ALICE_DELIVERY.getId(), ALICE_DELIVERY.getClient(),
+                VALID_FUTURE_DATETIME, ALICE_DELIVERY.getRemarks(), ALICE_DELIVERY.getCost(), ALICE_DELIVERY.getTag());
+        JsonAdaptedDelivery adaptedDelivery = new JsonAdaptedDelivery(testDelivery);
 
-        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(source);
-
-        // Use FoodBook for lookup
         FoodBook foodBook = new FoodBook();
-        foodBook.addPerson(dummyClient);
-
-        Delivery model = adapted.toModelType(foodBook);
-        assertEquals(source.getId(), model.getId());
-        assertEquals(source.getDeliveryDate(), model.getDeliveryDate());
-        assertEquals(source.getRemarks(), model.getRemarks());
-        assertEquals(source.getCost(), model.getCost());
-        assertEquals(source.getStatus(), model.getStatus());
+        foodBook.addPerson(TypicalPersons.ALICE);
+        assertEquals(testDelivery, adaptedDelivery.toModelType(foodBook));
     }
 
     @Test
-    public void toModelType_missingField_throwsIllegalValueException() throws Exception {
-        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(
-                null, VALID_NAME, VALID_DATE, VALID_TIME, VALID_REMARKS, VALID_COST, VALID_STATUS);
+    public void toModelType_isDeliveredTrue_returnsDeliveredDelivery() throws Exception {
+        Delivery testDelivery = new Delivery(ALICE_DELIVERY.getId(), ALICE_DELIVERY.getClient(),
+                VALID_FUTURE_DATETIME, ALICE_DELIVERY.getRemarks(), ALICE_DELIVERY.getCost(), ALICE_DELIVERY.getTag());
+        testDelivery.markAsDelivered();
+        JsonAdaptedDelivery adaptedDelivery = new JsonAdaptedDelivery(testDelivery);
 
         FoodBook foodBook = new FoodBook();
-        assertThrows(IllegalValueException.class, () -> adapted.toModelType(foodBook));
+        foodBook.addPerson(TypicalPersons.ALICE);
+        assertEquals(testDelivery, adaptedDelivery.toModelType(foodBook));
+    }
+
+    @Test
+    public void toModelType_nullId_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(null, TypicalPersons.ALICE.getName().fullName,
+                VALID_FUTURE_DATE, VALID_FUTURE_TIME, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "id");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nullClientName_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, null,
+                VALID_FUTURE_DATE, VALID_FUTURE_TIME, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "clientName");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nonExistentClient_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, INVALID_CLIENT_NAME,
+                VALID_FUTURE_DATE, VALID_FUTURE_TIME, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook(); // Client does not exist in this foodbook
+        String expectedMessage = "Client not found: " + INVALID_CLIENT_NAME;
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nullDate_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, TypicalPersons.ALICE.getName().fullName,
+                null, VALID_FUTURE_TIME, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "date");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nullTime_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, TypicalPersons.ALICE.getName().fullName,
+                VALID_FUTURE_DATE, null, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "time");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_invalidDateTimeFormat_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, TypicalPersons.ALICE.getName().fullName,
+                INVALID_DATE, INVALID_TIME, "Remarks", 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = DateTime.MESSAGE_CONSTRAINTS;
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nullRemarks_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, TypicalPersons.ALICE.getName().fullName,
+                VALID_FUTURE_DATE, VALID_FUTURE_TIME, null, 10.0, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "remarks");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    @Test
+    public void toModelType_nullCost_throwsIllegalValueException() {
+        JsonAdaptedDelivery adapted = new JsonAdaptedDelivery(0, TypicalPersons.ALICE.getName().fullName,
+                VALID_FUTURE_DATE, VALID_FUTURE_TIME, "Remarks", null, false, "Tag");
+        FoodBook foodBook = new FoodBook();
+        foodBook.addPerson(TypicalPersons.ALICE);
+        String expectedMessage = String.format(JsonAdaptedDelivery.MISSING_FIELD_MESSAGE_FORMAT, "cost");
+        assertThrowsWithMessage(adapted, foodBook, expectedMessage);
+    }
+
+    /**
+     * Helper method to assert that the toModelType() method throws an IllegalValueException
+     * with the correct message.
+     */
+    private void assertThrowsWithMessage(JsonAdaptedDelivery adaptedDelivery,
+                                         FoodBook foodBook, String expectedMessage) {
+        IllegalValueException exception = assertThrows(IllegalValueException.class, () ->
+                adaptedDelivery.toModelType(foodBook));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

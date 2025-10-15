@@ -60,7 +60,8 @@ public class UnmarkCommand extends Command {
                 deliveryToUnmark.getClient(),
                 deliveryToUnmark.getDeliveryDate(),
                 deliveryToUnmark.getRemarks(),
-                deliveryToUnmark.getCost()
+                deliveryToUnmark.getCost(),
+                deliveryToUnmark.getTag()
         );
         unmarkedDelivery.unmarkAsDelivered();
 

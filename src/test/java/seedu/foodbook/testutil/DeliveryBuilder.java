@@ -19,12 +19,14 @@ public class DeliveryBuilder {
 
     public static final String DEFAULT_REMARKS = "NIL";
     public static final Double DEFAULT_COST = 0.00;
+    public static final String DEFAULT_TAG = null;
 
     private int id;
     private Person client;
     private DateTime datetime;
     private String remarks;
     private Double cost;
+    private String tag;
 
     private boolean isDelivered;
 
@@ -37,6 +39,7 @@ public class DeliveryBuilder {
         datetime = new DateTime(DEFAULT_DATESTRING, DEFAULT_TIMESTRING);
         remarks = DEFAULT_REMARKS;
         cost = DEFAULT_COST;
+        tag = DEFAULT_TAG;
 
         isDelivered = false;
     }
@@ -50,6 +53,7 @@ public class DeliveryBuilder {
         datetime = deliveryToCopy.getDeliveryDate();
         remarks = deliveryToCopy.getRemarks();
         cost = deliveryToCopy.getCost();
+        tag = deliveryToCopy.getTag();
 
         isDelivered = deliveryToCopy.getStatus();
     }
@@ -95,6 +99,14 @@ public class DeliveryBuilder {
     }
 
     /**
+     * Sets the {@code tag} of the {@code Delivery} that we are building.
+     */
+    public DeliveryBuilder withTag(String tag) {
+        this.tag = tag;
+        return this;
+    }
+
+    /**
      * Sets the {@code isDelivered} status of the {@code Delivery} that we are building to be true.
      */
     public DeliveryBuilder asDelivered() {
@@ -107,7 +119,7 @@ public class DeliveryBuilder {
      * @return The constructed delivery object.
      */
     public Delivery build() {
-        Delivery delivery = new Delivery(id, client, datetime, remarks, cost);
+        Delivery delivery = new Delivery(id, client, datetime, remarks, cost, tag);
 
         if (this.isDelivered) {
             delivery.markAsDelivered();

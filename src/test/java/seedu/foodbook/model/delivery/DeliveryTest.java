@@ -3,91 +3,122 @@ package seedu.foodbook.model.delivery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.foodbook.model.delivery.TagKind.CORPORATE;
+import static seedu.foodbook.model.delivery.TagKind.OTHER;
+import static seedu.foodbook.model.delivery.TagKind.PERSONAL;
+import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
+import static seedu.foodbook.testutil.TypicalDeliveries.BENSON_DELIVERY;
+import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
+import static seedu.foodbook.testutil.TypicalDeliveries.DELIVERY_SAME_ID_AS_ALICE;
+import static seedu.foodbook.testutil.TypicalDeliveries.ELLE_DELIVERY;
+import static seedu.foodbook.testutil.TypicalPersons.ALICE;
+import static seedu.foodbook.testutil.TypicalPersons.CARL;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.model.person.Address;
-import seedu.foodbook.model.person.Email;
-import seedu.foodbook.model.person.Name;
-import seedu.foodbook.model.person.Person;
-import seedu.foodbook.model.person.Phone;
-import seedu.foodbook.model.tag.Tag;
-
 public class DeliveryTest {
-
-    private Person clientA;
-    private Person clientB;
-    private DateTime dt1;
-    private DateTime dt2;
-    private Delivery delivery1;
-    private Delivery delivery2;
-    private Delivery delivery3;
-
-    @BeforeEach
-    public void setUp() {
-        // create dummy clients
-        Name nameA = new Name("Alice Yeoh");
-        Phone phoneA = new Phone("91234567");
-        Email emailA = new Email("alice@example.com");
-        Address addressA = new Address("123 Orchard Road");
-        Set<Tag> tagsA = new HashSet<>(Collections.emptySet());
-        clientA = new Person(nameA, phoneA, emailA, addressA, tagsA);
-
-        Name nameB = new Name("Bob Tan");
-        Phone phoneB = new Phone("92345678");
-        Email emailB = new Email("bob@example.com");
-        Address addressB = new Address("456 Bukit Timah");
-        Set<Tag> tagsB = new HashSet<>(Collections.emptySet());
-        clientB = new Person(nameB, phoneB, emailB, addressB, tagsB);
-
-        dt1 = new DateTime("01/01/2025", "1000");
-        dt2 = new DateTime("02/01/2025", "1100");
-
-        delivery1 = new Delivery(1, clientA, dt1, "Order 1", 25.0);
-        delivery2 = new Delivery(1, clientA, dt1, "Order 1", 25.0);
-        delivery3 = new Delivery(2, clientB, dt2, "Order 2", 30.0);
-    }
 
     @Test
     public void equals_sameId_returnsTrue() {
         // Same id => equal, regardless of other fields
-        assertTrue(delivery1.equals(delivery2));
+        assertTrue(ALICE_DELIVERY.equals(DELIVERY_SAME_ID_AS_ALICE));
     }
 
     @Test
     public void equals_differentId_returnsFalse() {
-        assertFalse(delivery1.equals(delivery3));
+        assertFalse(ALICE_DELIVERY.equals(BENSON_DELIVERY));
+    }
+
+    @Test
+    public void equals_sameObject_returnsTrue() {
+        assertTrue(ALICE_DELIVERY.equals(ALICE_DELIVERY));
+    }
+
+    @Test
+    public void equals_null_returnsFalse() {
+        assertFalse(ALICE_DELIVERY.equals(null));
+    }
+
+    @Test
+    public void equals_differentType_returnsFalse() {
+        assertFalse(ALICE_DELIVERY.equals("not a delivery"));
+    }
+
+    @Test
+    public void getTagKind_aliceDelivery_returnsPersonal() {
+        assertEquals(PERSONAL, ALICE_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_bensonDelivery_returnsCorporate() {
+        assertEquals(CORPORATE, BENSON_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_carlDelivery_noTag() {
+        assertEquals(OTHER, CARL_DELIVERY.getTagKind());
+    }
+
+    @Test
+    public void getTagKind_ellieDelivery_otherTag() {
+        assertEquals(OTHER, ELLE_DELIVERY.getTagKind());
     }
 
     @Test
     public void getId_gettersReturnExpected() {
-        assertEquals(1, delivery1.getId());
-        assertEquals(clientA, delivery1.getClient());
-        assertEquals(dt1, delivery1.getDeliveryDate());
-        assertEquals("Order 1", delivery1.getRemarks());
-        assertEquals(25.0, delivery1.getCost());
+        assertEquals(0, ALICE_DELIVERY.getId());
+        assertEquals(ALICE, ALICE_DELIVERY.getClient());
+        assertEquals("NIL", ALICE_DELIVERY.getRemarks());
+        assertEquals(10.0, ALICE_DELIVERY.getCost());
+        assertEquals("Personal", ALICE_DELIVERY.getTag());
+    }
+
+    @Test
+    public void getters_deliveryWithoutTag_returnsExpected() {
+        assertEquals(2, CARL_DELIVERY.getId());
+        assertEquals(CARL, CARL_DELIVERY.getClient());
+        assertEquals("NIL", CARL_DELIVERY.getRemarks());
+        assertEquals(30.00, CARL_DELIVERY.getCost());
+        // Test default tag behavior if applicable
     }
 
     @Test
     public void markAndUnmark_statusTransitions() {
+        // Use a fresh delivery for this test
+        Delivery testDelivery = new Delivery(999,
+                ALICE,
+                new DateTime("01/01/2025", "1000"),
+                "Test order",
+                10.0, null);
+
         // Initially not delivered
-        assertFalse(delivery1.getStatus());
+        assertFalse(testDelivery.getStatus());
 
-        delivery1.markAsDelivered();
-        assertTrue(delivery1.getStatus());
+        testDelivery.markAsDelivered();
+        assertTrue(testDelivery.getStatus());
 
-        delivery1.unmarkAsDelivered();
-        assertFalse(delivery1.getStatus());
+        testDelivery.unmarkAsDelivered();
+        assertFalse(testDelivery.getStatus());
     }
 
     @Test
     public void hashCode_sameIdSameHash() {
-        assertEquals(delivery1.hashCode(), delivery2.hashCode());
+        assertEquals(ALICE_DELIVERY.hashCode(), DELIVERY_SAME_ID_AS_ALICE.hashCode());
+    }
+
+    @Test
+    public void hashCode_differentIdDifferentHash() {
+        assertFalse(ALICE_DELIVERY.hashCode() == BENSON_DELIVERY.hashCode());
+    }
+
+    @Test
+    public void toString_containsExpectedFields() {
+        String result = ALICE_DELIVERY.toString();
+        assertTrue(result.contains("0")); // ID
+        assertTrue(result.contains("Alice")); // Client name
+        assertTrue(result.contains("NIL")); // Remarks
+        assertTrue(result.contains("10.0")); // Cost
+        assertTrue(result.contains("Personal")); // Tag
     }
 
 }

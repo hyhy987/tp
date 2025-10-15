@@ -3,6 +3,7 @@ package seedu.foodbook.logic.parser;
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
@@ -22,7 +23,7 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
      * Parses the given {@code String} of arguments in the context of the AddDeliveryCommand
      * and returns an AddDeliveryCommand object for execution.
      *
-     * Expected format: add_delivery n/CLIENT_NAME d/DATE tm/TIME r/REMARKS c/COST
+     * Expected format: add_delivery n/CLIENT_NAME d/DATE tm/TIME r/REMARKS c/COST t/tags
      *
      * @param args The string containing user input arguments.
      * @return An AddDeliveryCommand object ready for execution.
@@ -32,7 +33,7 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
     public AddDeliveryCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                        PREFIX_REMARKS, PREFIX_COST);
+                        PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         // Check that all required prefixes are present and no preamble exists
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
@@ -44,7 +45,7 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
 
         // Ensure no duplicate prefixes
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                PREFIX_REMARKS, PREFIX_COST);
+                PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         // Parse individual components
         String clientName = argMultimap.getValue(PREFIX_NAME).get().trim();
@@ -53,8 +54,12 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
         DateTime dateTime = ParserUtil.parseDateTime(date, time);
         String remarks = ParserUtil.parseRemarks(argMultimap.getValue(PREFIX_REMARKS).get());
         Double cost = ParserUtil.parseCost(argMultimap.getValue(PREFIX_COST).get());
+        String tag = argMultimap.getValue(PREFIX_DELIVERY_TAG)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .orElse(null);
 
-        return new AddDeliveryCommand(clientName, dateTime, remarks, cost);
+        return new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag);
     }
 
     /**

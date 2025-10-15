@@ -1,6 +1,7 @@
 package seedu.foodbook.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.foodbook.testutil.Assert.assertThrows;
@@ -148,6 +149,90 @@ public class ParserUtilTest {
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
     }
 
+
+    @Test
+    public void parseCost_validInput_success() throws Exception {
+        assertEquals(10.0, ParserUtil.parseCost("10"));
+        assertEquals(10.5, ParserUtil.parseCost(" 10.5 "));
+    }
+
+    @Test
+    public void parseCost_invalidInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("ten"));
+    }
+
+    @Test
+    public void parseCost_nullInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("null"));
+    }
+
+    @Test
+    public void parseCost_emptyInput_throwsException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(""));
+    }
+
+    @Test
+    public void parseCost_empty_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(""));
+    }
+
+    @Test
+    public void parseCost_whitespaceOnly_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("   "));
+    }
+
+    @Test
+    public void parseCost_nan_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("NaN"));
+    }
+
+    @Test
+    public void parseCost_infinite_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("Infinity"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-Infinity"));
+    }
+
+    @Test
+    public void parseCost_negative_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-0.01"));
+    }
+
+    @Test
+    public void parseCost_intValue_returnsDouble() throws Exception {
+        assertEquals(0.0, ParserUtil.parseCost("0"));
+        assertEquals(42.0, ParserUtil.parseCost("42"));
+    }
+
+    @Test
+    public void parseCost_decimalValue_returnsDouble() throws Exception {
+        assertEquals(3.14, ParserUtil.parseCost("3.14"));
+        assertEquals(2.5, ParserUtil.parseCost(" 2.50 "));
+    }
+
+    // parseRemarks tests
+    @Test
+    public void parseRemarks_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRemarks(null));
+    }
+
+    @Test
+    public void parseRemarks_empty_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRemarks(""));
+    }
+
+    @Test
+    public void parseRemarks_whitespace_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRemarks("   "));
+    }
+
+    @Test
+    public void parseRemarks_valid_returnsTrimmed() throws Exception {
+        assertEquals("Note", ParserUtil.parseRemarks("Note"));
+        assertEquals("Leading and trailing trimmed",
+                ParserUtil.parseRemarks("  Leading and trailing trimmed  "));
+    }
+
     @Test
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
@@ -231,4 +316,27 @@ public class ParserUtilTest {
         // large valid integer
         assertEquals(Integer.valueOf(999999), ParserUtil.parseDeliveryId("999999"));
     }
+
+    // parseTagLoose
+    @Test
+    public void parseTagLoose_nullInput_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose(null));
+    }
+
+    @Test
+    public void parseTagLoose_empty_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose(""));
+    }
+
+    @Test
+    public void parseTagLoose_whitespace_returnsNull() {
+        assertNull(ParserUtil.parseTagLoose("   "));
+    }
+
+    @Test
+    public void parseTagLoose_validInput_returnsTrimmed() {
+        assertEquals("Personal", ParserUtil.parseTagLoose("Personal"));
+        assertEquals("Work", ParserUtil.parseTagLoose("  Work  "));
+    }
+
 }

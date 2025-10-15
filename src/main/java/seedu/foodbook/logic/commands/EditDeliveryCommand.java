@@ -125,7 +125,7 @@ public class EditDeliveryCommand extends Command {
         boolean wasDelivered = deliveryToEdit.getStatus();
 
         Delivery editedDelivery = new Delivery(deliveryToEdit.getId(), updatedClient,
-                updatedDateTime, updatedRemarks, updatedCost);
+                updatedDateTime, updatedRemarks, updatedCost, null);
 
         if (wasDelivered) {
             editedDelivery.markAsDelivered();

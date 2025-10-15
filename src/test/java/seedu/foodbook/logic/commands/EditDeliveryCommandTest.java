@@ -62,7 +62,7 @@ public class EditDeliveryCommandTest {
                         .findFirst().orElseThrow(),
                 new DateTime("21/10/2029", "1830"),
                 "Updated remarks",
-                88.80
+                88.80, null
         );
         // apply on expected model
         expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
@@ -104,7 +104,7 @@ public class EditDeliveryCommandTest {
                         .filter(d -> d.getId().equals(target.getId()))
                         .findFirst().orElseThrow().getDeliveryDate(),
                 "Leave with guard",
-                12.34
+                12.34, null
         );
         expectedModel.setDelivery(
                 expectedModel.getFilteredDeliveryList().stream()
@@ -208,7 +208,7 @@ public class EditDeliveryCommandTest {
                 before.getClient(),
                 before.getDeliveryDate(),
                 "Post-filter edit OK",
-                before.getCost());
+                before.getCost(), null);
         expectedModel.setDelivery(before, edited);
         expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
 
