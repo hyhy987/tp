@@ -12,10 +12,12 @@ import static seedu.foodbook.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
 import seedu.foodbook.logic.commands.DeleteCommand;
+import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 import seedu.foodbook.logic.commands.EditClientCommand;
 import seedu.foodbook.logic.commands.ExitCommand;
 import seedu.foodbook.logic.commands.FindClientCommand;
@@ -75,6 +77,15 @@ public class FoodBookParserTest {
                 DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
     }
+
+    @Test
+    public void parseCommand_deleteDelivery() throws Exception {
+        // Test with delivery ID 67 (as per specification)
+        DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
+                DeleteDeliveryCommand.COMMAND_WORD + " 67");
+        assertEquals(new DeleteDeliveryCommand(Index.fromOneBased(67)), command);
+    }
+
 
     @Test
     public void parseCommand_edit() throws Exception {
