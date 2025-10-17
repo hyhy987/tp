@@ -22,6 +22,7 @@ import seedu.foodbook.logic.commands.FindDeliveryCommand;
 import seedu.foodbook.logic.commands.HelpCommand;
 import seedu.foodbook.logic.commands.ListCommand;
 import seedu.foodbook.logic.commands.ListDeliveryCommand;
+import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
 import seedu.foodbook.logic.commands.UnmarkCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
@@ -104,6 +105,9 @@ public class FoodBookParser {
 
         case UnmarkCommand.COMMAND_WORD:
             return new UnmarkCommandParser().parse(arguments);
+
+        case ListRevenueCommand.COMMAND_WORD:
+            return new ListRevenueCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);
