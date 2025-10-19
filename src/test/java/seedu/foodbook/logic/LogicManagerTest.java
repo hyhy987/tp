@@ -2,7 +2,7 @@ package seedu.foodbook.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
+import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_NAME;
 import static seedu.foodbook.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -62,8 +62,8 @@ public class LogicManagerTest {
 
     @Test
     public void execute_commandExecutionError_throwsCommandException() {
-        String deleteCommand = "delete_client 9";
-        assertCommandException(deleteCommand, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        String deleteCommand = "delete_client Alex Chan";
+        assertCommandException(deleteCommand, MESSAGE_INVALID_PERSON_DISPLAYED_NAME);
     }
 
     @Test

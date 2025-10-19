@@ -1,6 +1,7 @@
 package seedu.foodbook.ui;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -23,6 +24,7 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML private Label cost;
     @FXML private Label tagLabel;
     @FXML private Label delivered;
+    @FXML private CheckBox deliveredCheckBox;
 
     /**
      * Creates a {@code DeliveryCard} with the given {@code Delivery} and index to display.
@@ -30,7 +32,6 @@ public class DeliveryCard extends UiPart<Region> {
     public DeliveryCard(Delivery delivery, int displayedIndex) {
         super(FXML);
         this.delivery = delivery;
-        id.setText(displayedIndex + ". ");
         client.setText(delivery.getClient().getName().toString());
 
         deliveryId.setText("Delivery ID: " + delivery.getId());
@@ -38,7 +39,7 @@ public class DeliveryCard extends UiPart<Region> {
                 + "\n" + "Delivery Time: " + delivery.getDeliveryDate().getTimeString());
         remarks.setText("Remarks: " + delivery.getRemarks());
         cost.setText("Cost: $" + delivery.getCost().toString());
-        delivered.setText("Delivered: " + (delivery.getStatus() ? "True" : "False"));
+        deliveredCheckBox.setSelected(delivery.getStatus());
 
         String tag = delivery.getTag();
         if (tag != null) {
