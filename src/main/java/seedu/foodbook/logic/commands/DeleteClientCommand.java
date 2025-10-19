@@ -38,6 +38,7 @@ public class DeleteClientCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         List<Person> lastShownList = model.getFilteredPersonList();
 
         Person target = lastShownList.stream()
@@ -49,7 +50,7 @@ public class DeleteClientCommand extends Command {
 
 
         //deleting all deliveries from FoodBook associated with the deleted client
-        List<Delivery> toDelete = model.getFoodBook().getDeliveryList().stream()
+        List<Delivery> toDelete = model.getFilteredDeliveryList().stream()
                 .filter(d -> d.getClient().getName().equals(toBeDeleted))
                 .collect(java.util.stream.Collectors.toList());
 
