@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.CheckBox?>
 <HBox id="cardPane" fx:id="cardPane"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1">
@@ -35,7 +36,8 @@
             <Label fx:id="datetime"   styleClass="cell_small_label"/>
             <Label fx:id="remarks"    styleClass="cell_small_label"/>
             <Label fx:id="cost"       styleClass="cell_small_label"/>
-            <Label fx:id="delivered"  styleClass="cell_small_label"/>
+            <Label fx:id="deliveredLabel" text="Delivered:" />
+            <CheckBox fx:id="deliveredCheckBox" disable="true" />
             <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-pill"/>
         </VBox>
     </GridPane>
