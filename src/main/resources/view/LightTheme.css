@@ -1,161 +1,180 @@
-/* =============================
-   LightTheme.css — place in /src/main/resources/view/
-   Load via Scene#getStylesheets or FXML <stylesheets>.
-   ============================= */
-
 /* ---- Palette (looked-up colors) ---- */
 .root {
-    -color-bg:          #F5F7FB;   /* subtle blue background */
-    -color-card:        #FFFFFF;
-    -color-card-alt:    #F2F6FF;   /* lightly tinted surface */
-    -color-fg:          #2A2E37;
-    -color-fg-muted:    #5B6270;
+    /* Your palette */
+    -theme-blue:  #80A1BA;  /* primary */
+    -theme-teal:  #91C4C3;  /* secondary */
+    -theme-mint:  #B4DEBD;  /* success/mint */
+    -theme-cream: #FFF7DD;  /* warm background */
+
+    /* Surfaces */
+    -color-bg:          -theme-cream;            /* page background */
+    -color-card:        #FFFFFF;                 /* cards */
+    -color-card-alt:    #FFF7E6;                 /* slightly tinted card */
+
+    /* Text */
+    -color-fg:          #1F2937;
+    -color-fg-muted:    #556070;
     -color-fg-weak:     #8A93A5;
 
-    -color-accent:      #4C8BF5;   /* primary blue */
-    -color-accent-weak: #DCE8FF;   /* stronger pastel */
-    -color-border:      rgba(24, 32, 56, 0.12);
-    -color-shadow:      rgba(24, 32, 56, 0.14);
+    /* Accents */
+    -color-accent:      -theme-blue;             /* primary */
+    -color-accent-weak: #D9E5EF;                 /* soft blue, from #80A1BA */
 
-    -color-success:     #23A26D;
-    -color-warning:     #F59E0B;
-    -color-danger:      #E23E57;
+    /* Tints derived from your palette */
+    -color-tint-blue:   #E6EFF6;                 /* blue-ish bubble */
+    -color-tint-teal:   #E8F6F5;                 /* teal-ish bubble */
+    -color-tint-mint:   #EEF9F1;                 /* mint-ish bubble */
+    -color-tint-cream:  #FFF3D6;                 /* warm bubble */
 
-    /* extra pastel helpers */
-    -color-tint-1: #EEF4FF;  /* blue-ish */
-    -color-tint-2: #F7FFF3;  /* green-ish */
-    -color-tint-3: #FFF7EC;  /* orange-ish */
+    /* Semantics mapped to your colors */
+    -color-success:      #2AA66F;                /* deeper mint border */
+    -color-success-weak: -theme-mint;            /* success fill */
+    -color-warning:      #D78E00;                /* amber that fits cream */
+    -color-warning-weak: #FFECC6;
+    -color-danger:       #D65A6E;                /* muted rose */
+    -color-danger-weak:  #FFE0E6;
+
+    /* Lines & depth */
+    -color-border:      rgba(31, 41, 55, 0.12);
+    -color-shadow:      rgba(31, 41, 55, 0.14);
 }
 
-/* ---- App background & typography ---- */
+/* ---- Page background & typography ---- */
 .root {
     -fx-background-color: -color-bg;
-    -fx-font-smoothing-type: lcd;
-    -fx-text-fill: -color-fg;
     -fx-font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -fx-font-size: 12.5pt;
+    -fx-text-fill: -color-fg;
+    -fx-font-smoothing-type: lcd;
 }
-
 .label { -fx-text-fill: -color-fg; }
 
-/* ---- Top bars / status / command/results panes ---- */
-.menu-bar, .tool-bar, .status-bar,
-.commandBoxPlaceholder, .resultDisplay {
-    -fx-background-color: -color-tint-1;   /* visible light tint */
-    -fx-background-insets: 0;
+/* ---- App bars & info panes ---- */
+.menu-bar, .tool-bar {
+    -fx-background-color: linear-gradient(
+        to right,
+        #F4FAFF 0%,
+        -color-tint-teal 45%,
+        -color-tint-cream 100%
+    );
     -fx-border-color: -color-border;
-    -fx-border-width: 0 0 1 0;             /* bottom hairline */
+    -fx-border-width: 0 0 1 0;
+}
+.status-bar, .commandBoxPlaceholder, .resultDisplay {
+    -fx-background-color: -color-tint-cream;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 1 0;
 }
 
-/* ---- Tabs (if any) ---- */
+/* ---- Generic pane with border (matches your FXML styleClass) ---- */
+.pane-with-border {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 16;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(128,161,186,0.25), 10, 0.22, 0, 3);
+}
+
+/* ---- Tabs ---- */
 .tab-pane, .TabPane {
     -fx-background-color: -color-card;
     -fx-border-color: -color-border;
     -fx-border-width: 0 0 1 0;
 }
+.tab:selected { -fx-background-color: -color-accent-weak; }
 
-/* ---- List & cards ---- */
-.list-view, .list-cell, .scroll-pane, .scroll-pane .viewport {
-    -fx-background-color: transparent;
-}
+/* ---- Lists & cards ---- */
+.list-view, .scroll-pane, .scroll-pane .viewport { -fx-background-color: transparent; }
 
 .list-cell:filled {
-    -fx-background-color: -color-card-alt; /* tinted card */
-    -fx-background-radius: 14;
-    -fx-padding: 8 10 8 10;
-    -fx-border-color: -color-border;
-    -fx-border-radius: 14;
-    -fx-background-insets: 0;
-    -fx-effect: dropshadow(gaussian, -color-shadow, 8, 0.20, 0, 2);
+    -fx-background-color: transparent; /* remove list-cell gradient */
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-padding: 10 12;                /* keep spacing around the card */
+    -fx-effect: null;
+}
+.list-cell:filled:hover {
+    -fx-background-color: -color-tint-teal;
+    -fx-border-color: derive(-color-accent, -25%);
+}
+.list-cell:filled:selected {
+    -fx-background-color: linear-gradient(to bottom, #D3E2EE, #CDE6E5); /* blue→teal */
+    -fx-border-color: derive(-color-accent, -35%);
 }
 
-.list-cell:filled:selected, .list-cell:filled:hover {
-    -fx-background-color: -color-accent-weak;
-    -fx-border-color: derive(-color-accent, -30%);
-}
-
-/* ---- Generic card container (common in AB-3 forks) ---- */
+/* Common card wrapper (AB-3 style forks) */
 .card-pane, .card, .person-panel, .delivery-card {
     -fx-background-color: -color-card;
-    -fx-background-radius: 16;
+    -fx-background-radius: 18;
     -fx-border-color: -color-border;
-    -fx-border-radius: 16;
+    -fx-border-radius: 18;
     -fx-padding: 12 14;
-    -fx-effect: dropshadow(gaussian, -color-shadow, 10, 0.22, 0, 3);
+    -fx-effect: dropshadow(gaussian, -color-shadow, 12, 0.24, 0, 4);
 }
 
 /* ---- Bubble labels ---- */
 .bubble {
     -fx-background-color:
-        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
-        -color-tint-1;                 /* subtle visible tint */
-    -fx-background-radius: 16;
-    -fx-padding: 6 12;
+        linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)),
+        -color-tint-teal;                            /* default = teal-ish */
+    -fx-background-radius: 18;
     -fx-border-color: -color-border;
-    -fx-border-radius: 16;
+    -fx-border-radius: 18;
+    -fx-padding: 6 12;
     -fx-text-fill: -color-fg;
     -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
 }
 .bubble.small {
     -fx-font-size: 11pt;
     -fx-padding: 4 10;
-    -fx-background-radius: 14;
-    -fx-border-radius: 14;
-}
-/* semantic variants */
-.bubble.accent  { -fx-background-color: -color-accent-weak; -fx-border-color: derive(-color-accent, -25%); }
-.bubble.success { -fx-background-color: rgba(35,162,109,0.14); -fx-border-color: #23A26D; }
-.bubble.warning { -fx-background-color: rgba(245,158,11,0.16); -fx-border-color: #F59E0B; }
-.bubble.danger  { -fx-background-color: rgba(226,62,87,0.14);  -fx-border-color: #E23E57; }
-
-/* ---- FlowPane tag container bubble ---- */
-.tag-container {
-    -fx-background-color:
-        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
-        -color-tint-1;   /* pale blue bubble around the chips */
     -fx-background-radius: 16;
-    -fx-border-color: -color-border;
     -fx-border-radius: 16;
-    -fx-padding: 6 8;
-    -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
 }
-.tag-container.accent {
-    -fx-background-color: -color-accent-weak;
-    -fx-border-color: derive(-color-accent, -25%);
-}
+/* Alternate tints you can combine via styleClass in FXML */
+.bubble.blue  { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-blue; }
+.bubble.mint  { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-mint; }
+.bubble.cream { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-cream; }
+.bubble.accent  { -fx-background-color: -color-accent-weak; -fx-border-color: derive(-color-accent, -25%); }
+.bubble.success { -fx-background-color: -color-success-weak; -fx-border-color: -color-success; }
+.bubble.warning { -fx-background-color: -color-warning-weak; -fx-border-color: -color-warning; }
+.bubble.danger  { -fx-background-color: -color-danger-weak;  -fx-border-color: -color-danger; }
 
-/* ---- Tag chips ---- */
-.tag, .chip, .flow-pane .label.tagLabel {
-    -fx-background-color: -color-accent-weak;
-    -fx-text-fill: -color-fg;
-    -fx-background-radius: 999;
-    -fx-padding: 2 10;
+/* ---- TAGS: separate bubbles per tag with NO backend changes ---- */
+/* Keep FlowPane neutral (no giant bubble) */
+.tag-container, #tags {
+    -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-font-size: 10.5pt;
-    -fx-font-weight: 600;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-hgap: 6;
+    -fx-vgap: 6;
 }
-
-/* Back-compat: exact fx:id="tagLabel" styled as a chip */
+/* Each child label inside the tags FlowPane becomes its own chip */
+#tags > .label,
+.flow-pane > .label,
 #tagLabel {
-    -fx-background-color: -color-accent-weak;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.72)),
+        -color-accent-weak;           /* soft blue by default */
     -fx-text-fill: -color-fg;
     -fx-background-radius: 999;
-    -fx-padding: 2 10;
-    -fx-border-color: transparent;
-    -fx-font-size: 10.5pt;
-    -fx-font-weight: 600;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 999;
+    -fx-padding: 3 12;
+    -fx-font-size: 11pt;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(31,41,55,0.06), 3, 0.3, 0, 1);
 }
+/* Optional per-tag colour variants (used only if present) */
+.tag-personal, #tagLabel.tag-personal { -fx-background-color: -color-success-weak; -fx-text-fill: #0E6A48; } /* mint */
+.tag-corporate, #tagLabel.tag-corporate { -fx-background-color: -color-accent-weak;  -fx-text-fill: #1C3B5A; } /* soft blue */
 
-/* Per-tag colour variants (works with classes and/or #tagLabel) */
-.tag-personal, #tagLabel.tag-personal { -fx-background-color: #EAF7EE; -fx-text-fill: #1D6D46; }
-.tag-corporate, #tagLabel.tag-corporate { -fx-background-color: #EAF0FF; -fx-text-fill: #2947A9; }
-.tag-generic, #tagLabel.tag-generic { -fx-background-color: #FFF7E6; -fx-text-fill: #9A5B00; }
 
 /* ---- Fields inside cards ---- */
-.id, .name, .phone, .address, .email, .cost, .datetime, .remarks, .status {
-    -fx-text-fill: -color-fg;
-}
-.name { -fx-font-size: 14.5pt; -fx-font-weight: 700; }
+.id, .name, .phone, .address, .email, .cost, .datetime, .remarks, .status { -fx-text-fill: -color-fg; }
+.name { -fx-font-size: 15.5pt; -fx-font-weight: 800; }
 .id   { -fx-font-weight: 600;  -fx-text-fill: -color-fg-muted; }
 
 /* ---- Inputs ---- */
@@ -169,7 +188,7 @@
 }
 .text-field:focused, .text-area:focused, .combo-box-base:focused {
     -fx-border-color: -color-accent;
-    -fx-effect: dropshadow(gaussian, rgba(76,139,245,0.35), 6, 0.30, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(128,161,186,0.35), 7, 0.32, 0, 0); /* #80A1BA glow */
 }
 
 /* ---- Buttons ---- */
@@ -185,30 +204,31 @@
 .button:default {
     -fx-background-color: -color-accent;
     -fx-text-fill: white;
-    -fx-border-color: derive(-color-accent, -15%);
+    -fx-border-color: derive(-color-accent, -12%);
 }
 .button:default:hover { -fx-background-color: derive(-color-accent, -8%); }
+/* optional semantic buttons */
+.button.success { -fx-background-color: -color-success; -fx-text-fill: white; }
+.button.warning { -fx-background-color: -color-warning; -fx-text-fill: white; }
+.button.danger  { -fx-background-color: -color-danger;  -fx-text-fill: white; }
 
 /* ---- Scrollbars ---- */
 .scroll-bar:vertical, .scroll-bar:horizontal { -fx-background-color: transparent; }
-.scroll-bar .thumb {
-    -fx-background-color: rgba(0,0,0,0.18);
-    -fx-background-radius: 999;
-}
+.scroll-bar .thumb { -fx-background-color: rgba(31,41,55,0.25); -fx-background-radius: 999; }
 
 /* ---- TableView ---- */
 .table-view {
     -fx-background-color: -color-card;
-    -fx-background-radius: 14;
+    -fx-background-radius: 16;
     -fx-border-color: -color-border;
-    -fx-border-radius: 14;
+    -fx-border-radius: 16;
     -fx-padding: 6;
 }
-.table-row-cell:filled:selected, .table-row-cell:filled:hover {
+.table-row-cell:filled:hover, .table-row-cell:filled:selected {
     -fx-background-color: -color-accent-weak;
 }
 
-/* ---- Misc helpers ---- */
+/* ---- Helpers ---- */
 .mono    { -fx-font-family: "JetBrains Mono", "Consolas", monospace; }
 .muted   { -fx-text-fill: -color-fg-weak; }
 .hairline{ -fx-border-color: -color-border; -fx-border-width: 0 0 1 0; }
@@ -216,20 +236,67 @@
 /* ---- AB-3 big label compatibility ---- */
 .cell_big_label {
     -fx-text-fill: -color-fg;
-    -fx-font-size: 16pt;
-    -fx-font-weight: 800;
+    -fx-font-size: 17pt;
+    -fx-font-weight: 900;
     -fx-background-color: transparent;
     -fx-padding: 0 0 2 0;
 }
 .cell_big_label.bubble {
     -fx-background-color:
-        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
-        -color-tint-1;
-    -fx-background-radius: 16;
+        linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.68)),
+        -color-tint-cream; /* warm peachy title bubble */
+    -fx-background-radius: 18;
     -fx-border-color: -color-border;
-    -fx-border-radius: 16;
+    -fx-border-radius: 18;
     -fx-padding: 6 12;
     -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
+}
+
+/* PersonCard: solid cream background (no gradient) */
+#cardPane {
+    -fx-background-color: -color-bg;   /* maps to #FFF7DD in your palette */
+    -fx-background-radius: 18;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 18;
+    -fx-padding: 12 14;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 12, 0.24, 0, 4);
+}
+
+/* If you also have other card selectors, unify them to cream: */
+.person-panel, .delivery-card, .card, .card-pane {
+    -fx-background-color: -color-bg;   /* solid cream */
+}
+
+/* Keep a subtle highlight when selecting the cell (border-only) */
+.list-cell:filled:selected > #cardPane {
+    -fx-border-color: derive(-color-accent, -35%);
+}
+
+/* ResultDisplay text area (inner background) */
+#resultDisplay,
+.resultDisplay,
+.result-display {
+    -fx-control-inner-background: #FFF7DD;   /* typing area */
+    -fx-background-color: #FFF7DD;           /* fallback */
+    -fx-text-fill: #1F2937;
+}
+
+/* AB-3 skins the content with multiple layers — switch them to cream */
+#resultDisplay .content,
+.resultDisplay .content,
+.result-display .content {
+    -fx-background-color: transparent, #FFF7DD, transparent, #FFF7DD;
+    -fx-background-radius: 8;
+}
+
+/* Keep scroll container transparent so the cream shows through */
+#resultDisplay .scroll-pane,
+#resultDisplay .viewport,
+.resultDisplay .scroll-pane,
+.resultDisplay .viewport,
+.result-display .scroll-pane,
+.result-display .viewport {
+    -fx-background-color: transparent;
 }
 
 /* End of LightTheme.css */

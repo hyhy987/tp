@@ -36,9 +36,12 @@
             <Label fx:id="datetime"   styleClass="bubble"/>
             <Label fx:id="remarks"    styleClass="bubble"/>
             <Label fx:id="cost"       styleClass="bubble"/>
-            <Label fx:id="deliveredLabel" text="Delivered:" styleClass="bubble"/>
-            <CheckBox fx:id="deliveredCheckBox" disable="true" styleClass="bubble"/>
-            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-personal"/>
+            <HBox spacing="8" alignment="BASELINE_LEFT" styleClass="bubble" VBox.vgrow="NEVER">
+                <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+                <Label fx:id="deliveredLabel" text="Delivered:"/>
+                <CheckBox fx:id="deliveredCheckBox" disable="true"/>
+            </HBox>
+            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-pill"/>
         </VBox>
     </GridPane>
 </HBox>
