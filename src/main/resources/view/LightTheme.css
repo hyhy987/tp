@@ -1,0 +1,235 @@
+/* =============================
+   LightTheme.css — place in /src/main/resources/view/
+   Load via Scene#getStylesheets or FXML <stylesheets>.
+   ============================= */
+
+/* ---- Palette (looked-up colors) ---- */
+.root {
+    -color-bg:          #F5F7FB;   /* subtle blue background */
+    -color-card:        #FFFFFF;
+    -color-card-alt:    #F2F6FF;   /* lightly tinted surface */
+    -color-fg:          #2A2E37;
+    -color-fg-muted:    #5B6270;
+    -color-fg-weak:     #8A93A5;
+
+    -color-accent:      #4C8BF5;   /* primary blue */
+    -color-accent-weak: #DCE8FF;   /* stronger pastel */
+    -color-border:      rgba(24, 32, 56, 0.12);
+    -color-shadow:      rgba(24, 32, 56, 0.14);
+
+    -color-success:     #23A26D;
+    -color-warning:     #F59E0B;
+    -color-danger:      #E23E57;
+
+    /* extra pastel helpers */
+    -color-tint-1: #EEF4FF;  /* blue-ish */
+    -color-tint-2: #F7FFF3;  /* green-ish */
+    -color-tint-3: #FFF7EC;  /* orange-ish */
+}
+
+/* ---- App background & typography ---- */
+.root {
+    -fx-background-color: -color-bg;
+    -fx-font-smoothing-type: lcd;
+    -fx-text-fill: -color-fg;
+    -fx-font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -fx-font-size: 12.5pt;
+}
+
+.label { -fx-text-fill: -color-fg; }
+
+/* ---- Top bars / status / command/results panes ---- */
+.menu-bar, .tool-bar, .status-bar,
+.commandBoxPlaceholder, .resultDisplay {
+    -fx-background-color: -color-tint-1;   /* visible light tint */
+    -fx-background-insets: 0;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 1 0;             /* bottom hairline */
+}
+
+/* ---- Tabs (if any) ---- */
+.tab-pane, .TabPane {
+    -fx-background-color: -color-card;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ---- List & cards ---- */
+.list-view, .list-cell, .scroll-pane, .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled {
+    -fx-background-color: -color-card-alt; /* tinted card */
+    -fx-background-radius: 14;
+    -fx-padding: 8 10 8 10;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 14;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 8, 0.20, 0, 2);
+}
+
+.list-cell:filled:selected, .list-cell:filled:hover {
+    -fx-background-color: -color-accent-weak;
+    -fx-border-color: derive(-color-accent, -30%);
+}
+
+/* ---- Generic card container (common in AB-3 forks) ---- */
+.card-pane, .card, .person-panel, .delivery-card {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 16;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-padding: 12 14;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 10, 0.22, 0, 3);
+}
+
+/* ---- Bubble labels ---- */
+.bubble {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
+        -color-tint-1;                 /* subtle visible tint */
+    -fx-background-radius: 16;
+    -fx-padding: 6 12;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-text-fill: -color-fg;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
+}
+.bubble.small {
+    -fx-font-size: 11pt;
+    -fx-padding: 4 10;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+}
+/* semantic variants */
+.bubble.accent  { -fx-background-color: -color-accent-weak; -fx-border-color: derive(-color-accent, -25%); }
+.bubble.success { -fx-background-color: rgba(35,162,109,0.14); -fx-border-color: #23A26D; }
+.bubble.warning { -fx-background-color: rgba(245,158,11,0.16); -fx-border-color: #F59E0B; }
+.bubble.danger  { -fx-background-color: rgba(226,62,87,0.14);  -fx-border-color: #E23E57; }
+
+/* ---- FlowPane tag container bubble ---- */
+.tag-container {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
+        -color-tint-1;   /* pale blue bubble around the chips */
+    -fx-background-radius: 16;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-padding: 6 8;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
+}
+.tag-container.accent {
+    -fx-background-color: -color-accent-weak;
+    -fx-border-color: derive(-color-accent, -25%);
+}
+
+/* ---- Tag chips ---- */
+.tag, .chip, .flow-pane .label.tagLabel {
+    -fx-background-color: -color-accent-weak;
+    -fx-text-fill: -color-fg;
+    -fx-background-radius: 999;
+    -fx-padding: 2 10;
+    -fx-border-color: transparent;
+    -fx-font-size: 10.5pt;
+    -fx-font-weight: 600;
+}
+
+/* Back-compat: exact fx:id="tagLabel" styled as a chip */
+#tagLabel {
+    -fx-background-color: -color-accent-weak;
+    -fx-text-fill: -color-fg;
+    -fx-background-radius: 999;
+    -fx-padding: 2 10;
+    -fx-border-color: transparent;
+    -fx-font-size: 10.5pt;
+    -fx-font-weight: 600;
+}
+
+/* Per-tag colour variants (works with classes and/or #tagLabel) */
+.tag-personal, #tagLabel.tag-personal { -fx-background-color: #EAF7EE; -fx-text-fill: #1D6D46; }
+.tag-corporate, #tagLabel.tag-corporate { -fx-background-color: #EAF0FF; -fx-text-fill: #2947A9; }
+.tag-generic, #tagLabel.tag-generic { -fx-background-color: #FFF7E6; -fx-text-fill: #9A5B00; }
+
+/* ---- Fields inside cards ---- */
+.id, .name, .phone, .address, .email, .cost, .datetime, .remarks, .status {
+    -fx-text-fill: -color-fg;
+}
+.name { -fx-font-size: 14.5pt; -fx-font-weight: 700; }
+.id   { -fx-font-weight: 600;  -fx-text-fill: -color-fg-muted; }
+
+/* ---- Inputs ---- */
+.text-field, .text-area, .combo-box-base {
+    -fx-background-color: -color-card;
+    -fx-text-fill: -color-fg;
+    -fx-background-radius: 12;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 12;
+    -fx-padding: 6 10;
+}
+.text-field:focused, .text-area:focused, .combo-box-base:focused {
+    -fx-border-color: -color-accent;
+    -fx-effect: dropshadow(gaussian, rgba(76,139,245,0.35), 6, 0.30, 0, 0);
+}
+
+/* ---- Buttons ---- */
+.button {
+    -fx-background-radius: 12;
+    -fx-background-color: -color-card;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 12;
+    -fx-text-fill: -color-fg;
+    -fx-padding: 6 14;
+}
+.button:hover { -fx-background-color: -color-card-alt; }
+.button:default {
+    -fx-background-color: -color-accent;
+    -fx-text-fill: white;
+    -fx-border-color: derive(-color-accent, -15%);
+}
+.button:default:hover { -fx-background-color: derive(-color-accent, -8%); }
+
+/* ---- Scrollbars ---- */
+.scroll-bar:vertical, .scroll-bar:horizontal { -fx-background-color: transparent; }
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.18);
+    -fx-background-radius: 999;
+}
+
+/* ---- TableView ---- */
+.table-view {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 14;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 14;
+    -fx-padding: 6;
+}
+.table-row-cell:filled:selected, .table-row-cell:filled:hover {
+    -fx-background-color: -color-accent-weak;
+}
+
+/* ---- Misc helpers ---- */
+.mono    { -fx-font-family: "JetBrains Mono", "Consolas", monospace; }
+.muted   { -fx-text-fill: -color-fg-weak; }
+.hairline{ -fx-border-color: -color-border; -fx-border-width: 0 0 1 0; }
+
+/* ---- AB-3 big label compatibility ---- */
+.cell_big_label {
+    -fx-text-fill: -color-fg;
+    -fx-font-size: 16pt;
+    -fx-font-weight: 800;
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 2 0;
+}
+.cell_big_label.bubble {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.75)),
+        -color-tint-1;
+    -fx-background-radius: 16;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-padding: 6 12;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
+}
+
+/* End of LightTheme.css */

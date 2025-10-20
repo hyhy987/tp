@@ -32,13 +32,13 @@
             </HBox>
 
             <!-- Key/Value rows -->
-            <Label fx:id="deliveryId" styleClass="cell_small_label"/>
-            <Label fx:id="datetime"   styleClass="cell_small_label"/>
-            <Label fx:id="remarks"    styleClass="cell_small_label"/>
-            <Label fx:id="cost"       styleClass="cell_small_label"/>
-            <Label fx:id="deliveredLabel" text="Delivered:" />
-            <CheckBox fx:id="deliveredCheckBox" disable="true" />
-            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-pill"/>
+            <Label fx:id="deliveryId" styleClass="bubble"/>
+            <Label fx:id="datetime"   styleClass="bubble"/>
+            <Label fx:id="remarks"    styleClass="bubble"/>
+            <Label fx:id="cost"       styleClass="bubble"/>
+            <Label fx:id="deliveredLabel" text="Delivered:" styleClass="bubble"/>
+            <CheckBox fx:id="deliveredCheckBox" disable="true" styleClass="bubble"/>
+            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-personal"/>
         </VBox>
     </GridPane>
 </HBox>
