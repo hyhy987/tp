@@ -27,11 +27,11 @@
     -color-tint-cream:  #FFF3D6;                 /* warm bubble */
 
     /* Semantics mapped to your colors */
-    -color-success:      #2AA66F;                /* deeper mint border */
-    -color-success-weak: -theme-mint;            /* success fill */
-    -color-warning:      #D78E00;                /* amber that fits cream */
+    -color-success:      #2AA66F;                /* green for Personal */
+    -color-success-weak: -theme-mint;            /* light success */
+    -color-warning:      #D78E00;                /* amber (kept for other UI) */
     -color-warning-weak: #FFECC6;
-    -color-danger:       #D65A6E;                /* muted rose */
+    -color-danger:       #D65A6E;
     -color-danger-weak:  #FFE0E6;
 
     /* Lines & depth */
@@ -66,7 +66,7 @@
     -fx-border-width: 0 0 1 0;
 }
 
-/* ---- Generic pane with border (matches your FXML styleClass) ---- */
+/* ---- Generic pane with border ---- */
 .pane-with-border {
     -fx-background-color: -color-card;
     -fx-background-radius: 16;
@@ -88,11 +88,11 @@
 .list-view, .scroll-pane, .scroll-pane .viewport { -fx-background-color: transparent; }
 
 .list-cell:filled {
-    -fx-background-color: transparent; /* remove list-cell gradient */
+    -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-border-color: transparent;
     -fx-border-radius: 0;
-    -fx-padding: 10 12;                /* keep spacing around the card */
+    -fx-padding: 10 12;
     -fx-effect: null;
 }
 .list-cell:filled:hover {
@@ -104,7 +104,7 @@
     -fx-border-color: derive(-color-accent, -35%);
 }
 
-/* Common card wrapper (AB-3 style forks) */
+/* Common card wrapper */
 .card-pane, .card, .person-panel, .delivery-card {
     -fx-background-color: -color-card;
     -fx-background-radius: 18;
@@ -118,7 +118,7 @@
 .bubble {
     -fx-background-color:
         linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)),
-        -color-tint-teal;                            /* default = teal-ish */
+        -color-tint-teal;
     -fx-background-radius: 18;
     -fx-border-color: -color-border;
     -fx-border-radius: 18;
@@ -132,7 +132,6 @@
     -fx-background-radius: 16;
     -fx-border-radius: 16;
 }
-/* Alternate tints you can combine via styleClass in FXML */
 .bubble.blue  { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-blue; }
 .bubble.mint  { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-mint; }
 .bubble.cream { -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)), -color-tint-cream; }
@@ -141,8 +140,7 @@
 .bubble.warning { -fx-background-color: -color-warning-weak; -fx-border-color: -color-warning; }
 .bubble.danger  { -fx-background-color: -color-danger-weak;  -fx-border-color: -color-danger; }
 
-/* ---- TAGS: separate bubbles per tag with NO backend changes ---- */
-/* Keep FlowPane neutral (no giant bubble) */
+/* ---- TAGS container kept neutral ---- */
 .tag-container, #tags {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -151,25 +149,31 @@
     -fx-hgap: 6;
     -fx-vgap: 6;
 }
-/* Each child label inside the tags FlowPane becomes its own chip */
-#tags > .label,
-.flow-pane > .label,
-#tagLabel {
-    -fx-background-color:
-        linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.72)),
-        -color-accent-weak;           /* soft blue by default */
-    -fx-text-fill: -color-fg;
+
+/* Personal styles */
+.tag-pill.personal  {
+    -fx-background-color: #2AA66F;
+    -fx-text-fill: white;
     -fx-background-radius: 999;
-    -fx-border-color: -color-border;
-    -fx-border-radius: 999;
     -fx-padding: 3 12;
-    -fx-font-size: 11pt;
+    -fx-font-weight: 700; }
+
+/* Corporate styles */
+.tag-pill.corporate {
+    -fx-background-color: #80A1BA;
+    -fx-text-fill: white; -fx-background-radius: 999;
+    -fx-padding: 3 12;
+    -fx-font-weight: 700; }
+
+/* Others styles */
+.tag-pill.other {
+    -fx-background-color: #D9E5EF;
+    -fx-text-fill: #1F2937;
+    -fx-background-radius: 999;
+    -fx-padding: 3 12;
     -fx-font-weight: 700;
-    -fx-effect: dropshadow(gaussian, rgba(31,41,55,0.06), 3, 0.3, 0, 1);
-}
-/* Optional per-tag colour variants (used only if present) */
-.tag-personal, #tagLabel.tag-personal { -fx-background-color: -color-success-weak; -fx-text-fill: #0E6A48; } /* mint */
-.tag-corporate, #tagLabel.tag-corporate { -fx-background-color: -color-accent-weak;  -fx-text-fill: #1C3B5A; } /* soft blue */
+    -fx-border-color: rgba(31,41,55,0.12);
+    -fx-border-radius: 999; }
 
 
 /* ---- Fields inside cards ---- */
@@ -188,7 +192,7 @@
 }
 .text-field:focused, .text-area:focused, .combo-box-base:focused {
     -fx-border-color: -color-accent;
-    -fx-effect: dropshadow(gaussian, rgba(128,161,186,0.35), 7, 0.32, 0, 0); /* #80A1BA glow */
+    -fx-effect: dropshadow(gaussian, rgba(128,161,186,0.35), 7, 0.32, 0, 0);
 }
 
 /* ---- Buttons ---- */
@@ -207,7 +211,6 @@
     -fx-border-color: derive(-color-accent, -12%);
 }
 .button:default:hover { -fx-background-color: derive(-color-accent, -8%); }
-/* optional semantic buttons */
 .button.success { -fx-background-color: -color-success; -fx-text-fill: white; }
 .button.warning { -fx-background-color: -color-warning; -fx-text-fill: white; }
 .button.danger  { -fx-background-color: -color-danger;  -fx-text-fill: white; }
@@ -233,7 +236,7 @@
 .muted   { -fx-text-fill: -color-fg-weak; }
 .hairline{ -fx-border-color: -color-border; -fx-border-width: 0 0 1 0; }
 
-/* ---- AB-3 big label compatibility ---- */
+/* ---- Big labels ---- */
 .cell_big_label {
     -fx-text-fill: -color-fg;
     -fx-font-size: 17pt;
@@ -244,7 +247,7 @@
 .cell_big_label.bubble {
     -fx-background-color:
         linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.68)),
-        -color-tint-cream; /* warm peachy title bubble */
+        -color-tint-cream;
     -fx-background-radius: 18;
     -fx-border-color: -color-border;
     -fx-border-radius: 18;
@@ -252,9 +255,9 @@
     -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
 }
 
-/* PersonCard: solid cream background (no gradient) */
+/* PersonCard: solid cream background */
 #cardPane {
-    -fx-background-color: -color-bg;   /* maps to #FFF7DD in your palette */
+    -fx-background-color: -color-bg;
     -fx-background-radius: 18;
     -fx-border-color: -color-border;
     -fx-border-radius: 18;
@@ -264,7 +267,7 @@
 
 /* If you also have other card selectors, unify them to cream: */
 .person-panel, .delivery-card, .card, .card-pane {
-    -fx-background-color: -color-bg;   /* solid cream */
+    -fx-background-color: -color-bg;
 }
 
 /* Keep a subtle highlight when selecting the cell (border-only) */
@@ -276,12 +279,12 @@
 #resultDisplay,
 .resultDisplay,
 .result-display {
-    -fx-control-inner-background: #FFF7DD;   /* typing area */
-    -fx-background-color: #FFF7DD;           /* fallback */
+    -fx-control-inner-background: #FFF7DD;
+    -fx-background-color: #FFF7DD;
     -fx-text-fill: #1F2937;
 }
 
-/* AB-3 skins the content with multiple layers — switch them to cream */
+/* Inner layers to cream */
 #resultDisplay .content,
 .resultDisplay .content,
 .result-display .content {
@@ -299,4 +302,31 @@
     -fx-background-color: transparent;
 }
 
-/* End of LightTheme.css */
+/* Person tags — darker blue bubbles */
+#clientTags > .label,
+.client-tags > .label {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.10), rgba(255,255,255,0.00)),
+        derive(-color-accent, -15%);        /* darker than your primary blue */
+    -fx-text-fill: white;                   /* better contrast on dark blue */
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: derive(-color-accent, -35%);
+    -fx-padding: 3 10;
+    -fx-font-size: 11pt;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(31,41,55,0.12), 4, 0.3, 0, 1);
+}
+
+/* Hover a touch darker for feedback */
+#clientTags > .label:hover,
+.client-tags > .label:hover {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.00)),
+        derive(-color-accent, -22%);
+    -fx-border-color: derive(-color-accent, -40%);
+}
+
+
+
+

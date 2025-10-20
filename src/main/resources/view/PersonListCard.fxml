@@ -28,7 +28,9 @@
         <Label fx:id="name" text="\$first" styleClass="cell_big_label" />
       </HBox>
       <FlowPane fx:id="tags"
-                styleClass="tag-container"/>
+                id="clientTags"
+                styleClass="tag-container client-tags"
+                prefWrapLength="280"/>
       <Label fx:id="phone" styleClass="bubble" text="\$phone" />
       <Label fx:id="address" styleClass="bubble" text="\$address" />
       <Label fx:id="email" styleClass="bubble" text="\$email" />

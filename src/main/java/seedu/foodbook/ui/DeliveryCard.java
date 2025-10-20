@@ -42,32 +42,23 @@ public class DeliveryCard extends UiPart<Region> {
         deliveredCheckBox.setSelected(delivery.getStatus());
 
         String tag = delivery.getTag();
-        if (tag != null) {
+        if (tag == null || tag.isBlank()) {
+            tagLabel.setVisible(false);
+            tagLabel.setManaged(false);
+        } else {
+            tagLabel.setVisible(true);
+            tagLabel.setManaged(true);
             tagLabel.setText(tag);
 
-            // Reset any previous styling before setting the new one
-            tagLabel.getStyleClass().removeAll("tag-personal", "tag-corporate", "tag-generic");
+            tagLabel.getStyleClass().removeAll("personal", "corporate", "other");
 
-            switch (delivery.getTagKind()) {
-            case PERSONAL:
-                tagLabel.getStyleClass().add("tag-personal");
-                break;
-            case CORPORATE:
-                tagLabel.getStyleClass().add("tag-corporate");
-                break;
-            default:
-                tagLabel.getStyleClass().add("tag-generic");
-                break;
-            }
+            String variant = switch (tag.trim().toLowerCase()) {
+                case "personal" -> "personal";
+                case "corporate" -> "corporate";
+                default -> "other";
+            };
 
-            // Show the pill and let layout allocate space for it
-            tagLabel.setManaged(true);
-            tagLabel.setVisible(true);
-        } else {
-            // Hide and remove from layout flow when there’s no tag
-            tagLabel.setManaged(false);
-            tagLabel.setVisible(false);
+            tagLabel.getStyleClass().add(variant);
         }
-
     }
 }
