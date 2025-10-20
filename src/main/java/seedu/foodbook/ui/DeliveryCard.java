@@ -52,11 +52,18 @@ public class DeliveryCard extends UiPart<Region> {
 
             tagLabel.getStyleClass().removeAll("personal", "corporate", "other");
 
-            String variant = switch (tag.trim().toLowerCase()) {
-                case "personal" -> "personal";
-                case "corporate" -> "corporate";
-                default -> "other";
-            };
+            String variant;
+            switch (tag.trim().toLowerCase()) {
+            case "personal":
+                variant = "personal";
+                break;
+            case "corporate":
+                variant = "corporate";
+                break;
+            default:
+                variant = "other";
+                break;
+            }
 
             tagLabel.getStyleClass().add(variant);
         }
