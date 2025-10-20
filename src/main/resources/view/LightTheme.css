@@ -265,7 +265,6 @@
     -fx-effect: dropshadow(gaussian, -color-shadow, 12, 0.24, 0, 4);
 }
 
-/* If you also have other card selectors, unify them to cream: */
 .person-panel, .delivery-card, .card, .card-pane {
     -fx-background-color: -color-bg;
 }
@@ -307,8 +306,8 @@
 .client-tags > .label {
     -fx-background-color:
         linear-gradient(to bottom, rgba(255,255,255,0.10), rgba(255,255,255,0.00)),
-        derive(-color-accent, -15%);        /* darker than your primary blue */
-    -fx-text-fill: white;                   /* better contrast on dark blue */
+        derive(-color-accent, -15%);
+    -fx-text-fill: white;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
     -fx-border-color: derive(-color-accent, -35%);
