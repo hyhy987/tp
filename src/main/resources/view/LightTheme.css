@@ -326,6 +326,18 @@
     -fx-border-color: derive(-color-accent, -40%);
 }
 
+/* ---- Cost Label ---- */
+.costLabel {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.60)),
+        -color-tint-teal;
+    -fx-background-radius: 18;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 18;
+    -fx-padding: 6 12;
+    -fx-text-fill: -color-fg;
+    -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
+}
 
 
 

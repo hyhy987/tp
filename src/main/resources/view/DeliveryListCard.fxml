@@ -7,18 +7,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.CheckBox?>
+
+<?import javafx.scene.text.TextFlow?>
 <HBox id="cardPane" fx:id="cardPane"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1">
 
     <GridPane HBox.hgrow="ALWAYS">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10" />
+            <ColumnConstraints hgrow="NEVER" />
         </columnConstraints>
 
-        <VBox alignment="CENTER_LEFT" minHeight="105" GridPane.columnIndex="0">
+        <VBox alignment="CENTER_LEFT" minHeight="105" GridPane.columnIndex="0" spacing="6">
             <padding>
                 <Insets top="5" right="5" bottom="5" left="15"/>
             </padding>
@@ -32,16 +34,49 @@
             </HBox>
 
             <!-- Key/Value rows -->
-            <Label fx:id="deliveryId" styleClass="bubble"/>
-            <Label fx:id="datetime"   styleClass="bubble"/>
-            <Label fx:id="remarks"    styleClass="bubble"/>
-            <Label fx:id="cost"       styleClass="bubble"/>
+            <TextFlow fx:id="deliveryId" styleClass="bubble">
+                <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+            </TextFlow>
+            <TextFlow fx:id="datetime"   styleClass="bubble">
+                <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+            </TextFlow>
+            <TextFlow fx:id="remarks"    styleClass="bubble">
+                <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+            </TextFlow>
             <HBox spacing="8" alignment="BASELINE_LEFT" styleClass="bubble" VBox.vgrow="NEVER">
                 <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
                 <Label fx:id="deliveredLabel" text="Delivered:"/>
                 <CheckBox fx:id="deliveredCheckBox" disable="true"/>
             </HBox>
-            <Label fx:id="tagLabel" text="TAG" visible="false" managed="false" styleClass="tag-pill"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
         </VBox>
+
+        <Label fx:id="cost"
+               styleClass="costLabel, cell_big_label"
+               GridPane.columnIndex="1"
+               GridPane.halignment="RIGHT"
+               GridPane.valignment="TOP">
+            <GridPane.margin>
+                <Insets top="5" right="15" bottom="5" left="5" />
+            </GridPane.margin>
+        </Label>
+
+
+        <Label fx:id="tagLabel"
+               text="TAG"
+               visible="false"
+               managed="false"
+               styleClass="tag-pill"
+               GridPane.columnIndex="1"
+               GridPane.halignment="RIGHT"
+               GridPane.valignment="BOTTOM">
+            <GridPane.margin>
+                <Insets top="5" right="15" bottom="5" left="5" />
+            </GridPane.margin>
+        </Label>
+
+
     </GridPane>
 </HBox>
