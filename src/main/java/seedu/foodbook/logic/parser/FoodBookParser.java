@@ -22,6 +22,7 @@ import seedu.foodbook.logic.commands.FindDeliveryCommand;
 import seedu.foodbook.logic.commands.HelpCommand;
 import seedu.foodbook.logic.commands.ListCommand;
 import seedu.foodbook.logic.commands.ListDeliveryCommand;
+import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
 import seedu.foodbook.logic.commands.UndoCommand;
 import seedu.foodbook.logic.commands.UnmarkCommand;
@@ -105,6 +106,9 @@ public class FoodBookParser {
 
         case UnmarkCommand.COMMAND_WORD:
             return new UnmarkCommandParser().parse(arguments);
+
+        case ListRevenueCommand.COMMAND_WORD:
+            return new ListRevenueCommandParser().parse(arguments);
 
         case UndoCommand.COMMAND_WORD:
             return new UndoCommand();
