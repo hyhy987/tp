@@ -18,6 +18,7 @@ import static seedu.foodbook.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.foodbook.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -65,6 +66,11 @@ public class EditClientCommandTest {
 
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
         expectedModel.setPerson(target, editedPerson);
+        List<Delivery> deliveries = expectedModel.getDeliveriesByClientName(target.getName());
+        for (Delivery d: deliveries) {
+            Delivery newDelivery = d.copyWithNewClient(editedPerson);
+            expectedModel.setDelivery(d, newDelivery);
+        }
 
         assertCommandSuccess(editClientCommand, model, expectedMessage, expectedModel);
     }
@@ -96,6 +102,11 @@ public class EditClientCommandTest {
 
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
         expectedModel.setPerson(lastPerson, editedPerson);
+        List<Delivery> deliveryList = expectedModel.getDeliveriesByClientName(lastPerson.getName());
+        for (Delivery d : deliveryList) {
+            Delivery newDelivery = d.copyWithNewClient(editedPerson);
+            expectedModel.setDelivery(d, newDelivery);
+        }
 
         assertCommandSuccess(editClientCommand, model, expectedMessage, expectedModel);
     }
@@ -117,24 +128,43 @@ public class EditClientCommandTest {
 
     @Test
     public void execute_filteredList_success() {
+        // Arrange: filter actual model to only show the first person
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Name currentClientName = target.getName();
 
-        Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(personInFilteredList).withName(VALID_NAME_BOB).build();
-        EditClientCommand editCommand = new EditClientCommand(currentClientName,
-                new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
+        Person editedPerson = new PersonBuilder(target).withName(VALID_NAME_BOB).build();
+        EditClientCommand editCommand = new EditClientCommand(
+                currentClientName,
+                new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build()
+        );
 
-        String expectedMessage = String.format(EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS,
-                Messages.format(editedPerson));
+        String expectedMessage = String.format(
+                EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)
+        );
 
+        // Build expected model from a deep copy
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
-        expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
 
+        // IMPORTANT: mirror the same filter on expectedModel
+        showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
+
+        // Replace the same logical person inside expectedModel
+        Person expectedTarget = expectedModel.getFilteredPersonList().get(0);
+        expectedModel.setPerson(expectedTarget, editedPerson);
+
+        // Update deliveries that reference the old name, inside expectedModel
+        List<Delivery> deliveries = expectedModel.getDeliveriesByClientName(currentClientName);
+        for (Delivery d : deliveries) {
+            Delivery newDelivery = d.copyWithNewClient(editedPerson); // ensure this preserves isDelivered
+            expectedModel.setDelivery(d, newDelivery);
+        }
+
+        // Assert
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
+
 
     @Test
     public void execute_duplicatePersonUnfilteredList_failure() {
@@ -238,9 +268,15 @@ public class EditClientCommandTest {
 
         // Expected model: Alice replaced with NewAlice; Bob unaffected
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
+        showPersonAtIndex(expectedModel, INDEX_SECOND_PERSON);
         Person expectedAliceInExpectedModel = expectedModel.getFoodBook()
                 .getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         expectedModel.setPerson(expectedAliceInExpectedModel, editedAlice);
+        List<Delivery> deliveries = expectedModel.getDeliveriesByClientName(expectedAliceInExpectedModel.getName());
+        for (Delivery d: deliveries) {
+            Delivery newDelivery = d.copyWithNewClient(editedAlice);
+            expectedModel.setDelivery(d, newDelivery);
+        }
 
         // Assert success (don’t assume any filter reset unless your command guarantees it)
         String expectedMsg = String.format(EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedAlice));

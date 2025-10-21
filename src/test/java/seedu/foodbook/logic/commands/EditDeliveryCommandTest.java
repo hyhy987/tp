@@ -31,19 +31,14 @@ public class EditDeliveryCommandTest {
     @Test
     public void execute_allFieldsSpecified_success() {
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        List<Delivery> deliveries = model.getFilteredDeliveryList();
-        // ensure we have at least one delivery in TypicalFoodBook
-        Delivery target = deliveries.get(0);
+        Delivery target = model.getFilteredDeliveryList().get(0);
 
-        // choose a different existing person for client change
         Person currentClient = target.getClient();
         Person replacementClient = model.getFilteredPersonList().stream()
                 .filter(p -> !p.getName().fullName.equals(currentClient.getName().fullName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        "TypicalFoodBook should contain at least two persons"));
+                .orElseThrow(() -> new IllegalStateException("TypicalFoodBook should contain at least two persons"));
 
-        // build descriptor with all fields changed
         EditDeliveryDescriptor descriptor = new EditDeliveryDescriptor();
         descriptor.setClientName(replacementClient.getName().fullName);
         descriptor.setDateTime(new DateTime("21/10/2029", "1830"));
@@ -52,36 +47,43 @@ public class EditDeliveryCommandTest {
 
         EditDeliveryCommand command = new EditDeliveryCommand(target.getId(), descriptor);
 
-        // expected model state after edit
+        // expected
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
-        Delivery expectedEdited = new Delivery(
-                target.getId(),
-                // important: get the Person instance from expectedModel
-                expectedModel.getFilteredPersonList().stream()
-                        .filter(p -> p.getName().fullName.equals(replacementClient.getName().fullName))
-                        .findFirst().orElseThrow(),
-                new DateTime("21/10/2029", "1830"),
-                "Updated remarks",
-                88.80, null
-        );
-        // apply on expected model
-        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        expectedModel.setDelivery(
-                expectedModel.getFilteredDeliveryList().stream()
-                        .filter(d -> d.getId().equals(target.getId()))
-                        .findFirst().orElseThrow(),
-                expectedEdited
-        );
         expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
 
-        String expectedMessage = String.format(EditDeliveryCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
-                Messages.format(expectedEdited));
+        // grab the base delivery + replacement person from expectedModel
+        Delivery base = expectedModel.getFilteredDeliveryList().stream()
+                .filter(d -> d.getId().equals(target.getId()))
+                .findFirst().orElseThrow();
+
+        Person expectedReplacement = expectedModel.getFilteredPersonList().stream()
+                .filter(p -> p.getName().fullName.equals(replacementClient.getName().fullName))
+                .findFirst().orElseThrow();
+
+        Delivery expectedEdited = new Delivery(
+                base.getId(),
+                expectedReplacement,                 // changed
+                new DateTime("21/10/2029", "1830"),  // changed
+                "Updated remarks",                   // changed
+                88.80,                               // changed
+                base.getTag(),                       // preserve
+                base.getStatus()                     // preserve
+        );
+
+        expectedModel.setDelivery(base, expectedEdited);
+
+        String expectedMessage = String.format(
+                EditDeliveryCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
+                Messages.format(expectedEdited)
+        );
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
     }
 
+
     @Test
     public void execute_someFieldsSpecified_success() {
+        // Make actual model show all deliveries
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         Delivery target = model.getFilteredDeliveryList().get(0);
 
@@ -93,31 +95,33 @@ public class EditDeliveryCommandTest {
 
         // expected model
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
+        // Mirror the same filter if your assert compares filtered lists
+        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
+
+        Delivery base = expectedModel.getFilteredDeliveryList().stream()
+                .filter(d -> d.getId().equals(target.getId()))
+                .findFirst().orElseThrow();
+
         Delivery expectedEdited = new Delivery(
-                target.getId(),
-                // same client instance but from expected model
-                expectedModel.getFilteredDeliveryList().stream()
-                        .filter(d -> d.getId().equals(target.getId()))
-                        .findFirst().orElseThrow().getClient(),
-                // keep original datetime
-                expectedModel.getFilteredDeliveryList().stream()
-                        .filter(d -> d.getId().equals(target.getId()))
-                        .findFirst().orElseThrow().getDeliveryDate(),
-                "Leave with guard",
-                12.34, null
-        );
-        expectedModel.setDelivery(
-                expectedModel.getFilteredDeliveryList().stream()
-                        .filter(d -> d.getId().equals(target.getId()))
-                        .findFirst().orElseThrow(),
-                expectedEdited
+                base.getId(),
+                base.getClient(),
+                base.getDeliveryDate(),
+                "Leave with guard",     // only changed field
+                12.34,                  // only changed field
+                base.getTag(),          // preserve tag
+                base.getStatus()        // preserve delivered flag
         );
 
-        String expectedMessage = String.format(EditDeliveryCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
-                Messages.format(expectedEdited));
+        expectedModel.setDelivery(base, expectedEdited);
+
+        String expectedMessage = String.format(
+                EditDeliveryCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
+                Messages.format(expectedEdited)
+        );
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
     }
+
 
     @Test
     public void execute_changeClientToNonexistent_failure() {

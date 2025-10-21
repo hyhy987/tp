@@ -378,7 +378,7 @@ public class AddDeliveryCommandTest {
         @Override
         public boolean hasDelivery(Delivery delivery) {
             requireNonNull(delivery);
-            return this.delivery.equals(delivery);
+            return this.delivery.isSameDelivery(delivery);
         }
     }
 

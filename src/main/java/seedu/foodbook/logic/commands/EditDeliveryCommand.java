@@ -86,7 +86,7 @@ public class EditDeliveryCommand extends Command {
 
         Delivery newDelivery = createEditedDelivery(oldDelivery, editDeliveryDescriptor, model);
 
-        if (!oldDelivery.equals(newDelivery) && model.hasDelivery(newDelivery )) {
+        if (!oldDelivery.isSameDelivery(newDelivery) && model.hasDelivery(newDelivery )) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
         }
 

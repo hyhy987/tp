@@ -15,7 +15,7 @@ public class Delivery {
 
     // Identity fields
     private final Integer id;
-    private final boolean isDelivered;
+    private final Boolean isDelivered;
     private final Person client;
     private final DateTime datetime;
     private final String remarks;
@@ -124,9 +124,15 @@ public class Delivery {
         return TagKind.OTHER;
     }
 
-    /**
-     * Returns true if both deliveries have the same id.
-     */
+    public boolean isSameDelivery(Delivery otherDelivery) {
+        if (otherDelivery == this) {
+            return true;
+        }
+
+        return otherDelivery != null
+                && otherDelivery.getId().equals(getId());
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -138,7 +144,14 @@ public class Delivery {
             return false;
         }
 
-        return this.id.equals(((Delivery) other).id);
+        Delivery otherDelivery= (Delivery) other;
+        return id.equals(otherDelivery.id)
+                && isDelivered.equals(otherDelivery.isDelivered)
+                && client.equals(otherDelivery.client)
+                && datetime.equals(otherDelivery.datetime)
+                && remarks.equals(otherDelivery.remarks)
+                && cost.equals(otherDelivery.cost)
+                && Objects.equals(tag, otherDelivery.tag);
     }
 
     public Delivery copyWithNewClient(Person newClient) {
@@ -148,7 +161,8 @@ public class Delivery {
                 this.getDeliveryDate(),
                 this.getRemarks(),
                 this.getCost(),
-                this.getTag());
+                this.getTag(),
+                this.getStatus());
     }
 
     @Override
