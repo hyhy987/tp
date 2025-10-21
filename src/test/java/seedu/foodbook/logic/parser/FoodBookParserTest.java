@@ -7,7 +7,6 @@ import static seedu.foodbook.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.NAME_DESC_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.foodbook.testutil.Assert.assertThrows;
-import static seedu.foodbook.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.foodbook.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
-import seedu.foodbook.logic.commands.DeleteCommand;
+import seedu.foodbook.logic.commands.DeleteClientCommand;
 import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 import seedu.foodbook.logic.commands.EditClientCommand;
 import seedu.foodbook.logic.commands.ExitCommand;
@@ -73,10 +72,11 @@ public class FoodBookParserTest {
     }
 
     @Test
-    public void parseCommand_delete() throws Exception {
-        DeleteCommand command = (DeleteCommand) parser.parseCommand(
-                DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
-        assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
+    public void parseCommand_deleteClient() throws Exception {
+
+        DeleteClientCommand command = (DeleteClientCommand) parser.parseCommand(
+                DeleteClientCommand.COMMAND_WORD + " " + BOB.getName().fullName);
+        assertEquals(new DeleteClientCommand(BOB.getName()), command);
     }
 
     @Test
