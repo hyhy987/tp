@@ -86,6 +86,21 @@ public class FindDeliveryCommandParserTest {
     }
 
     @Test
+    public void parse_emptyDateValue_throwsParseException() {
+        // Line 61: Check if dateValue.isEmpty() is true
+        // Line 62: throw ParseException for empty date
+        assertParseFailure(parser, " d/", "Date cannot be empty.");
+    }
+
+    @Test
+    public void parse_dateWithOnlyWhitespace_throwsParseException() {
+        // Line 61: Check if dateValue.trim().isEmpty() is true
+        // Line 62: throw ParseException for whitespace-only date
+        assertParseFailure(parser, " d/   ", "Date cannot be empty.");
+        assertParseFailure(parser, " d/\t\n  ", "Date cannot be empty.");
+    }
+
+    @Test
     public void parse_invalidDate_throwsParseException() {
         assertParseFailure(parser, " d/31/02/2024",
                 "Invalid date format. Please use d/M/yyyy format (e.g., 25/12/2024).");
@@ -104,5 +119,24 @@ public class FindDeliveryCommandParserTest {
         // Text before any prefix
         assertParseFailure(parser, "some text n/John",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_noTagPrefix_returnsPredicateWithoutTags() {
+        // Line 88-90: If tagList.isEmpty(), return Optional.empty()
+        // This is the normal path when no t/ prefix is provided
+        FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
+                new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.empty()));
+        assertParseSuccess(parser, " n/John", expectedCommand);
+    }
+
+    @Test
+    public void parse_noFiltersProvided_returnsPredicateShowingAll() {
+        // When no filters at all, all Optional.empty()
+        // This covers the case where parseTags returns Optional.empty()
+        FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
+                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.empty()));
+        assertParseSuccess(parser, "", expectedCommand);
+        assertParseSuccess(parser, "   ", expectedCommand);
     }
 }
