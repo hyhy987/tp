@@ -5,6 +5,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import seedu.foodbook.model.delivery.Delivery;
 
 /**
@@ -18,9 +20,9 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML private HBox cardPane;
     @FXML private Label id;
     @FXML private Label client;
-    @FXML private Label deliveryId;
-    @FXML private Label datetime;
-    @FXML private Label remarks;
+    @FXML private TextFlow deliveryId;
+    @FXML private TextFlow datetime;
+    @FXML private TextFlow remarks;
     @FXML private Label cost;
     @FXML private Label tagLabel;
     @FXML private Label delivered;
@@ -34,40 +36,61 @@ public class DeliveryCard extends UiPart<Region> {
         this.delivery = delivery;
         client.setText(delivery.getClient().getName().toString());
 
-        deliveryId.setText("Delivery ID: " + delivery.getId());
-        datetime.setText("Delivery Date: " + delivery.getDeliveryDate().getDateString()
-                + "\n" + "Delivery Time: " + delivery.getDeliveryDate().getTimeString());
-        remarks.setText("Remarks: " + delivery.getRemarks());
+        deliveryId.getChildren().clear();
+        datetime.getChildren().clear();
+        remarks.getChildren().clear();
+
+        // Delivery ID
+        Text deliveryIdHeader = new Text("Delivery ID: \n");
+        deliveryIdHeader.setStyle("-fx-font-weight: bold;");
+        deliveryId.getChildren().addAll(deliveryIdHeader, new Text(delivery.getId().toString()));
+
+        // Datetime
+        Text datetimeHeader = new Text("Delivery Date: \n");
+        datetimeHeader.setStyle("-fx-font-weight: bold;");
+
+        String dateTimeString = delivery.getDeliveryDate().getDateString()
+                + " "
+                + delivery.getDeliveryDate().getTimeString()
+                + "hrs";
+        Text datetimeValue = new Text(dateTimeString);
+
+        datetime.getChildren().addAll(datetimeHeader, datetimeValue);
+
+        // Remarks
+        Text remarksHeader = new Text("Remarks: \n");
+        remarksHeader.setStyle("-fx-font-weight: bold;");
+        remarks.getChildren().addAll(remarksHeader, new Text(delivery.getRemarks()));
+
+
         cost.setText("Cost: $" + delivery.getCost().toString());
         deliveredCheckBox.setSelected(delivery.getStatus());
 
         String tag = delivery.getTag();
-        if (tag != null) {
+        if (tag == null || tag.isBlank()) {
+            tagLabel.setVisible(false);
+            tagLabel.setManaged(false);
+        } else {
+            tagLabel.setVisible(true);
+            tagLabel.setManaged(true);
             tagLabel.setText(tag);
 
-            // Reset any previous styling before setting the new one
-            tagLabel.getStyleClass().removeAll("tag-personal", "tag-corporate", "tag-generic");
+            tagLabel.getStyleClass().removeAll("personal", "corporate", "other");
 
-            switch (delivery.getTagKind()) {
-            case PERSONAL:
-                tagLabel.getStyleClass().add("tag-personal");
+            String variant;
+            switch (tag.trim().toLowerCase()) {
+            case "personal":
+                variant = "personal";
                 break;
-            case CORPORATE:
-                tagLabel.getStyleClass().add("tag-corporate");
+            case "corporate":
+                variant = "corporate";
                 break;
             default:
-                tagLabel.getStyleClass().add("tag-generic");
+                variant = "other";
                 break;
             }
 
-            // Show the pill and let layout allocate space for it
-            tagLabel.setManaged(true);
-            tagLabel.setVisible(true);
-        } else {
-            // Hide and remove from layout flow when there’s no tag
-            tagLabel.setManaged(false);
-            tagLabel.setVisible(false);
+            tagLabel.getStyleClass().add(variant);
         }
-
     }
 }
