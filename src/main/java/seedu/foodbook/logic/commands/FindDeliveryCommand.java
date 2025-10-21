@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
 import seedu.foodbook.model.Model;
-import seedu.foodbook.model.delivery.DeliveryContainsDatePredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Retrieves and displays all deliveries in FoodBook scheduled for the specified date.
@@ -16,15 +16,21 @@ public class FindDeliveryCommand extends Command {
     public static final String COMMAND_WORD = "find_delivery";
 
     /** Usage message showing the correct format for this command. */
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds deliveries by date and displays them as a list "
-            + "with index numbers.\n"
-            + "Parameters: DATE [MORE_\n"
-            + "Example: " + COMMAND_WORD + " 25/12/2024 31/12/2024";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds deliveries by various filters "
+            + "and displays them as a list with index numbers.\n"
+            + "When no filters are specified, displays all deliveries.\n"
+            + "Parameters: [n/CLIENT_NAME] [d/DATE] [t/TAG]...\n"
+            + "Examples:\n"
+            + "- " + COMMAND_WORD + " (lists all deliveries)\n"
+            + "- " + COMMAND_WORD + " n/John Doe\n"
+            + "- " + COMMAND_WORD + " d/25/12/2024\n"
+            + "- " + COMMAND_WORD + " t/urgent\n"
+            + "- " + COMMAND_WORD + " n/John d/25/12/2024 t/urgent";
 
     /** Predicate indicating the filter condition for find_delivery. */
-    private final DeliveryContainsDatePredicate predicate;
+    private final DeliveryPredicate predicate;
 
-    public FindDeliveryCommand(DeliveryContainsDatePredicate predicate) {
+    public FindDeliveryCommand(DeliveryPredicate predicate) {
         this.predicate = predicate;
     }
 
@@ -51,4 +57,3 @@ public class FindDeliveryCommand extends Command {
                 .toString();
     }
 }
-
