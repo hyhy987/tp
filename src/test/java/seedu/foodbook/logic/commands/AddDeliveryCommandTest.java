@@ -12,6 +12,8 @@ import static seedu.foodbook.testutil.TypicalPersons.BENSON;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,10 @@ import seedu.foodbook.model.ReadOnlyFoodBook;
 import seedu.foodbook.model.ReadOnlyUserPrefs;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.undo.ModelRecord;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.DeliveryBuilder;
 
 public class AddDeliveryCommandTest {
@@ -84,7 +89,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_validParameters_success() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
@@ -105,7 +110,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_nullDateTime_throwsNullPointerException() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
 
@@ -115,7 +120,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_nullRemarks_throwsNullPointerException() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         Double cost = 25.50;
 
@@ -125,7 +130,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_nullCost_throwsNullPointerException() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
 
@@ -135,7 +140,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_withTag_success() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
@@ -147,7 +152,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_withTag_negativeCost() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = -25.50;
@@ -159,7 +164,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_withTag_nullTag() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
@@ -172,7 +177,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void constructor_withTag_blankTag() {
-        String clientName = "Alice Yeoh";
+        Name clientName = new Name("Alice Yeoh");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
@@ -183,7 +188,7 @@ public class AddDeliveryCommandTest {
 
     @Test
     public void execute_clientNotFound_throwsCommandException() {
-        String nonExistentClient = "NonExistent Client";
+        Name nonExistentClient = new Name("NonExistent Client");
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Test delivery";
         Double cost = 25.50;
@@ -199,7 +204,7 @@ public class AddDeliveryCommandTest {
     @Test
     public void execute_clientFound_addSuccessful() throws Exception {
         ModelStubWithClient modelStub = new ModelStubWithClient();
-        String clientName = ALICE.getName().fullName;
+        Name clientName = ALICE.getName();
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Test delivery";
         Double cost = 25.50;
@@ -327,6 +332,36 @@ public class AddDeliveryCommandTest {
         public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public void checkpoint(String commandString) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ModelRecord undo() throws NoMoreUndoException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> getPersonByName(Name clientName) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Delivery> getDeliveryById(Integer deliveryId) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Delivery> getDeliveriesByClientName(Name clientName) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**
@@ -369,12 +404,25 @@ public class AddDeliveryCommandTest {
         public ReadOnlyFoodBook getFoodBook() {
             return new FoodBook();
         }
+
+        @Override
+        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
+        }
+
+        @Override
+        public void checkpoint(String commandString) {
+        }
+
+        @Override
+        public Optional<Person> getPersonByName(Name clientName) {
+            return Optional.empty();
+        }
     }
 
     /**
      * A Model stub that doesn't have any client.
      */
-    private class ModelStubWithoutClient extends ModelStub {
+    private class ModelStubWithoutClient extends ModelStubAcceptingDeliveryAdded {
         @Override
         public ObservableList<Person> getFilteredPersonList() {
             return javafx.collections.FXCollections.observableArrayList();
@@ -394,23 +442,11 @@ public class AddDeliveryCommandTest {
     /**
      * A Model stub that has a client.
      */
-    private class ModelStubWithClient extends ModelStub {
-        final ArrayList<Delivery> deliveriesAdded = new ArrayList<>();
+    private class ModelStubWithClient extends ModelStubAcceptingDeliveryAdded {
 
         @Override
         public ObservableList<Person> getFilteredPersonList() {
             return javafx.collections.FXCollections.observableArrayList(ALICE, BENSON);
-        }
-
-        @Override
-        public boolean hasDelivery(Delivery delivery) {
-            return deliveriesAdded.stream().anyMatch(delivery::equals);
-        }
-
-        @Override
-        public void addDelivery(Delivery delivery) {
-            requireNonNull(delivery);
-            deliveriesAdded.add(delivery);
         }
 
         @Override
@@ -419,9 +455,15 @@ public class AddDeliveryCommandTest {
         }
 
         @Override
-        public ReadOnlyFoodBook getFoodBook() {
-            return new FoodBook();
+        public Optional<Person> getPersonByName(Name clientName) {
+            if (clientName.equals(ALICE.getName())) {
+                return Optional.of(ALICE);
+            } else if (clientName.equals(BENSON.getName())) {
+                return Optional.of(BENSON);
+            }
+            return Optional.empty();
         }
+
     }
 
 }

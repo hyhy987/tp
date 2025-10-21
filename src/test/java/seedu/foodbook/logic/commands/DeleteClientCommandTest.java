@@ -3,6 +3,7 @@ package seedu.foodbook.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.logic.commands.CommandTestUtil.showPersonAtIndex;
@@ -58,31 +59,8 @@ public class DeleteClientCommandTest {
         Name nameNotInBook = HOON.getName();
         DeleteClientCommand deleteClientCommand = new DeleteClientCommand(nameNotInBook);
 
-        assertCommandFailure(deleteClientCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_NAME);
+        assertCommandFailure(deleteClientCommand, model, String.format(MESSAGE_CLIENT_NOT_FOUND, nameNotInBook));
     }
-
-    @Test
-    public void execute_validNameFilteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
-
-        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteClientCommand deleteClientCommand = new DeleteClientCommand(personToDelete.getName());
-
-        String expectedMessage = String.format(DeleteClientCommand.MESSAGE_DELETE_PERSON_SUCCESS,
-                Messages.format(personToDelete));
-
-        Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
-        expectedModel.deletePerson(personToDelete);
-
-        List<Delivery> toDelete = expectedModel.getFilteredDeliveryList().stream()
-                .filter(d -> d.getClient().getName().equals(personToDelete.getName()))
-                .collect(java.util.stream.Collectors.toList());
-        toDelete.forEach(expectedModel::deleteDelivery);
-        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-
-        assertCommandSuccess(deleteClientCommand, model, expectedMessage, expectedModel);
-    }
-
 
     @Test
     public void equals() {

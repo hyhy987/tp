@@ -28,7 +28,7 @@ public class DeleteDeliveryCommandTest {
                 .findFirst()
                 .get();
 
-        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(Index.fromOneBased(1));
+        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(1);
 
         String expectedMessage = String.format(DeleteDeliveryCommand.MESSAGE_DELETE_DELIVERY_SUCCESS,
                 Messages.format(deliveryToDelete));
@@ -42,7 +42,7 @@ public class DeleteDeliveryCommandTest {
     @Test
     public void execute_invalidDeliveryId_throwsCommandException() {
         // Use a delivery ID that doesn't exist
-        Index invalidDeliveryId = Index.fromOneBased(99999);
+        Integer invalidDeliveryId = 99999;
         DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(invalidDeliveryId);
 
         assertCommandFailure(deleteDeliveryCommand, model,
@@ -52,7 +52,7 @@ public class DeleteDeliveryCommandTest {
     @Test
     public void execute_deliveryIdNotInFilteredList_throwsCommandException() {
         // Assuming delivery with ID 100 doesn't exist
-        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(Index.fromOneBased(100));
+        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(100);
 
         assertCommandFailure(deleteDeliveryCommand, model,
                 String.format(DeleteDeliveryCommand.MESSAGE_DELIVERY_NOT_FOUND, 100));
@@ -60,14 +60,14 @@ public class DeleteDeliveryCommandTest {
 
     @Test
     public void equals() {
-        DeleteDeliveryCommand deleteFirstCommand = new DeleteDeliveryCommand(Index.fromOneBased(1));
-        DeleteDeliveryCommand deleteSecondCommand = new DeleteDeliveryCommand(Index.fromOneBased(2));
+        DeleteDeliveryCommand deleteFirstCommand = new DeleteDeliveryCommand(1);
+        DeleteDeliveryCommand deleteSecondCommand = new DeleteDeliveryCommand(2);
 
         // same object -> returns true
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 
         // same values -> returns true
-        DeleteDeliveryCommand deleteFirstCommandCopy = new DeleteDeliveryCommand(Index.fromOneBased(1));
+        DeleteDeliveryCommand deleteFirstCommandCopy = new DeleteDeliveryCommand(1);
         assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
 
         // different types -> returns false
@@ -82,7 +82,7 @@ public class DeleteDeliveryCommandTest {
 
     @Test
     public void toString_validDeliveryId_correctStringRepresentation() {
-        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(Index.fromOneBased(67));
+        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(67);
         String expected = DeleteDeliveryCommand.class.getCanonicalName()
                 + "{deliveryId=67}";
         assertEquals(expected, deleteDeliveryCommand.toString());
@@ -95,7 +95,7 @@ public class DeleteDeliveryCommandTest {
                 .findFirst()
                 .get();
 
-        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(Index.fromOneBased(1));
+        DeleteDeliveryCommand deleteDeliveryCommand = new DeleteDeliveryCommand(1);
         CommandResult result = deleteDeliveryCommand.execute(model);
 
         assertEquals(CommandResult.UiPanel.DELIVERIES, result.getPanelToShow());

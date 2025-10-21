@@ -1,10 +1,12 @@
 package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
+import java.util.Optional;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
@@ -37,27 +39,23 @@ public class DeleteClientCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        List<Person> lastShownList = model.getFilteredPersonList();
 
-        Person target = lastShownList.stream()
-                .filter(p -> p.getName().fullName.equals(toBeDeleted.fullName))
-                .findFirst()
-                .orElseThrow(() -> new CommandException("The name provided is not found"));
+        Optional<Person> maybePerson = model.getPersonByName(toBeDeleted);
+        if (maybePerson.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_CLIENT_NOT_FOUND, toBeDeleted)
+            );
+        }
 
-        model.deletePerson(target);
+        Person clientToDelete = maybePerson.get();
+        List<Delivery> deliveriesToDelete = model.getDeliveriesByClientName(toBeDeleted);
 
+        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
 
-        //deleting all deliveries from FoodBook associated with the deleted client
-        List<Delivery> toDelete = model.getFilteredDeliveryList().stream()
-                .filter(d -> d.getClient().getName().equals(toBeDeleted))
-                .collect(java.util.stream.Collectors.toList());
+        deliveriesToDelete.forEach(model::deleteDelivery);
+        model.deletePerson(clientToDelete);
 
-        toDelete.forEach(model::deleteDelivery);
-
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(target)),
+        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(clientToDelete)),
                 CommandResult.UiPanel.PERSONS);
     }
 

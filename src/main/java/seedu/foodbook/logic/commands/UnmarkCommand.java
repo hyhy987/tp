@@ -3,6 +3,7 @@ package seedu.foodbook.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
@@ -41,32 +42,27 @@ public class UnmarkCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Delivery> lastShownList = model.getFilteredDeliveryList();
 
-        // Find the delivery with the specified ID
-        Delivery deliveryToUnmark = lastShownList.stream()
-                .filter(delivery -> delivery.getId().equals(deliveryId))
-                .findFirst()
-                .orElseThrow(() -> new CommandException(MESSAGE_DELIVERY_NOT_FOUND));
+        Optional<Delivery> maybeDelivery = model.getDeliveryById(deliveryId);
 
-        // Check if delivery is already unmarked as completed
-        if (!deliveryToUnmark.getStatus()) {
+        if (maybeDelivery.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId));
+        }
+
+        Delivery delivery = maybeDelivery.get();
+
+        // Check if delivery is already marked as completed
+        if (!delivery.getStatus()) {
             throw new CommandException(MESSAGE_DELIVERY_ALREADY_UNMARKED);
         }
 
-        // Create a new delivery object with unmarked status
-        Delivery unmarkedDelivery = new Delivery(
-                deliveryToUnmark.getId(),
-                deliveryToUnmark.getClient(),
-                deliveryToUnmark.getDeliveryDate(),
-                deliveryToUnmark.getRemarks(),
-                deliveryToUnmark.getCost(),
-                deliveryToUnmark.getTag()
-        );
-        unmarkedDelivery.unmarkAsDelivered();
+        Delivery unmarkedDelivery = delivery.unmarkAsDelivered();
+
+        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
 
         // Update the model
-        model.setDelivery(deliveryToUnmark, unmarkedDelivery);
+        model.setDelivery(delivery, unmarkedDelivery);
 
         return new CommandResult(String.format(MESSAGE_UNMARK_DELIVERY_SUCCESS, Messages.format(unmarkedDelivery)),
                 CommandResult.UiPanel.DELIVERIES);

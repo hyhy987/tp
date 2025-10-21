@@ -83,7 +83,7 @@ public class FoodBookParserTest {
         // Test with delivery ID 67 (as per specification)
         DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
                 DeleteDeliveryCommand.COMMAND_WORD + " 67");
-        assertEquals(new DeleteDeliveryCommand(Index.fromOneBased(67)), command);
+        assertEquals(new DeleteDeliveryCommand(67), command);
     }
 
 
@@ -93,7 +93,7 @@ public class FoodBookParserTest {
         EditClientCommand.EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(person).build();
         EditClientCommand command = (EditClientCommand) parser.parseCommand(EditClientCommand.COMMAND_WORD + " "
                 + BOB.getName().fullName + " " + PersonUtil.getEditPersonDescriptorDetails(descriptor));
-        assertEquals(new EditClientCommand(BOB.getName().fullName, descriptor), command);
+        assertEquals(new EditClientCommand(BOB.getName(), descriptor), command);
     }
 
     @Test

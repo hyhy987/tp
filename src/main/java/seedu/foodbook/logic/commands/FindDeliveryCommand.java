@@ -31,7 +31,11 @@ public class FindDeliveryCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+
+        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+
         model.updateFilteredDeliveryList(predicate);
+
         return new CommandResult(
                 String.format(Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW, model.getFilteredDeliveryList().size()),
                 CommandResult.UiPanel.DELIVERIES);

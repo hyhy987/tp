@@ -29,6 +29,9 @@ public class ListDeliveryCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+
+        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         return new CommandResult(MESSAGE_SUCCESS, CommandResult.UiPanel.DELIVERIES);
     }

@@ -94,11 +94,11 @@ public class DeliveryTest {
         // Initially not delivered
         assertFalse(testDelivery.getStatus());
 
-        testDelivery.markAsDelivered();
-        assertTrue(testDelivery.getStatus());
+        Delivery markedDelivery = testDelivery.markAsDelivered();
+        assertTrue(markedDelivery.getStatus());
 
-        testDelivery.unmarkAsDelivered();
-        assertFalse(testDelivery.getStatus());
+        Delivery unmarkedDelivery = markedDelivery.unmarkAsDelivered();
+        assertFalse(unmarkedDelivery.getStatus());
     }
 
     @Test

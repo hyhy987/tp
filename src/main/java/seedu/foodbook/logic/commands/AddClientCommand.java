@@ -56,6 +56,7 @@ public class AddClientCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
+        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
         model.addPerson(toAdd);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)),
                 CommandResult.UiPanel.PERSONS);

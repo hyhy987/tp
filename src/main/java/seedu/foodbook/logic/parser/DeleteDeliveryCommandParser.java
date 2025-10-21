@@ -26,7 +26,7 @@ public class DeleteDeliveryCommandParser implements Parser<DeleteDeliveryCommand
             }
 
             Integer deliveryId = ParserUtil.parseDeliveryId(trimmedArgs);
-            return new DeleteDeliveryCommand(fromOneBased(deliveryId));
+            return new DeleteDeliveryCommand(deliveryId);
         } catch (ParseException pe) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteDeliveryCommand.MESSAGE_USAGE), pe);

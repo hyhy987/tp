@@ -1,6 +1,7 @@
 package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
@@ -19,6 +20,7 @@ import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
 
 /**
@@ -73,26 +75,25 @@ public class EditDeliveryCommand extends Command {
             throw new CommandException(MESSAGE_NOT_EDITED);
         }
 
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        List<Delivery> lastShownList = model.getFilteredDeliveryList();
+        Optional<Delivery> maybeDelivery = model.getDeliveryById(deliveryId);
 
-        // Find delivery by ID
-        Delivery deliveryToEdit = lastShownList.stream()
-                .filter(d -> d.getId().equals(deliveryId))
-                .findFirst()
-                .orElseThrow(() -> new CommandException(
-                        String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId)));
+        if (maybeDelivery.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId));
+        }
 
-        Delivery editedDelivery = createEditedDelivery(deliveryToEdit, editDeliveryDescriptor, model);
+        Delivery oldDelivery = maybeDelivery.get();
 
-        if (!deliveryToEdit.equals(editedDelivery) && model.hasDelivery(editedDelivery)) {
+        Delivery newDelivery = createEditedDelivery(oldDelivery, editDeliveryDescriptor, model);
+
+        if (!oldDelivery.equals(newDelivery) && model.hasDelivery(newDelivery )) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
         }
 
-        model.setDelivery(deliveryToEdit, editedDelivery);
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
+        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+        model.setDelivery(oldDelivery, newDelivery);
 
-        return new CommandResult(String.format(MESSAGE_EDIT_DELIVERY_SUCCESS, Messages.format(editedDelivery)),
+        return new CommandResult(String.format(MESSAGE_EDIT_DELIVERY_SUCCESS, Messages.format(newDelivery)),
                 CommandResult.UiPanel.DELIVERIES);
     }
 
@@ -107,11 +108,15 @@ public class EditDeliveryCommand extends Command {
         // Get new client if name is being changed
         Person updatedClient = deliveryToEdit.getClient();
         if (editDeliveryDescriptor.getClientName().isPresent()) {
-            String newClientName = editDeliveryDescriptor.getClientName().get();
-            updatedClient = model.getFilteredPersonList().stream()
-                    .filter(person -> person.getName().fullName.equals(newClientName))
-                    .findFirst()
-                    .orElseThrow(() -> new CommandException("Client not found: " + newClientName));
+            Name newClientName = new Name(editDeliveryDescriptor.getClientName().get());
+            Optional<Person> maybePerson = model.getPersonByName(newClientName);
+
+            if (maybePerson.isEmpty()) {
+                throw new CommandException(
+                        String.format(MESSAGE_CLIENT_NOT_FOUND, newClientName));
+            }
+
+            updatedClient = maybePerson.get();
         }
 
         DateTime updatedDateTime = editDeliveryDescriptor.getDateTime().orElse(deliveryToEdit.getDeliveryDate());
@@ -125,11 +130,7 @@ public class EditDeliveryCommand extends Command {
         boolean wasDelivered = deliveryToEdit.getStatus();
 
         Delivery editedDelivery = new Delivery(deliveryToEdit.getId(), updatedClient,
-                updatedDateTime, updatedRemarks, updatedCost, null);
-
-        if (wasDelivered) {
-            editedDelivery.markAsDelivered();
-        }
+                updatedDateTime, updatedRemarks, updatedCost, deliveryToEdit.getTag(), wasDelivered);
 
         return editedDelivery;
     }

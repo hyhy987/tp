@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -11,8 +13,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.foodbook.commons.core.GuiSettings;
 import seedu.foodbook.commons.core.LogsCenter;
+import seedu.foodbook.logic.commands.CommandResult;
+import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+
+import seedu.foodbook.model.undo.ModelRecord;
+import seedu.foodbook.model.undo.UndoStack;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 
 /**
  * Represents the in-memory model of the food book data.
@@ -24,6 +33,9 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Delivery> filteredDeliveries;
+
+    private final UndoStack<ModelRecord> undoStack;
+    private CommandResult.UiPanel curUiPanel;
 
     /**
      * Initializes a ModelManager with the given foodBook and userPrefs.
@@ -37,6 +49,9 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.foodBook.getPersonList());
         filteredDeliveries = new FilteredList<>(this.foodBook.getDeliveryList());
+
+        this.undoStack = new UndoStack<>();
+        this.curUiPanel = CommandResult.UiPanel.PERSONS;
     }
 
     public ModelManager() {
@@ -99,6 +114,13 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public Optional<Person> getPersonByName(Name clientName) {
+        return this.foodBook.getPersonList().stream()
+                .filter(person -> person.getName().equals(clientName))
+                .findFirst();
+    }
+
+    @Override
     public void deletePerson(Person target) {
         foodBook.removePerson(target);
     }
@@ -139,6 +161,20 @@ public class ModelManager implements Model {
     public boolean hasDelivery(Delivery delivery) {
         requireNonNull(delivery);
         return foodBook.hasDelivery(delivery);
+    }
+
+    @Override
+    public Optional<Delivery> getDeliveryById(Integer deliveryId) {
+        return this.foodBook.getDeliveryList().stream()
+                .filter(delivery -> delivery.getId().equals(deliveryId))
+                .findFirst();
+    }
+
+    @Override
+    public List<Delivery> getDeliveriesByClientName(Name clientName) {
+        return this.foodBook.getDeliveryList().stream()
+                .filter(delivery -> delivery.getClient().getName().equals(clientName))
+                .toList();
     }
 
     @Override
@@ -192,6 +228,36 @@ public class ModelManager implements Model {
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredPersons.equals(otherModelManager.filteredPersons)
                 && filteredDeliveries.equals(otherModelManager.filteredDeliveries);
+    }
+
+    //=========== Undo State Management =============================================================
+    @Override
+    public void checkpoint(String commandString) {
+        ModelRecord record = new ModelRecord(
+                commandString,
+                this.curUiPanel,
+                this.filteredPersons.getPredicate(),
+                this.filteredDeliveries.getPredicate()
+        );
+
+        this.undoStack.checkpoint(record);
+        this.foodBook.checkpoint();
+    }
+
+    @Override
+    public ModelRecord undo() throws NoMoreUndoException {
+        ModelRecord record = this.undoStack.undo();
+
+        this.foodBook.undo();
+
+        filteredPersons.setPredicate(record.personListPredicate());
+        filteredDeliveries.setPredicate(record.deliveryListPredicate());
+
+        return record;
+    }
+    @Override
+    public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
+        this.curUiPanel = uiPanel;
     }
 
 }

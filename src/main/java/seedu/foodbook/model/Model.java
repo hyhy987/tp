@@ -1,12 +1,18 @@
 package seedu.foodbook.model;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.foodbook.commons.core.GuiSettings;
+import seedu.foodbook.logic.commands.CommandResult;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.undo.ModelRecord;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 
 /**
  * The API of the Model component.
@@ -59,6 +65,8 @@ public interface Model {
      */
     boolean hasPerson(Person person);
 
+    Optional<Person> getPersonByName(Name name);
+
     /**
      * Deletes the given person.
      * The person must exist in the food book.
@@ -92,6 +100,10 @@ public interface Model {
      */
     boolean hasDelivery(Delivery delivery);
 
+    Optional<Delivery> getDeliveryById(Integer id);
+
+    List<Delivery> getDeliveriesByClientName(Name clientName);
+
     /**
      * Deletes the given delivery.
      * The delivery must exist in the food book.
@@ -120,4 +132,11 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredDeliveryList(Predicate<Delivery> predicate);
+
+
+    void checkpoint(String commandString);
+
+    ModelRecord undo() throws NoMoreUndoException;
+
+    void setCurUiPanel(CommandResult.UiPanel uiPanel);
 }

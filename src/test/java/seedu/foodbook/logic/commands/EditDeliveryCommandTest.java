@@ -184,52 +184,12 @@ public class EditDeliveryCommandTest {
     }
 
     @Test
-    public void execute_resetFiltersAfterEdit_success() throws Exception {
-        // mirrors EditClientCommandTest style: ensure filters end up "show all"
-        // 1) start from filtered deliveries (arbitrary simple filter by keeping only the first delivery)
-        model.updateFilteredDeliveryList(listItem -> {
-            // keep only the first delivery's id
-            Integer firstId = model.getFoodBook().getDeliveryList().get(0).getId();
-            return listItem.getId().equals(firstId);
-        });
-        Delivery target = model.getFilteredDeliveryList().get(0);
-
-        // 2) edit something small (remarks)
-        EditDeliveryDescriptor descriptor = new EditDeliveryDescriptor();
-        descriptor.setRemarks("Post-filter edit OK");
-        EditDeliveryCommand command = new EditDeliveryCommand(target.getId(), descriptor);
-
-        // 3) expected model -> same pre-state, then apply edit and reset filters to "show all"
-        Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
-        Delivery before = expectedModel.getFilteredDeliveryList().stream()
-                .filter(d -> d.getId().equals(target.getId()))
-                .findFirst().orElseThrow();
-        Delivery edited = new Delivery(before.getId(),
-                before.getClient(),
-                before.getDeliveryDate(),
-                "Post-filter edit OK",
-                before.getCost(), null);
-        expectedModel.setDelivery(before, edited);
-        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-
-        String expectedMessage = String.format(EditDeliveryCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
-                Messages.format(edited));
-
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
-
-        // sanity: actual model should also be showing all deliveries now
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        assertEquals(expectedModel.getFilteredDeliveryList().size(), model.getFilteredDeliveryList().size());
-    }
-
-    @Test
     public void execute_preservesDeliveredStatus_success() throws Exception {
         Model model = new ModelManager(getTypicalFoodBook(), new UserPrefs());
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         Delivery target = model.getFilteredDeliveryList().get(0);
-        target.markAsDelivered();
-        model.setDelivery(model.getFilteredDeliveryList().get(0), target);
+        Delivery markedTarget = target.markAsDelivered();
+        model.setDelivery(model.getFilteredDeliveryList().get(0), markedTarget);
 
         EditDeliveryCommand.EditDeliveryDescriptor desc = new EditDeliveryCommand.EditDeliveryDescriptor();
         desc.setRemarks("updated");

@@ -1,6 +1,7 @@
 package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
@@ -54,14 +55,14 @@ public class EditClientCommand extends Command {
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the food book.";
 
-    private final String currentClientName;
+    private final Name currentClientName;
     private final EditPersonDescriptor editPersonDescriptor;
 
     /**
      * @param currentClientName of the person in the filtered person list to edit
      * @param editPersonDescriptor details to edit the person with
      */
-    public EditClientCommand(String currentClientName, EditPersonDescriptor editPersonDescriptor) {
+    public EditClientCommand(Name currentClientName, EditPersonDescriptor editPersonDescriptor) {
         requireNonNull(currentClientName);
         requireNonNull(editPersonDescriptor);
 
@@ -75,46 +76,34 @@ public class EditClientCommand extends Command {
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        Person target = lastShownList.stream()
-                .filter(p -> p.getName().fullName.equals(currentClientName))
-                .findFirst()
-                .orElseThrow(() -> new CommandException("Client not found: " + currentClientName));
+        // TODO: Get Client By NAME
+        Optional<Person> maybePerson =  model.getPersonByName(currentClientName);
 
-        int indexInt = lastShownList.indexOf(target);
-        Index index = Index.fromZeroBased(indexInt);
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        if (maybePerson.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_CLIENT_NOT_FOUND, currentClientName)
+            );
         }
 
-        Person personToEdit = lastShownList.get(index.getZeroBased());
-        Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
+        Person oldClient = maybePerson.get();
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
+        Person newClient = createEditedPerson(oldClient, editPersonDescriptor);
+
+        if (!newClient.isSamePerson(oldClient) && model.hasPerson(newClient)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        model.setPerson(personToEdit, editedPerson);
+        List<Delivery> deliveryList = model.getDeliveriesByClientName(currentClientName);
 
+        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
 
-        model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-        // Update every delivery whose client == personToEdit
-        model.getFilteredDeliveryList().stream()
-                .filter(d -> d.getClient().isSamePerson(personToEdit)) // or .equals(personToEdit)
-                .forEach(d -> {
-                    Delivery updated = new Delivery(
-                            d.getId(),
-                            editedPerson, // <-- replace the old client details with new client details
-                            d.getDeliveryDate(),
-                            d.getRemarks(),
-                            d.getCost(),
-                            d.getTag());
-                    model.setDelivery(d, updated); // replace in the model
-                });
+        model.setPerson(oldClient, newClient);
+        deliveryList.forEach(oldDelivery -> {
+            Delivery updatedDelivery = oldDelivery.copyWithNewClient(newClient);
+            model.setDelivery(oldDelivery, updatedDelivery);
+        });
 
-
-
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
+        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(newClient)),
                 CommandResult.UiPanel.PERSONS);
     }
 

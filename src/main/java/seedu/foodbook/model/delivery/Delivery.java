@@ -15,7 +15,7 @@ public class Delivery {
 
     // Identity fields
     private final Integer id;
-    private boolean isDelivered;
+    private final boolean isDelivered;
     private final Person client;
     private final DateTime datetime;
     private final String remarks;
@@ -28,8 +28,8 @@ public class Delivery {
      * Every field must be present and not null.
      */
     public Delivery(Integer id, Person client, DateTime datetime,
-                  String remarks, Double cost, String tag) {
-        requireAllNonNull(id, client, datetime, remarks, cost);
+                  String remarks, Double cost, String tag, Boolean isDelivered) {
+        requireAllNonNull(id, client, datetime, remarks, cost, isDelivered);
         this.id = id;
         this.client = client;
         this.datetime = datetime;
@@ -41,7 +41,12 @@ public class Delivery {
             this.tag = tag;
         }
 
-        this.isDelivered = false;
+        this.isDelivered = isDelivered;
+    }
+
+    public Delivery(Integer id, Person client, DateTime datetime,
+                    String remarks, Double cost, String tag) {
+        this(id, client, datetime, remarks, cost, tag, false);
     }
 
     public Integer getId() {
@@ -52,12 +57,27 @@ public class Delivery {
         return this.isDelivered;
     }
 
-    public void markAsDelivered() {
-        this.isDelivered = true;
+    public Delivery markAsDelivered() {
+        return new Delivery(
+                this.getId(),
+                this.getClient(),
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag(),
+                true
+        );
     }
 
-    public void unmarkAsDelivered() {
-        this.isDelivered = false;
+    public Delivery unmarkAsDelivered() {
+        return new Delivery(
+                this.getId(),
+                this.getClient(),
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag()
+        );
     }
 
     public Person getClient() {
@@ -119,6 +139,16 @@ public class Delivery {
         }
 
         return this.id.equals(((Delivery) other).id);
+    }
+
+    public Delivery copyWithNewClient(Person newClient) {
+        return new Delivery(
+                this.getId(),
+                newClient,
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag());
     }
 
     @Override

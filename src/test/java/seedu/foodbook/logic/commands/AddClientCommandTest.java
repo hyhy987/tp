@@ -10,6 +10,8 @@ import static seedu.foodbook.testutil.TypicalPersons.ALICE;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,10 @@ import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ReadOnlyFoodBook;
 import seedu.foodbook.model.ReadOnlyUserPrefs;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.undo.ModelRecord;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.PersonBuilder;
 
 public class AddClientCommandTest {
@@ -142,6 +147,11 @@ public class AddClientCommandTest {
         }
 
         @Override
+        public Optional<Person> getPersonByName(Name clientName) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void deletePerson(Person target) {
             throw new AssertionError("This method should not be called.");
         }
@@ -172,6 +182,16 @@ public class AddClientCommandTest {
         }
 
         @Override
+        public Optional<Delivery> getDeliveryById(Integer deliveryId) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Delivery> getDeliveriesByClientName(Name clientName) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void deleteDelivery(Delivery target) {
             throw new AssertionError("This method should not be called.");
         }
@@ -188,6 +208,21 @@ public class AddClientCommandTest {
 
         @Override
         public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void checkpoint(String commandString) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ModelRecord undo() throws NoMoreUndoException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
             throw new AssertionError("This method should not be called.");
         }
     }
@@ -226,6 +261,15 @@ public class AddClientCommandTest {
         public void addPerson(Person person) {
             requireNonNull(person);
             personsAdded.add(person);
+        }
+
+        // Do nothing
+        @Override
+        public void checkpoint(String commandString) {
+        }
+
+        @Override
+        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
         }
 
         @Override

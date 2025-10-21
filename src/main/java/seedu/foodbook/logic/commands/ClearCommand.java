@@ -17,6 +17,8 @@ public class ClearCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+
+        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
         model.setFoodBook(new FoodBook());
         return new CommandResult(MESSAGE_SUCCESS, CommandResult.UiPanel.PERSONS);
     }

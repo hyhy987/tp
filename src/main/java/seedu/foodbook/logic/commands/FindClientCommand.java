@@ -47,6 +47,8 @@ public class FindClientCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+
+        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
         model.updateFilteredPersonList(predicate);
 
         int numClientsFound = model.getFilteredPersonList().size();

@@ -10,6 +10,10 @@ import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.delivery.UniqueDeliveryList;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.model.person.UniquePersonList;
+import seedu.foodbook.model.undo.FoodBookRecord;
+import seedu.foodbook.model.undo.ModelRecord;
+import seedu.foodbook.model.undo.UndoStack;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 
 /**
  * Wraps all data at the food-book level
@@ -19,6 +23,8 @@ public class FoodBook implements ReadOnlyFoodBook {
 
     private final UniquePersonList persons;
     private final UniqueDeliveryList deliveries;
+
+    private final UndoStack<FoodBookRecord> undoStack;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -30,6 +36,7 @@ public class FoodBook implements ReadOnlyFoodBook {
     {
         persons = new UniquePersonList();
         deliveries = new UniqueDeliveryList();
+        undoStack = new UndoStack<>();
     }
 
     public FoodBook() {}
@@ -179,5 +186,23 @@ public class FoodBook implements ReadOnlyFoodBook {
     @Override
     public int hashCode() {
         return persons.hashCode();
+    }
+
+    //=========== Undo State Management =============================================================
+    public void checkpoint() {
+        FoodBookRecord record = new FoodBookRecord(
+                List.copyOf(getPersonList()),
+                List.copyOf(getDeliveryList())
+        );
+
+        this.undoStack.checkpoint(record);
+    }
+
+    public void undo() throws NoMoreUndoException {
+        FoodBookRecord record = this.undoStack.undo();
+
+        this.setPersons(record.personList());
+        this.setDeliveries(record.deliveryList());
+
     }
 }

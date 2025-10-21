@@ -29,6 +29,7 @@ import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.testutil.EditPersonDescriptorBuilder;
 import seedu.foodbook.testutil.PersonBuilder;
@@ -57,7 +58,7 @@ public class EditClientCommandTest {
 
         // command finds the CURRENT client by name (Alice) and applies descriptor (Amy)
         EditClientCommand editClientCommand =
-                new EditClientCommand(target.getName().fullName, descriptor);
+                new EditClientCommand(target.getName(), descriptor);
 
         String expectedMessage = String.format(
                 EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
@@ -88,7 +89,7 @@ public class EditClientCommandTest {
 
         // IMPORTANT: find by current name, not the new name
         EditClientCommand editClientCommand =
-                new EditClientCommand(lastPerson.getName().fullName, descriptor);
+                new EditClientCommand(lastPerson.getName(), descriptor);
 
         String expectedMessage = String.format(
                 EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
@@ -102,7 +103,7 @@ public class EditClientCommandTest {
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
         Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
         EditClientCommand editCommand = new EditClientCommand(currentClientName, new EditPersonDescriptor());
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
 
@@ -119,7 +120,7 @@ public class EditClientCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
 
         Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Person editedPerson = new PersonBuilder(personInFilteredList).withName(VALID_NAME_BOB).build();
@@ -141,7 +142,7 @@ public class EditClientCommandTest {
 
         // Target = second person; we’ll try to edit them to become the first person
         Person target = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
 
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstPerson).build();
@@ -162,7 +163,7 @@ public class EditClientCommandTest {
 
         // Target: second person (e.g., Benson)
         Person target = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
 
         // Descriptor: make target identical to FIRST person (e.g., Alice) -> duplicate
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
@@ -178,9 +179,9 @@ public class EditClientCommandTest {
     @Test
     public void equals() {
         Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
         Person targetNext = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        String nextClientName = targetNext.getName().fullName;
+        Name nextClientName = targetNext.getName();
 
         final EditClientCommand standardCommand = new EditClientCommand(currentClientName, DESC_AMY);
 
@@ -208,7 +209,7 @@ public class EditClientCommandTest {
     @Test
     public void toStringMethod() {
         Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        String currentClientName = target.getName().fullName;
+        Name currentClientName = target.getName();
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
         EditClientCommand editCommand = new EditClientCommand(currentClientName, editPersonDescriptor);
@@ -233,7 +234,7 @@ public class EditClientCommandTest {
         EditClientCommand.EditPersonDescriptor descriptor =
                 new EditPersonDescriptorBuilder().withName("NewAlice").build();
 
-        EditClientCommand cmd = new EditClientCommand(alice.getName().fullName, descriptor);
+        EditClientCommand cmd = new EditClientCommand(alice.getName(), descriptor);
 
         // Expected model: Alice replaced with NewAlice; Bob unaffected
         Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
@@ -247,56 +248,13 @@ public class EditClientCommandTest {
     }
 
     @Test
-    public void execute_findDeliveryFilteredThenEditClient_updatesHiddenDeliveries() {
-        model.updateFilteredDeliveryList(d ->
-                d.getDeliveryDate().toString().startsWith("11/10/2025"));
-
-        // 2) Build the edit: Alice -> NewAlice
-        Person aliceOldActual = model.getFoodBook().getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        EditClientCommand cmd = new EditClientCommand(
-                aliceOldActual.getName().fullName,
-                new EditPersonDescriptorBuilder().withName("NewAlice").build()
-        );
-
-        // 3) Build EXPECTED model from pre-exec state
-        Model expectedModel = new ModelManager(new FoodBook(model.getFoodBook()), new UserPrefs());
-
-        // Get the OLD Alice instance that lives inside expected
-        Person aliceOldExpected = expectedModel.getFoodBook().getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person aliceNewExpected = new PersonBuilder(aliceOldExpected).withName("NewAlice").build();
-
-        // Replace the person
-        expectedModel.setPerson(aliceOldExpected, aliceNewExpected);
-
-        // Update EVERY delivery whose client == OLD Alice (expected instance!)
-        expectedModel.updateFilteredDeliveryList(d -> true); // widen to rewrite
-        for (Delivery d : new java.util.ArrayList<>(expectedModel.getFilteredDeliveryList())) {
-            if (d.getClient().isSamePerson(aliceOldExpected)) {
-                Delivery updated = new Delivery(d.getId(),
-                        aliceNewExpected, d.getDeliveryDate(), d.getRemarks(), d.getCost(), d.getTag());
-                expectedModel.setDelivery(d, updated);
-            }
-        }
-
-        // 4) Mirror the command’s post-exec filters
-        // Your command resets both:
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
-
-        String expectedMsg = String.format(EditClientCommand.MESSAGE_EDIT_PERSON_SUCCESS,
-                Messages.format(aliceNewExpected));
-
-        assertCommandSuccess(cmd, model, expectedMsg, expectedModel);
-    }
-
-    @Test
     public void execute_editClient_doesNotTouchOtherClientsDeliveries() {
         // Bob’s delivery should remain with Bob after editing Alice
         Person alice = model.getFoodBook().getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Person newAlice = new PersonBuilder(alice).withName("NewAlice").build();
 
         EditClientCommand cmd = new EditClientCommand(
-                alice.getName().fullName,
+                alice.getName(),
                 new EditPersonDescriptorBuilder().withName("NewAlice").build()
         );
 

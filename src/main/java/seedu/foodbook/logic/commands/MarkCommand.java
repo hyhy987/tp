@@ -3,6 +3,7 @@ package seedu.foodbook.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
@@ -41,32 +42,28 @@ public class MarkCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Delivery> lastShownList = model.getFilteredDeliveryList();
 
-        // Find the delivery with the specified ID
-        Delivery deliveryToMark = lastShownList.stream()
-                .filter(delivery -> delivery.getId().equals(deliveryId))
-                .findFirst()
-                .orElseThrow(() -> new CommandException(MESSAGE_DELIVERY_NOT_FOUND));
+        Optional<Delivery> maybeDelivery = model.getDeliveryById(deliveryId);
+
+        if (maybeDelivery.isEmpty()) {
+            throw new CommandException(
+                    String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId));
+        }
+
+        Delivery delivery = maybeDelivery.get();
 
         // Check if delivery is already marked as completed
-        if (deliveryToMark.getStatus()) {
+        if (delivery.getStatus()) {
             throw new CommandException(MESSAGE_DELIVERY_ALREADY_MARKED);
         }
 
         // Create a new delivery object with marked status
-        Delivery markedDelivery = new Delivery(
-                deliveryToMark.getId(),
-                deliveryToMark.getClient(),
-                deliveryToMark.getDeliveryDate(),
-                deliveryToMark.getRemarks(),
-                deliveryToMark.getCost(),
-                deliveryToMark.getTag()
-        );
-        markedDelivery.markAsDelivered();
+        Delivery markedDelivery = delivery.markAsDelivered();
+
+        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
 
         // Update the model
-        model.setDelivery(deliveryToMark, markedDelivery);
+        model.setDelivery(delivery, markedDelivery);
 
         return new CommandResult(String.format(MESSAGE_MARK_DELIVERY_SUCCESS, Messages.format(markedDelivery)),
                 CommandResult.UiPanel.DELIVERIES);
