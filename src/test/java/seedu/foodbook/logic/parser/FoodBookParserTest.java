@@ -23,6 +23,7 @@ import seedu.foodbook.logic.commands.FindClientCommand;
 import seedu.foodbook.logic.commands.FindDeliveryCommand;
 import seedu.foodbook.logic.commands.HelpCommand;
 import seedu.foodbook.logic.commands.ListCommand;
+import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
 import seedu.foodbook.logic.commands.UnmarkCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
@@ -138,6 +139,23 @@ public class FoodBookParserTest {
         assertTrue(parser.parseCommand(UnmarkCommand.COMMAND_WORD + " 3") instanceof UnmarkCommand);
     }
 
+    @Test
+    public void parseCommand_listRevenue() throws Exception {
+        // Test with no parameters
+        assertTrue(parser.parseCommand(ListRevenueCommand.COMMAND_WORD) instanceof ListRevenueCommand);
+
+        // Test with parameters
+        String commandWithParams = ListRevenueCommand.COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024";
+        assertTrue(parser.parseCommand(commandWithParams) instanceof ListRevenueCommand);
+
+        // Test with status filter
+        String commandWithStatus = ListRevenueCommand.COMMAND_WORD + " s/delivered";
+        assertTrue(parser.parseCommand(commandWithStatus) instanceof ListRevenueCommand);
+
+        // Test with client name filter
+        String commandWithName = ListRevenueCommand.COMMAND_WORD + " n/Alice";
+        assertTrue(parser.parseCommand(commandWithName) instanceof ListRevenueCommand);
+    }
 
     @Test
     public void parseCommand_unrecognisedInput_throwsParseException() {
