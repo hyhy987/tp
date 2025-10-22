@@ -6,38 +6,62 @@ skinparam classBackgroundColor STORAGE_COLOR
 
 package Storage as StoragePackage {
 
-package "UserPrefs Storage" #F4F6F6{
-Class "<<interface>>\nUserPrefsStorage" as UserPrefsStorage
-Class JsonUserPrefsStorage
+  package "UserPrefs Storage" #F4F6F6 {
+    Class "<<interface>>\nUserPrefsStorage" as UserPrefsStorage
+    Class JsonUserPrefsStorage
+  }
+
+  Class "<<interface>>\nStorage" as Storage
+  Class StorageManager
+
+  package "AddressBook Storage" #F4F6F6 {
+    Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
+    Class JsonAddressBookStorage
+    Class JsonSerializableAddressBook
+    Class JsonAdaptedPerson
+    Class JsonAdaptedTag
+  }
+
+  ' New: Delivery book storage parallel to AddressBook storage
+  package "DeliveryBook Storage" #F4F6F6 {
+    Class "<<interface>>\nDeliveryBookStorage" as DeliveryBookStorage
+    Class JsonDeliveryBookStorage
+    Class JsonSerializableDeliveryBook
+    Class JsonAdaptedDelivery
+    ' If you model delivery-specific tags separately, keep this; otherwise remove.
+    ' Class JsonAdaptedDeliveryTag
+  }
 }
 
-Class "<<interface>>\nStorage" as Storage
-Class StorageManager
-
-package "AddressBook Storage" #F4F6F6{
-Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
-Class JsonAddressBookStorage
-Class JsonSerializableAddressBook
-Class JsonAdaptedPerson
-Class JsonAdaptedTag
-}
-
-}
-
+' Visibility helper (unchanged)
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
+' Manager implements Storage facade and holds concrete storages
 StorageManager .up.|> Storage
 StorageManager -up-> "1" UserPrefsStorage
 StorageManager -up-> "1" AddressBookStorage
+StorageManager -up-> "1" DeliveryBookStorage
 
+' Storage facade refines into the three store interfaces
 Storage -left-|> UserPrefsStorage
 Storage -right-|> AddressBookStorage
+Storage -down-|> DeliveryBookStorage
 
+' Concrete implementations
 JsonUserPrefsStorage .up.|> UserPrefsStorage
+
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedPerson
 JsonAdaptedPerson --> "*" JsonAdaptedTag
+
+' New: Delivery book JSON wiring
+JsonDeliveryBookStorage .up.|> DeliveryBookStorage
+JsonDeliveryBookStorage ..> JsonSerializableDeliveryBook
+JsonSerializableDeliveryBook --> "*" JsonAdaptedDelivery
+
+' If deliveries encode a link to a person in JSON, show the dependency:
+JsonAdaptedDelivery ..> JsonAdaptedPerson : references client
 
 @enduml
