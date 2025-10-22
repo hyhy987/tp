@@ -6,7 +6,6 @@ import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BOB_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,16 +18,16 @@ public class DeliveryPredicateTest {
     @Test
     public void equals() {
         DeliveryPredicate firstPredicate = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of(List.of("urgent")));
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("personal"));
         DeliveryPredicate secondPredicate = new DeliveryPredicate(
-                Optional.of("Bob"), Optional.of("26/12/2024"), Optional.of(List.of("corporate")));
+                Optional.of("Bob"), Optional.of("26/12/2024"), Optional.of("corporate"));
 
         // same object -> returns true
         assertTrue(firstPredicate.equals(firstPredicate));
 
         // same values -> returns true
         DeliveryPredicate firstPredicateCopy = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of(List.of("urgent")));
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("personal"));
         assertTrue(firstPredicate.equals(firstPredicateCopy));
 
         // different types -> returns false
@@ -42,14 +41,14 @@ public class DeliveryPredicateTest {
     }
 
     @Test
-    public void test_noFiltersProvided_returnsTrue() {
-        // No filters -> should match all deliveries
+    public void test_noFiltersProvided_returnsFalse() {
+        // No filters -> return false
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.empty(), Optional.empty(), Optional.empty());
 
-        assertTrue(predicate.test(ALICE_DELIVERY));
-        assertTrue(predicate.test(BOB_DELIVERY));
-        assertTrue(predicate.test(CARL_DELIVERY));
+        assertFalse(predicate.test(ALICE_DELIVERY));
+        assertFalse(predicate.test(BOB_DELIVERY));
+        assertFalse(predicate.test(CARL_DELIVERY));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class DeliveryPredicateTest {
         // Single tag matching
         // Assuming ALICE_DELIVERY has tag "personal"
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("personal")));
+                Optional.empty(), Optional.empty(), Optional.of("personal"));
 
         assertTrue(predicate.test(ALICE_DELIVERY));
     }
@@ -120,41 +119,21 @@ public class DeliveryPredicateTest {
     public void test_singleTagDoesNotMatch_returnsFalse() {
         // Tag doesn't match
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("corporate")));
+                Optional.empty(), Optional.empty(), Optional.of("corporate"));
 
         // ALICE_DELIVERY has tag "personal", not "corporate"
         assertFalse(predicate.test(ALICE_DELIVERY));
     }
 
     @Test
-    public void test_multipleTagsOneMatches_returnsTrue() {
-        // OR logic: if ANY tag matches, return true
-        // Assuming ALICE_DELIVERY has tag "personal"
-        DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("personal", "corporate", "urgent")));
-
-        assertTrue(predicate.test(ALICE_DELIVERY)); // Matches "personal"
-    }
-
-    @Test
-    public void test_multipleTagsNoneMatch_returnsFalse() {
-        // None of the tags match
-        DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("corporate", "urgent", "vip")));
-
-        // ALICE_DELIVERY has "personal", not any of these
-        assertFalse(predicate.test(ALICE_DELIVERY));
-    }
-
-    @Test
     public void test_tagCaseInsensitive_returnsTrue() {
-        // Tag matching is case insensitive
+        // Tag matching is case-insensitive
         DeliveryPredicate predicateLower = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("personal")));
+                Optional.empty(), Optional.empty(), Optional.of("personal"));
         DeliveryPredicate predicateUpper = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("PERSONAL")));
+                Optional.empty(), Optional.empty(), Optional.of("PERSONAL"));
         DeliveryPredicate predicateMixed = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("PeRsOnAl")));
+                Optional.empty(), Optional.empty(), Optional.of("PeRsOnAl"));
 
         // Assuming ALICE_DELIVERY has tag "personal"
         assertTrue(predicateLower.test(ALICE_DELIVERY));
@@ -167,7 +146,7 @@ public class DeliveryPredicateTest {
         // Tag uses contains (substring matching)
         // Assuming ALICE_DELIVERY has tag "personal"
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("person")));
+                Optional.empty(), Optional.empty(), Optional.of("person"));
 
         assertTrue(predicate.test(ALICE_DELIVERY)); // "personal" contains "person"
     }
@@ -178,17 +157,17 @@ public class DeliveryPredicateTest {
 
         // Client matches, date matches, but tag doesn't match
         DeliveryPredicate predicate1 = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of(List.of("corporate")));
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("corporate"));
         assertFalse(predicate1.test(ALICE_DELIVERY));
 
         // Client matches, tag matches, but date doesn't match
         DeliveryPredicate predicate2 = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("31/12/2024"), Optional.of(List.of("personal")));
+                Optional.of("Alice"), Optional.of("31/12/2024"), Optional.of("personal"));
         assertFalse(predicate2.test(ALICE_DELIVERY));
 
         // Date matches, tag matches, but client doesn't match
         DeliveryPredicate predicate3 = new DeliveryPredicate(
-                Optional.of("Bob"), Optional.of("25/12/2024"), Optional.of(List.of("personal")));
+                Optional.of("Bob"), Optional.of("25/12/2024"), Optional.of("personal"));
         assertFalse(predicate3.test(ALICE_DELIVERY));
     }
 
@@ -212,7 +191,7 @@ public class DeliveryPredicateTest {
     @Test
     public void test_toString() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of(List.of("urgent")));
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("urgent"));
 
         String result = predicate.toString();
 

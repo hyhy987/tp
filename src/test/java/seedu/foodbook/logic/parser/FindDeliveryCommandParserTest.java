@@ -1,10 +1,10 @@
 package seedu.foodbook.logic.parser;
 
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.foodbook.logic.Messages.MESSAGE_MISSING_ARGUMENT_FORMAT;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,10 @@ public class FindDeliveryCommandParserTest {
     private FindDeliveryCommandParser parser = new FindDeliveryCommandParser();
 
     @Test
-    public void parse_emptyArg_returnsShowAllCommand() {
-        // Empty string should show all deliveries
-        FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.empty()));
-        assertParseSuccess(parser, "", expectedCommand);
-        assertParseSuccess(parser, "     ", expectedCommand);
+    public void parse_emptyArg_returnsFalse() {
+
+        assertParseFailure(parser, "",
+                String.format(MESSAGE_MISSING_ARGUMENT_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -48,16 +46,8 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validSingleTag_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.of(List.of("urgent"))));
+                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.of("urgent")));
         assertParseSuccess(parser, " t/urgent", expectedCommand);
-    }
-
-    @Test
-    public void parse_validMultipleTags_returnsFindDeliveryCommand() {
-        FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(),
-                        Optional.of(List.of("urgent", "fragile"))));
-        assertParseSuccess(parser, " t/urgent t/fragile", expectedCommand);
     }
 
     @Test
@@ -69,20 +59,20 @@ public class FindDeliveryCommandParserTest {
 
         // Client name + tags
         FindDeliveryCommand expectedCommand2 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.of(List.of("urgent"))));
+                new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.of("urgent")));
         assertParseSuccess(parser, " n/John t/urgent", expectedCommand2);
 
         // Date + tags
         FindDeliveryCommand expectedCommand3 = new FindDeliveryCommand(
                 new DeliveryPredicate(Optional.empty(), Optional.of("25/12/2024"),
-                        Optional.of(List.of("urgent"))));
+                        Optional.of("urgent")));
         assertParseSuccess(parser, " d/25/12/2024 t/urgent", expectedCommand3);
 
         // All three filters
         FindDeliveryCommand expectedCommand4 = new FindDeliveryCommand(
                 new DeliveryPredicate(Optional.of("John Doe"), Optional.of("25/12/2024"),
-                        Optional.of(List.of("urgent", "fragile"))));
-        assertParseSuccess(parser, " n/John Doe d/25/12/2024 t/urgent t/fragile", expectedCommand4);
+                        Optional.of("urgent")));
+        assertParseSuccess(parser, " n/John Doe d/25/12/2024 t/urgent", expectedCommand4);
     }
 
     @Test
@@ -128,15 +118,5 @@ public class FindDeliveryCommandParserTest {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
                 new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John", expectedCommand);
-    }
-
-    @Test
-    public void parse_noFiltersProvided_returnsPredicateShowingAll() {
-        // When no filters at all, all Optional.empty()
-        // This covers the case where parseTags returns Optional.empty()
-        FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.empty()));
-        assertParseSuccess(parser, "", expectedCommand);
-        assertParseSuccess(parser, "   ", expectedCommand);
     }
 }

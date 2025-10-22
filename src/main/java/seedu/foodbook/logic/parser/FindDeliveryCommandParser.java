@@ -52,8 +52,7 @@ public class FindDeliveryCommandParser implements Parser<FindDeliveryCommand> {
 
         // Validate client name is not empty if provided
         if (clientName.isPresent() && clientName.get().trim().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    FindDeliveryCommand.MESSAGE_USAGE));
+            throw new ParseException("Client name cannot be empty.");
         }
 
         // Validate date format if provided

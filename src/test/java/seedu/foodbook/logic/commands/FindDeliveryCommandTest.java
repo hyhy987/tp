@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW;
+import static seedu.foodbook.logic.Messages.MESSAGE_MISSING_ARGUMENT_FORMAT;
+import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -54,17 +55,6 @@ public class FindDeliveryCommandTest {
     }
 
     @Test
-    public void execute_noFilters_allDeliveriesFound() {
-        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
-                model.getFilteredDeliveryList().size());
-        DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty());
-        FindDeliveryCommand command = new FindDeliveryCommand(predicate);
-        expectedModel.updateFilteredDeliveryList(predicate);
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
-    }
-
-    @Test
     public void execute_clientNameFilter_deliveriesFound() {
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of("Alice"), Optional.empty(), Optional.empty());
@@ -89,7 +79,7 @@ public class FindDeliveryCommandTest {
     @Test
     public void execute_tagFilter_deliveriesFound() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of(List.of("urgent")));
+                Optional.empty(), Optional.empty(), Optional.of("urgent"));
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -100,7 +90,7 @@ public class FindDeliveryCommandTest {
     @Test
     public void execute_combinedFilters_deliveriesFound() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of(List.of("urgent")));
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("urgent"));
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -122,7 +112,7 @@ public class FindDeliveryCommandTest {
     @Test
     public void toStringMethod() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("John"), Optional.of("25/12/2024"), Optional.of(List.of("urgent")));
+                Optional.of("John"), Optional.of("25/12/2024"), Optional.of("urgent"));
         FindDeliveryCommand findCommand = new FindDeliveryCommand(predicate);
         String expected = FindDeliveryCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
         assertEquals(expected, findCommand.toString());

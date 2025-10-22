@@ -1,6 +1,5 @@
 package seedu.foodbook.model.delivery;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,9 +13,9 @@ import seedu.foodbook.commons.util.ToStringBuilder;
  */
 public class DeliveryPredicate implements Predicate<Delivery> {
 
-    private final Optional<String> clientName;
-    private final Optional<String> date;
-    private final Optional<String> tag;
+    private final Optional<? extends String> clientName;
+    private final Optional<? extends String> date;
+    private final Optional<? extends String> tag;
 
     /**
      * Constructs a DeliveryPredicate with the specified filters.
@@ -25,7 +24,9 @@ public class DeliveryPredicate implements Predicate<Delivery> {
      * @param date Optional date to filter by (exact match in dd/MM/yyyy format)
      * @param tag Optional list of tags to filter by (delivery must have at least one matching tag)
      */
-    public DeliveryPredicate(Optional<String> clientName, Optional<String> date, Optional<String> tag) {
+    public DeliveryPredicate(Optional<? extends String> clientName,
+                             Optional<? extends String> date,
+                             Optional<? extends String> tag) {
         this.clientName = clientName;
         this.date = date;
         this.tag = tag;
@@ -35,7 +36,7 @@ public class DeliveryPredicate implements Predicate<Delivery> {
     public boolean test(Delivery delivery) {
         // If no filters specified, show all deliveries
         if (clientName.isEmpty() && date.isEmpty() && tag.isEmpty()) {
-            return true;
+            return false;
         }
 
         boolean matchesClientName = clientName.isEmpty()
@@ -45,7 +46,8 @@ public class DeliveryPredicate implements Predicate<Delivery> {
                 || delivery.getDeliveryDate().getDateString().equals(date.get());
 
         boolean matchesTags = tag.isEmpty()
-                || (delivery.getTag() != null && delivery.getTag().toLowerCase().equals(tag.get().toLowerCase()));
+                || (delivery.getTag() != null
+                && delivery.getTag().toLowerCase().contains(tag.get().toLowerCase()));
 
         // All specified filters must match (AND logic)
         return matchesClientName && matchesDate && matchesTags;
@@ -70,9 +72,9 @@ public class DeliveryPredicate implements Predicate<Delivery> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("clientName", clientName.orElse("any"))
-                .add("date", date.orElse("any"))
-                .add("tags", tag.orElse("any"))
+                .add("clientName", clientName.map(String::valueOf).orElse(""))
+                .add("date", date.map(String::valueOf).orElse(""))
+                .add("tags", tag.map(String::valueOf).orElse(""))
                 .toString();
     }
 }
