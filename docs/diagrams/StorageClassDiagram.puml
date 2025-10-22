@@ -6,38 +6,46 @@ skinparam classBackgroundColor STORAGE_COLOR
 
 package Storage as StoragePackage {
 
-package "UserPrefs Storage" #F4F6F6{
-Class "<<interface>>\nUserPrefsStorage" as UserPrefsStorage
-Class JsonUserPrefsStorage
+  package "UserPrefs Storage" #F4F6F6 {
+    Class "<<interface>>\nUserPrefsStorage" as UserPrefsStorage
+    Class JsonUserPrefsStorage
+  }
+
+  Class "<<interface>>\nStorage" as Storage
+  Class StorageManager
+
+  package "FoodBook Storage" #F4F6F6 {
+    Class "<<interface>>\nFoodBookStorage" as FoodBookStorage
+    Class JsonFoodBookStorage
+    Class JsonSerializableFoodBook
+    Class JsonAdaptedPerson
+    Class JsonAdaptedDelivery
+    Class JsonAdaptedTag
+  }
 }
 
-Class "<<interface>>\nStorage" as Storage
-Class StorageManager
-
-package "AddressBook Storage" #F4F6F6{
-Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
-Class JsonAddressBookStorage
-Class JsonSerializableAddressBook
-Class JsonAdaptedPerson
-Class JsonAdaptedTag
-}
-
-}
-
+' helper to keep external deps visually compact
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
+' Storage facade + manager wiring
 StorageManager .up.|> Storage
 StorageManager -up-> "1" UserPrefsStorage
-StorageManager -up-> "1" AddressBookStorage
+StorageManager -up-> "1" FoodBookStorage
 
+' Storage interface refines into concrete store interfaces
 Storage -left-|> UserPrefsStorage
-Storage -right-|> AddressBookStorage
+Storage -right-|> FoodBookStorage
 
+' Concrete implementations
 JsonUserPrefsStorage .up.|> UserPrefsStorage
-JsonAddressBookStorage .up.|> AddressBookStorage
-JsonAddressBookStorage ..> JsonSerializableAddressBook
-JsonSerializableAddressBook --> "*" JsonAdaptedPerson
+
+JsonFoodBookStorage .up.|> FoodBookStorage
+JsonFoodBookStorage ..> JsonSerializableFoodBook
+
+' JSON graph (serialized form)
+JsonSerializableFoodBook --> "*" JsonAdaptedPerson
+JsonSerializableFoodBook --> "*" JsonAdaptedDelivery
 JsonAdaptedPerson --> "*" JsonAdaptedTag
 
 @enduml
