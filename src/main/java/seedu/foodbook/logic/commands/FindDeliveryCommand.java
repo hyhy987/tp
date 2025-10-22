@@ -27,6 +27,8 @@ public class FindDeliveryCommand extends Command {
             + "- " + COMMAND_WORD + " t/urgent\n"
             + "- " + COMMAND_WORD + " n/John d/25/12/2024 t/urgent";
 
+    public static final String MESSAGE_NO_DELIVERY_FOUND = "Error: No delivery found.";
+
     /** Predicate indicating the filter condition for find_delivery. */
     private final DeliveryPredicate predicate;
 
@@ -38,6 +40,12 @@ public class FindDeliveryCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredDeliveryList(predicate);
+
+        int numClientsFound = model.getFilteredPersonList().size();
+
+        if (numClientsFound == 0) {
+            return new CommandResult(MESSAGE_NO_DELIVERY_FOUND, CommandResult.UiPanel.DELIVERIES);
+        }
         return new CommandResult(
                 String.format(Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW, model.getFilteredDeliveryList().size()),
                 CommandResult.UiPanel.DELIVERIES);
