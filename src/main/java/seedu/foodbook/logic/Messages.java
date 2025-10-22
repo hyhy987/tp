@@ -19,6 +19,7 @@ public class Messages {
     public static final String MESSAGE_DELIVERIES_LISTED_OVERVIEW = "%1$d deliveries found!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
+    public static final String MESSAGE_MISSING_ARGUMENT_FORMAT = "Missing argument! \n %1$s";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

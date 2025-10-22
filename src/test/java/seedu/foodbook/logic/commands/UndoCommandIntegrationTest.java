@@ -21,7 +21,7 @@ import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;
 import seedu.foodbook.model.delivery.Delivery;
-import seedu.foodbook.model.delivery.DeliveryContainsDatePredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 import seedu.foodbook.model.person.ClientMatchesPredicate;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
@@ -286,8 +286,12 @@ public class UndoCommandIntegrationTest {
         Delivery sample = model.getFilteredDeliveryList().get(0);
         String dateStr = sample.getDeliveryDate().getDateString();
 
-        DeliveryContainsDatePredicate predicate =
-                new DeliveryContainsDatePredicate(dateStr);
+        DeliveryPredicate predicate =
+                new DeliveryPredicate(
+                        Optional.empty(),
+                        Optional.of(dateStr),
+                        Optional.empty()
+                );
         FindDeliveryCommand find = new FindDeliveryCommand(predicate);
 
         Model expectedAfter = snapshotOf(model);
