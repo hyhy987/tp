@@ -8,13 +8,14 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;
-import seedu.foodbook.model.delivery.DeliveryContainsDatePredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code FindDeliveryCommand}.
@@ -26,10 +27,10 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void equals() {
-        DeliveryContainsDatePredicate firstPredicate =
-                new DeliveryContainsDatePredicate("25/12/2024");
-        DeliveryContainsDatePredicate secondPredicate =
-                new DeliveryContainsDatePredicate("31/12/2024");
+        DeliveryPredicate firstPredicate = new DeliveryPredicate(
+                Optional.of("John"), Optional.of("25/12/2024"), Optional.empty());
+        DeliveryPredicate secondPredicate = new DeliveryPredicate(
+                Optional.of("Jane"), Optional.of("31/12/2024"), Optional.empty());
 
         FindDeliveryCommand findFirstCommand = new FindDeliveryCommand(firstPredicate);
         FindDeliveryCommand findSecondCommand = new FindDeliveryCommand(secondPredicate);
@@ -47,14 +48,59 @@ public class FindDeliveryCommandTest {
         // null -> returns false
         assertFalse(findFirstCommand.equals(null));
 
-        // different delivery -> returns false
+        // different predicate -> returns false
         assertFalse(findFirstCommand.equals(findSecondCommand));
     }
 
     @Test
-    public void execute_zeroKeywords_noDeliveryFound() {
+    public void execute_clientNameFilter_deliveriesFound() {
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of("Alice"), Optional.empty(), Optional.empty());
+        FindDeliveryCommand command = new FindDeliveryCommand(predicate);
+        expectedModel.updateFilteredDeliveryList(predicate);
+        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
+                expectedModel.getFilteredDeliveryList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_dateFilter_deliveriesFound() {
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.of("25/12/2024"), Optional.empty());
+        FindDeliveryCommand command = new FindDeliveryCommand(predicate);
+        expectedModel.updateFilteredDeliveryList(predicate);
+        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
+                expectedModel.getFilteredDeliveryList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_tagFilter_deliveriesFound() {
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.of("urgent"));
+        FindDeliveryCommand command = new FindDeliveryCommand(predicate);
+        expectedModel.updateFilteredDeliveryList(predicate);
+        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
+                expectedModel.getFilteredDeliveryList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_combinedFilters_deliveriesFound() {
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("urgent"));
+        FindDeliveryCommand command = new FindDeliveryCommand(predicate);
+        expectedModel.updateFilteredDeliveryList(predicate);
+        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
+                expectedModel.getFilteredDeliveryList().size());
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_nonMatchingFilters_noDeliveryFound() {
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, 0);
-        DeliveryContainsDatePredicate predicate = preparePredicate(" ");
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of("NonExistentClient"), Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
@@ -63,16 +109,10 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void toStringMethod() {
-        DeliveryContainsDatePredicate predicate = new DeliveryContainsDatePredicate("25/12/2024");
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of("John"), Optional.of("25/12/2024"), Optional.of("urgent"));
         FindDeliveryCommand findCommand = new FindDeliveryCommand(predicate);
         String expected = FindDeliveryCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
         assertEquals(expected, findCommand.toString());
-    }
-
-    /**
-     * Parses {@code userInput} into a {@code DeliveryContainsDatePredicate}.
-     */
-    private DeliveryContainsDatePredicate preparePredicate(String userInput) {
-        return new DeliveryContainsDatePredicate(userInput);
     }
 }

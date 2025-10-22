@@ -112,7 +112,7 @@ public class FoodBookParserTest {
 
     @Test
     public void parseCommand_findDelivery() throws Exception {
-        String findDeliveryCommand = FindDeliveryCommand.COMMAND_WORD + " 12/10/2003";
+        String findDeliveryCommand = FindDeliveryCommand.COMMAND_WORD + NAME_DESC_BOB;
         FindDeliveryCommand command = (FindDeliveryCommand) parser.parseCommand(findDeliveryCommand);
         assertTrue(command instanceof FindDeliveryCommand);
     }
