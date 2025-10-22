@@ -2,8 +2,6 @@ package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +48,7 @@ public class DeleteClientCommand extends Command {
         Person clientToDelete = maybePerson.get();
         List<Delivery> deliveriesToDelete = model.getDeliveriesByClientName(toBeDeleted);
 
-        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.PERSONS);
 
         deliveriesToDelete.forEach(model::deleteDelivery);
         model.deletePerson(clientToDelete);

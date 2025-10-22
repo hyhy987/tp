@@ -9,7 +9,6 @@ import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.Messages;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;

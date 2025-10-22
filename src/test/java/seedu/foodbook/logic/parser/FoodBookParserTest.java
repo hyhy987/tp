@@ -11,7 +11,6 @@ import static seedu.foodbook.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
@@ -25,6 +24,7 @@ import seedu.foodbook.logic.commands.HelpCommand;
 import seedu.foodbook.logic.commands.ListCommand;
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
+import seedu.foodbook.logic.commands.UndoCommand;
 import seedu.foodbook.logic.commands.UnmarkCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.Delivery;
@@ -137,6 +137,11 @@ public class FoodBookParserTest {
     @Test
     public void parseCommand_unmarkDelivery() throws Exception {
         assertTrue(parser.parseCommand(UnmarkCommand.COMMAND_WORD + " 3") instanceof UnmarkCommand);
+    }
+
+    @Test
+    public void parseCommand_undo() throws Exception {
+        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD) instanceof UndoCommand);
     }
 
     @Test

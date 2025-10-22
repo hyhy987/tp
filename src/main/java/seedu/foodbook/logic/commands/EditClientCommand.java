@@ -7,8 +7,6 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +15,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.commons.util.CollectionUtil;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
@@ -74,7 +71,7 @@ public class EditClientCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        Optional<Person> maybePerson =  model.getPersonByName(currentClientName);
+        Optional<Person> maybePerson = model.getPersonByName(currentClientName);
 
         if (maybePerson.isEmpty()) {
             throw new CommandException(
@@ -92,7 +89,7 @@ public class EditClientCommand extends Command {
 
         List<Delivery> deliveryList = model.getDeliveriesByClientName(currentClientName);
 
-        this.checkpoint(model, CommandResult.UiPanel.PERSONS);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.PERSONS);
 
         model.setPerson(oldClient, newClient);
         deliveryList.forEach(oldDelivery -> {

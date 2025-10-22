@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
@@ -43,8 +42,6 @@ public class DeleteDeliveryCommand extends Command {
         requireNonNull(model);
 
         // Find the delivery with the matching ID
-
-        // TODO: MOve into getDeliveryByID
         Optional<Delivery> maybeDelivery = model.getDeliveryById(deliveryId);
 
         if (maybeDelivery.isEmpty()) {
@@ -53,7 +50,7 @@ public class DeleteDeliveryCommand extends Command {
 
         Delivery deliveryToDelete = maybeDelivery.get();
 
-        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.PERSONS);
 
         model.deleteDelivery(deliveryToDelete);
         return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS,

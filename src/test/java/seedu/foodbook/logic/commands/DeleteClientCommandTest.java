@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.foodbook.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 import static seedu.foodbook.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -18,7 +17,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.foodbook.logic.Messages;
-import seedu.foodbook.model.FoodBook;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;

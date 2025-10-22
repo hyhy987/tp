@@ -212,17 +212,12 @@ public class AddClientCommandTest {
         }
 
         @Override
-        public void checkpoint(String commandString) {
+        public void checkpoint(String commandString, CommandResult.UiPanel uiPanel) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public ModelRecord undo() throws NoMoreUndoException {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
             throw new AssertionError("This method should not be called.");
         }
     }
@@ -265,11 +260,7 @@ public class AddClientCommandTest {
 
         // Do nothing
         @Override
-        public void checkpoint(String commandString) {
-        }
-
-        @Override
-        public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
+        public void checkpoint(String commandString, CommandResult.UiPanel uiPanel) {
         }
 
         @Override

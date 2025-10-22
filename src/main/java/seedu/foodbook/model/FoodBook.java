@@ -11,7 +11,6 @@ import seedu.foodbook.model.delivery.UniqueDeliveryList;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.model.person.UniquePersonList;
 import seedu.foodbook.model.undo.FoodBookRecord;
-import seedu.foodbook.model.undo.ModelRecord;
 import seedu.foodbook.model.undo.UndoStack;
 import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 
@@ -189,6 +188,11 @@ public class FoodBook implements ReadOnlyFoodBook {
     }
 
     //=========== Undo State Management =============================================================
+
+    /**
+     * Takes a checkpoint of the current foodBook state for undo
+     * The state of the foodBook consists of the current person and delivery list.
+     */
     public void checkpoint() {
         FoodBookRecord record = new FoodBookRecord(
                 List.copyOf(getPersonList()),
@@ -198,6 +202,10 @@ public class FoodBook implements ReadOnlyFoodBook {
         this.undoStack.checkpoint(record);
     }
 
+    /**
+     * Reverts the state of foodBook to before the most previous edit
+     * @throws NoMoreUndoException If no more stored states remain
+     */
     public void undo() throws NoMoreUndoException {
         FoodBookRecord record = this.undoStack.undo();
 

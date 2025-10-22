@@ -133,10 +133,14 @@ public interface Model {
      */
     void updateFilteredDeliveryList(Predicate<Delivery> predicate);
 
+    /**
+     * Takes a checkpoint of the current model state for undo
+     */
+    void checkpoint(String commandString, CommandResult.UiPanel uiPanel);
 
-    void checkpoint(String commandString);
-
+    /**
+     * Reverts the state of model to before the most previous edit
+     * @throws NoMoreUndoException If no more stored states remain
+     */
     ModelRecord undo() throws NoMoreUndoException;
-
-    void setCurUiPanel(CommandResult.UiPanel uiPanel);
 }

@@ -11,7 +11,6 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.logic.commands.CommandTestUtil.showPersonAtIndex;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 import static seedu.foodbook.testutil.TypicalIndexes.INDEX_FIRST_PERSON;

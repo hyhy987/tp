@@ -57,6 +57,10 @@ public class Delivery {
         return this.isDelivered;
     }
 
+    /**
+     * Returns a copy of this delivery, marked as delivered
+     * @return A copy of this delivery, marked as delivered
+     */
     public Delivery markAsDelivered() {
         return new Delivery(
                 this.getId(),
@@ -69,6 +73,10 @@ public class Delivery {
         );
     }
 
+    /**
+     * Returns a copy of this delivery, unmarked as delivered
+     * @return A copy of this delivery, unmarked as delivered
+     */
     public Delivery unmarkAsDelivered() {
         return new Delivery(
                 this.getId(),
@@ -124,6 +132,10 @@ public class Delivery {
         return TagKind.OTHER;
     }
 
+    /**
+     * Returns true if both deliveries have the same id.
+     * This defines a weaker notion of equality between two deliveries.
+     */
     public boolean isSameDelivery(Delivery otherDelivery) {
         if (otherDelivery == this) {
             return true;
@@ -144,7 +156,7 @@ public class Delivery {
             return false;
         }
 
-        Delivery otherDelivery= (Delivery) other;
+        Delivery otherDelivery = (Delivery) other;
         return id.equals(otherDelivery.id)
                 && isDelivered.equals(otherDelivery.isDelivered)
                 && client.equals(otherDelivery.client)
@@ -154,6 +166,11 @@ public class Delivery {
                 && Objects.equals(tag, otherDelivery.tag);
     }
 
+    /**
+     * Returns copy of this delivery with the new client
+     * @param newClient The new client to replace the current client
+     * @return A copy of this delivery with the new client
+     */
     public Delivery copyWithNewClient(Person newClient) {
         return new Delivery(
                 this.getId(),

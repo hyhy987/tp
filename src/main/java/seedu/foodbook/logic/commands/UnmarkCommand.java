@@ -2,7 +2,6 @@ package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.List;
 import java.util.Optional;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
@@ -59,7 +58,7 @@ public class UnmarkCommand extends Command {
 
         Delivery unmarkedDelivery = delivery.unmarkAsDelivered();
 
-        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
 
         // Update the model
         model.setDelivery(delivery, unmarkedDelivery);

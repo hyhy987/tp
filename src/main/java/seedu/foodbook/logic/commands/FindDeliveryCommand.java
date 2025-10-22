@@ -32,8 +32,6 @@ public class FindDeliveryCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
 
-        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
-
         model.updateFilteredDeliveryList(predicate);
 
         return new CommandResult(

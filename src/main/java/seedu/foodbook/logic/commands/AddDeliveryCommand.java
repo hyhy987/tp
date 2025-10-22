@@ -159,7 +159,7 @@ public class AddDeliveryCommand extends Command {
             delivery = this.toAdd.get();
         } else {
             //Find the client by name
-            Optional<Person> maybePerson= model.getPersonByName(clientName);
+            Optional<Person> maybePerson = model.getPersonByName(clientName);
 
             if (maybePerson.isEmpty()) {
                 throw new CommandException(
@@ -180,7 +180,7 @@ public class AddDeliveryCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
         }
 
-        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
         model.addDelivery(delivery);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(delivery)),
                 CommandResult.UiPanel.DELIVERIES);

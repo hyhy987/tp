@@ -7,9 +7,7 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
-import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -86,11 +84,11 @@ public class EditDeliveryCommand extends Command {
 
         Delivery newDelivery = createEditedDelivery(oldDelivery, editDeliveryDescriptor, model);
 
-        if (!oldDelivery.isSameDelivery(newDelivery) && model.hasDelivery(newDelivery )) {
+        if (!oldDelivery.isSameDelivery(newDelivery) && model.hasDelivery(newDelivery)) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
         }
 
-        this.checkpoint(model, CommandResult.UiPanel.DELIVERIES);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
         model.setDelivery(oldDelivery, newDelivery);
 
         return new CommandResult(String.format(MESSAGE_EDIT_DELIVERY_SUCCESS, Messages.format(newDelivery)),

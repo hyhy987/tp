@@ -17,9 +17,4 @@ public abstract class Command {
      */
     public abstract CommandResult execute(Model model) throws CommandException;
 
-    public void checkpoint(Model model, CommandResult.UiPanel nextUiPanel) {
-        model.checkpoint(this.toString());
-        model.setCurUiPanel(nextUiPanel);
-    }
-
 }

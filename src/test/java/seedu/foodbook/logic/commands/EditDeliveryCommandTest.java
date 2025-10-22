@@ -9,8 +9,6 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess
 import static seedu.foodbook.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import seedu.foodbook.logic.Messages;
@@ -62,12 +60,12 @@ public class EditDeliveryCommandTest {
 
         Delivery expectedEdited = new Delivery(
                 base.getId(),
-                expectedReplacement,                 // changed
-                new DateTime("21/10/2029", "1830"),  // changed
-                "Updated remarks",                   // changed
-                88.80,                               // changed
-                base.getTag(),                       // preserve
-                base.getStatus()                     // preserve
+                expectedReplacement,
+                new DateTime("21/10/2029", "1830"),
+                "Updated remarks",
+                88.80,
+                base.getTag(),
+                base.getStatus()
         );
 
         expectedModel.setDelivery(base, expectedEdited);
@@ -106,10 +104,10 @@ public class EditDeliveryCommandTest {
                 base.getId(),
                 base.getClient(),
                 base.getDeliveryDate(),
-                "Leave with guard",     // only changed field
-                12.34,                  // only changed field
-                base.getTag(),          // preserve tag
-                base.getStatus()        // preserve delivered flag
+                "Leave with guard",
+                12.34,
+                base.getTag(),
+                base.getStatus()
         );
 
         expectedModel.setDelivery(base, expectedEdited);

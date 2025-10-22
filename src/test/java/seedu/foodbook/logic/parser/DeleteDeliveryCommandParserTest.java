@@ -6,7 +6,6 @@ import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseSucce
 
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 
 public class DeleteDeliveryCommandParserTest {

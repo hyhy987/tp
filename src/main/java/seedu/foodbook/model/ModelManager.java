@@ -14,11 +14,9 @@ import javafx.collections.transformation.FilteredList;
 import seedu.foodbook.commons.core.GuiSettings;
 import seedu.foodbook.commons.core.LogsCenter;
 import seedu.foodbook.logic.commands.CommandResult;
-import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
-
 import seedu.foodbook.model.undo.ModelRecord;
 import seedu.foodbook.model.undo.UndoStack;
 import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
@@ -35,7 +33,6 @@ public class ModelManager implements Model {
     private final FilteredList<Delivery> filteredDeliveries;
 
     private final UndoStack<ModelRecord> undoStack;
-    private CommandResult.UiPanel curUiPanel;
 
     /**
      * Initializes a ModelManager with the given foodBook and userPrefs.
@@ -51,7 +48,6 @@ public class ModelManager implements Model {
         filteredDeliveries = new FilteredList<>(this.foodBook.getDeliveryList());
 
         this.undoStack = new UndoStack<>();
-        this.curUiPanel = CommandResult.UiPanel.PERSONS;
     }
 
     public ModelManager() {
@@ -231,19 +227,32 @@ public class ModelManager implements Model {
     }
 
     //=========== Undo State Management =============================================================
+
+    /**
+     * Takes a checkpoint of the current foodBook state for undo
+     * The state of the foodBook consists of:
+     * 1. The most recent command word
+     * 2. The uiPanel to show after undo
+     * 3. The filters for filteredPersonList
+     * 4. The filters for filteredDeliveryList
+     */
     @Override
-    public void checkpoint(String commandString) {
+    public void checkpoint(String commandString, CommandResult.UiPanel uiPanel) {
         ModelRecord record = new ModelRecord(
                 commandString,
-                this.curUiPanel,
+                uiPanel,
                 this.filteredPersons.getPredicate(),
                 this.filteredDeliveries.getPredicate()
         );
 
-        this.undoStack.checkpoint(record);
         this.foodBook.checkpoint();
+        this.undoStack.checkpoint(record);
     }
 
+    /**
+     * Reverts the state of foodBook to before the most previous edit
+     * @throws NoMoreUndoException If no more stored states remain
+     */
     @Override
     public ModelRecord undo() throws NoMoreUndoException {
         ModelRecord record = this.undoStack.undo();
@@ -254,10 +263,6 @@ public class ModelManager implements Model {
         filteredDeliveries.setPredicate(record.deliveryListPredicate());
 
         return record;
-    }
-    @Override
-    public void setCurUiPanel(CommandResult.UiPanel uiPanel) {
-        this.curUiPanel = uiPanel;
     }
 
 }
