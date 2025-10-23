@@ -2,7 +2,8 @@ package seedu.foodbook.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import seedu.foodbook.commons.core.index.Index;
+import java.util.Optional;
+
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
@@ -24,14 +25,14 @@ public class DeleteDeliveryCommand extends Command {
     public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Delivery deleted.";
     public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: No delivery found with id %1$d";
 
-    private final Index deliveryId;
+    private final Integer deliveryId;
 
     /**
      * Creates a DeleteDeliveryCommand to delete the delivery with the specified {@code deliveryId}.
      *
      * @param deliveryId The ID of the delivery to delete.
      */
-    public DeleteDeliveryCommand(Index deliveryId) {
+    public DeleteDeliveryCommand(Integer deliveryId) {
         requireNonNull(deliveryId);
         this.deliveryId = deliveryId;
     }
@@ -41,11 +42,15 @@ public class DeleteDeliveryCommand extends Command {
         requireNonNull(model);
 
         // Find the delivery with the matching ID
-        Delivery deliveryToDelete = model.getFilteredDeliveryList().stream()
-                .filter(delivery -> delivery.getId().equals(deliveryId.getOneBased()))
-                .findFirst()
-                .orElseThrow(() -> new CommandException(
-                        String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId.getOneBased())));
+        Optional<Delivery> maybeDelivery = model.getDeliveryById(deliveryId);
+
+        if (maybeDelivery.isEmpty()) {
+            throw new CommandException(String.format(MESSAGE_DELIVERY_NOT_FOUND, deliveryId));
+        }
+
+        Delivery deliveryToDelete = maybeDelivery.get();
+
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.PERSONS);
 
         model.deleteDelivery(deliveryToDelete);
         return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS,
@@ -71,7 +76,7 @@ public class DeleteDeliveryCommand extends Command {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("deliveryId", deliveryId.getOneBased())
+                .add("deliveryId", deliveryId)
                 .toString();
     }
 }

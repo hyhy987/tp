@@ -1,6 +1,5 @@
 package seedu.foodbook.logic.parser;
 
-import static seedu.foodbook.commons.core.index.Index.fromOneBased;
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
@@ -26,7 +25,7 @@ public class DeleteDeliveryCommandParser implements Parser<DeleteDeliveryCommand
             }
 
             Integer deliveryId = ParserUtil.parseDeliveryId(trimmedArgs);
-            return new DeleteDeliveryCommand(fromOneBased(deliveryId));
+            return new DeleteDeliveryCommand(deliveryId);
         } catch (ParseException pe) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteDeliveryCommand.MESSAGE_USAGE), pe);

@@ -23,6 +23,7 @@ import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.delivery.exceptions.DuplicateDeliveryException;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.model.person.exceptions.DuplicatePersonException;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.DeliveryBuilder;
 import seedu.foodbook.testutil.PersonBuilder;
 
@@ -135,6 +136,85 @@ public class FoodBookTest {
                 + "{persons=" + foodBook.getPersonList() + ", "
                 + "deliveries=" + foodBook.getDeliveryList() + "}";
         assertEquals(expected, foodBook.toString());
+    }
+
+    @Test
+    public void undo_onEmptyStack_throwsNoMoreUndoException() {
+        assertThrows(NoMoreUndoException.class, () -> foodBook.undo());
+    }
+
+    @Test
+    public void checkpoint_thenUndo_restoresPersonsAndDeliveries() throws Exception {
+        // Start with typical data
+        FoodBook initial = getTypicalFoodBook();
+        foodBook.resetData(initial);
+
+        // Snapshot current state (for equality check after undo)
+        FoodBook snapshot = new FoodBook(foodBook);
+
+        // Take checkpoint of current state
+        foodBook.checkpoint();
+
+        // --- Mutate: remove a person and a delivery
+        // (ALICE and ALICE_DELIVERY are in Typical data per your imports)
+        foodBook.removePerson(ALICE);
+        foodBook.removeDelivery(ALICE_DELIVERY);
+
+        // Sanity: state changed
+        assertFalse(foodBook.getPersonList().contains(ALICE));
+        assertFalse(foodBook.getDeliveryList().contains(ALICE_DELIVERY));
+
+        // --- Undo
+        foodBook.undo();
+
+        // Restored to exact snapshot
+        assertEquals(snapshot, foodBook);
+        // And ALICE / ALICE_DELIVERY are back
+        assertTrue(foodBook.getPersonList().contains(ALICE));
+        assertTrue(foodBook.getDeliveryList().contains(ALICE_DELIVERY));
+    }
+
+    @Test
+    public void multipleCheckpoints_multipleUndos_restoreStepByStep() throws Exception {
+        // State S0: empty
+        foodBook.resetData(new FoodBook());
+        FoodBook s0 = new FoodBook(foodBook);
+        foodBook.checkpoint(); // save S0
+
+        // State S1: add ALICE person
+        foodBook.addPerson(ALICE);
+        FoodBook s1 = new FoodBook(foodBook);
+        foodBook.checkpoint(); // save S1
+
+        // State S2: add ALICE_DELIVERY as well
+        foodBook.addDelivery(ALICE_DELIVERY);
+        FoodBook s2 = new FoodBook(foodBook);
+        foodBook.checkpoint(); // save S2
+
+        // Now mutate away from S2 (remove both to be clearly different)
+        foodBook.removeDelivery(ALICE_DELIVERY);
+        foodBook.removePerson(ALICE);
+
+        // Undo #1 -> back to S2
+        foodBook.undo();
+        assertEquals(s2, foodBook);
+        assertTrue(foodBook.getPersonList().contains(ALICE));
+        assertTrue(foodBook.getDeliveryList().contains(ALICE_DELIVERY));
+
+        // Undo #2 -> back to S1 (person only, no delivery)
+        foodBook.undo();
+        assertEquals(s1, foodBook);
+        assertTrue(foodBook.getPersonList().contains(ALICE));
+        assertFalse(foodBook.getDeliveryList().contains(ALICE_DELIVERY));
+
+        // Undo #3 -> back to S0 (empty)
+        foodBook.undo();
+        assertEquals(s0, foodBook);
+        assertTrue(foodBook.getPersonList().isEmpty());
+        assertTrue(foodBook.getDeliveryList().isEmpty());
+
+        // One more undo should fail
+        assertThrows(NoMoreUndoException.class, () -> foodBook.undo());
     }
 
     /**

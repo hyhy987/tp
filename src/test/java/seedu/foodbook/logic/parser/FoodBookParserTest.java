@@ -11,7 +11,6 @@ import static seedu.foodbook.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.commands.ClearCommand;
@@ -25,6 +24,7 @@ import seedu.foodbook.logic.commands.HelpCommand;
 import seedu.foodbook.logic.commands.ListCommand;
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
+import seedu.foodbook.logic.commands.UndoCommand;
 import seedu.foodbook.logic.commands.UnmarkCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.Delivery;
@@ -84,7 +84,7 @@ public class FoodBookParserTest {
         // Test with delivery ID 67 (as per specification)
         DeleteDeliveryCommand command = (DeleteDeliveryCommand) parser.parseCommand(
                 DeleteDeliveryCommand.COMMAND_WORD + " 67");
-        assertEquals(new DeleteDeliveryCommand(Index.fromOneBased(67)), command);
+        assertEquals(new DeleteDeliveryCommand(67), command);
     }
 
 
@@ -94,7 +94,7 @@ public class FoodBookParserTest {
         EditClientCommand.EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(person).build();
         EditClientCommand command = (EditClientCommand) parser.parseCommand(EditClientCommand.COMMAND_WORD + " "
                 + BOB.getName().fullName + " " + PersonUtil.getEditPersonDescriptorDetails(descriptor));
-        assertEquals(new EditClientCommand(BOB.getName().fullName, descriptor), command);
+        assertEquals(new EditClientCommand(BOB.getName(), descriptor), command);
     }
 
     @Test
@@ -137,6 +137,11 @@ public class FoodBookParserTest {
     @Test
     public void parseCommand_unmarkDelivery() throws Exception {
         assertTrue(parser.parseCommand(UnmarkCommand.COMMAND_WORD + " 3") instanceof UnmarkCommand);
+    }
+
+    @Test
+    public void parseCommand_undo() throws Exception {
+        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD) instanceof UndoCommand);
     }
 
     @Test

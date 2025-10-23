@@ -15,12 +15,18 @@ import static seedu.foodbook.testutil.TypicalPersons.CARL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.foodbook.commons.core.GuiSettings;
-import seedu.foodbook.model.delivery.DeliveryContainsDatePredicate;
+import seedu.foodbook.logic.commands.CommandResult.UiPanel;
+import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 import seedu.foodbook.model.person.NameContainsKeywordsPredicate;
+import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.FoodBookBuilder;
 
 public class ModelManagerTest {
@@ -157,7 +163,11 @@ public class ModelManagerTest {
 
         // different filteredList -> returns false
         String searchDate = ALICE_DELIVERY.getDeliveryDate().getDateString();
-        modelManager.updateFilteredDeliveryList(new DeliveryContainsDatePredicate(searchDate));
+        modelManager.updateFilteredDeliveryList(new DeliveryPredicate(
+                Optional.empty(),
+                Optional.of(searchDate),
+                Optional.empty()
+                ));
         assertFalse(modelManager.equals(new ModelManager(foodBook, userPrefs)));
         // resets modelManager to initial state for upcoming tests
         modelManager.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
@@ -166,5 +176,173 @@ public class ModelManagerTest {
         UserPrefs differentUserPrefs = new UserPrefs();
         differentUserPrefs.setFoodBookFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(foodBook, differentUserPrefs)));
+    }
+
+    // =========================================================================================
+    // NEW TESTS: getPersonByName
+    // =========================================================================================
+
+    @Test
+    public void getPersonByName_present_returnsOptionalWithPerson() {
+        FoodBook fb = new FoodBookBuilder().withPerson(ALICE).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getPersonByName(ALICE.getName()).isPresent());
+        assertEquals(ALICE, m.getPersonByName(ALICE.getName()).get());
+    }
+
+    @Test
+    public void getPersonByName_absent_returnsEmptyOptional() {
+        FoodBook fb = new FoodBookBuilder().withPerson(BENSON).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getPersonByName(ALICE.getName()).isEmpty());
+    }
+
+    @Test
+    public void getPersonByName_nullName_returnsEmptyOptional() {
+        FoodBook fb = new FoodBookBuilder().withPerson(ALICE).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getPersonByName(null).isEmpty());
+    }
+
+    // =========================================================================================
+    // NEW TESTS: getDeliveryById
+    // =========================================================================================
+
+    @Test
+    public void getDeliveryById_present_returnsOptionalWithDelivery() {
+        FoodBook fb = new FoodBookBuilder().withDelivery(ALICE_DELIVERY).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        Integer id = ALICE_DELIVERY.getId();
+        assertTrue(m.getDeliveryById(id).isPresent());
+        assertEquals(id, m.getDeliveryById(id).get().getId());
+    }
+
+    @Test
+    public void getDeliveryById_absent_returnsEmptyOptional() {
+        FoodBook fb = new FoodBookBuilder().withDelivery(ALICE_DELIVERY).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getDeliveryById(Integer.MIN_VALUE).isEmpty());
+    }
+
+    @Test
+    public void getDeliveryById_null_returnsEmptyOptional() {
+        FoodBook fb = new FoodBookBuilder().withDelivery(ALICE_DELIVERY).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getDeliveryById(null).isEmpty());
+    }
+
+    // =========================================================================================
+    // NEW TESTS: getDeliveriesByClientName
+    // =========================================================================================
+
+    @Test
+    public void getDeliveriesByClientName_noDeliveries_returnsEmptyList() {
+        FoodBook fb = new FoodBookBuilder().build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        List<Delivery> list = m.getDeliveriesByClientName(ALICE.getName());
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
+    public void getDeliveriesByClientName_singleMatch_returnsOnlyThatClientsDeliveries() {
+        FoodBook fb = new FoodBookBuilder()
+                .withDelivery(ALICE_DELIVERY)
+                .withDelivery(BENSON_DELIVERY)
+                .build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+
+        List<Delivery> aliceDeliveries = m.getDeliveriesByClientName(ALICE.getName());
+        assertFalse(aliceDeliveries.isEmpty());
+        assertTrue(aliceDeliveries.stream().allMatch(d -> d.getClient().getName().equals(ALICE.getName())));
+
+        List<Delivery> bensonDeliveries = m.getDeliveriesByClientName(BENSON.getName());
+        assertFalse(bensonDeliveries.isEmpty());
+        assertTrue(bensonDeliveries.stream().allMatch(d -> d.getClient().getName().equals(BENSON.getName())));
+    }
+
+    @Test
+    public void getDeliveriesByClientName_null_returnsEmptyList() {
+        FoodBook fb = new FoodBookBuilder().withDelivery(ALICE_DELIVERY).build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+        assertTrue(m.getDeliveriesByClientName(null).isEmpty());
+    }
+
+    // =========================================================================================
+    // NEW TESTS: checkpoint + undo
+    // =========================================================================================
+
+    @Test
+    public void undo_onEmptyStack_throwsNoMoreUndoException() {
+        assertThrows(NoMoreUndoException.class, () -> modelManager.undo());
+    }
+
+    @Test
+    public void checkpoint_thenUndo_restoresFoodBookStateAndFilters() throws Exception {
+        // Start with populated model
+        FoodBook fb = new FoodBookBuilder()
+                .withPerson(ALICE)
+                .withPerson(BENSON)
+                .withDelivery(ALICE_DELIVERY)
+                .withDelivery(BENSON_DELIVERY)
+                .build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+
+        // Ensure show-all filters are active
+        m.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        m.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
+
+        // Take checkpoint
+        m.checkpoint("initial", UiPanel.PERSONS);
+
+        // Mutate state: remove a person + filter lists
+        Person toRemove = ALICE;
+        m.deletePerson(toRemove);
+        m.updateFilteredPersonList(p -> p.getName().equals(BENSON.getName())); // only BENSON
+        m.updateFilteredDeliveryList(d -> false); // show none
+
+        // Sanity checks: state changed
+        assertFalse(m.getFoodBook().getPersonList().contains(toRemove));
+        assertTrue(m.getFilteredPersonList().stream().allMatch(p -> p.getName().equals(BENSON.getName())));
+        assertTrue(m.getFilteredDeliveryList().isEmpty());
+
+        // Undo
+        m.undo();
+
+        // Verify: person restored and filters show-all (by content)
+        assertTrue(m.getFoodBook().getPersonList().contains(toRemove));
+        assertFalse(m.getFilteredPersonList().isEmpty());
+        assertFalse(m.getFilteredDeliveryList().isEmpty());
+    }
+
+    @Test
+    public void checkpoint_capturesCustomPredicates_undoRestoresThem() throws Exception {
+        // Build model
+        FoodBook fb = new FoodBookBuilder()
+                .withPerson(ALICE)
+                .withPerson(BENSON)
+                .withDelivery(ALICE_DELIVERY)
+                .withDelivery(BENSON_DELIVERY)
+                .build();
+        ModelManager m = new ModelManager(fb, new UserPrefs());
+
+        // Apply custom filters: only ALICE for persons; none for deliveries
+        m.updateFilteredPersonList(p -> p.getName().equals(ALICE.getName()));
+        m.updateFilteredDeliveryList(d -> false);
+
+        // Checkpoint with custom filters active
+        m.checkpoint("custom-filters", UiPanel.DELIVERIES);
+
+        // Change filters to show-all
+        m.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        m.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
+
+        // Sanity: different view now
+        assertTrue(m.getFilteredPersonList().size() >= 1);
+        assertFalse(m.getFilteredDeliveryList().isEmpty());
+
+        // Undo -> filters should be restored to custom ones
+        m.undo();
+        assertTrue(m.getFilteredPersonList().stream().allMatch(p -> p.getName().equals(ALICE.getName())));
+        assertTrue(m.getFilteredDeliveryList().isEmpty());
     }
 }

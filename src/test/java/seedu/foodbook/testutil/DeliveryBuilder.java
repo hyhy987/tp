@@ -119,12 +119,7 @@ public class DeliveryBuilder {
      * @return The constructed delivery object.
      */
     public Delivery build() {
-        Delivery delivery = new Delivery(id, client, datetime, remarks, cost, tag);
-
-        if (this.isDelivered) {
-            delivery.markAsDelivered();
-        }
-        return delivery;
+        return new Delivery(id, client, datetime, remarks, cost, tag, this.isDelivered);
     }
 
 }

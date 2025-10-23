@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.DateTime;
+import seedu.foodbook.model.person.Name;
 
 /**
  * Parses input arguments and creates a new AddDeliveryCommand object.
@@ -48,7 +49,7 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
                 PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         // Parse individual components
-        String clientName = argMultimap.getValue(PREFIX_NAME).get().trim();
+        Name clientName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
         String date = argMultimap.getValue(PREFIX_DATE).get();
         String time = argMultimap.getValue(PREFIX_TIME).get();
         DateTime dateTime = ParserUtil.parseDateTime(date, time);

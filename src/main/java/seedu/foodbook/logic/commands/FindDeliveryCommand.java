@@ -41,9 +41,9 @@ public class FindDeliveryCommand extends Command {
         requireNonNull(model);
         model.updateFilteredDeliveryList(predicate);
 
-        int numClientsFound = model.getFilteredPersonList().size();
+        int numDeliveriesFound = model.getFilteredPersonList().size();
 
-        if (numClientsFound == 0) {
+        if (numDeliveriesFound == 0) {
             return new CommandResult(MESSAGE_NO_DELIVERY_FOUND, CommandResult.UiPanel.DELIVERIES);
         }
         return new CommandResult(
@@ -65,3 +65,4 @@ public class FindDeliveryCommand extends Command {
                 .toString();
     }
 }
+
