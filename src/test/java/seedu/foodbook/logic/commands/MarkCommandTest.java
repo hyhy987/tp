@@ -29,8 +29,7 @@ public class MarkCommandTest {
         Delivery testDelivery = new DeliveryBuilder().build();
 
         ModelManager expectedModel = new ModelManager(model.getFoodBook(), new UserPrefs());
-        Delivery markedDelivery = new DeliveryBuilder().build();
-        markedDelivery.markAsDelivered();
+        Delivery markedDelivery = new DeliveryBuilder().asDelivered().build();
         expectedModel.addDelivery(markedDelivery);
 
         model.addDelivery(testDelivery);
@@ -54,8 +53,8 @@ public class MarkCommandTest {
         // Create a test person and delivery
 
         Delivery testDelivery = new DeliveryBuilder().build();
-        testDelivery.markAsDelivered(); // Mark as delivered first
-        model.addDelivery(testDelivery);
+        Delivery markedDelivery = testDelivery.markAsDelivered(); // Mark as delivered first
+        model.addDelivery(markedDelivery);
 
         MarkCommand markCommand = new MarkCommand(testDelivery.getId());
         assertCommandFailure(markCommand, model, MarkCommand.MESSAGE_DELIVERY_ALREADY_MARKED);

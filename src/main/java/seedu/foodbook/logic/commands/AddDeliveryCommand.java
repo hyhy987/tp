@@ -16,6 +16,7 @@ import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
 
 /**
@@ -51,7 +52,7 @@ public class AddDeliveryCommand extends Command {
     public static final String MESSAGE_CLIENT_NOT_FOUND = "Client not found: %1$s";
 
     /** The name of the client for this delivery. */
-    private final String clientName;
+    private final Name clientName;
 
     /** The date and time for this delivery. */
     private final DateTime dateTime;
@@ -78,7 +79,7 @@ public class AddDeliveryCommand extends Command {
      * @param cost The cost/price of this delivery.
      * @throws NullPointerException If any parameter is null.
      */
-    public AddDeliveryCommand(String clientName, DateTime dateTime, String remarks, Double cost) {
+    public AddDeliveryCommand(Name clientName, DateTime dateTime, String remarks, Double cost) {
         requireNonNull(clientName);
         requireNonNull(dateTime);
         requireNonNull(remarks);
@@ -101,13 +102,13 @@ public class AddDeliveryCommand extends Command {
      * @param tag optional tag string; {@code null} or blank indicates no tag.
      * @throws IllegalArgumentException if {@code cost} is negative (defensive check).
      */
-    public AddDeliveryCommand(String clientName, DateTime dateTime, String remarks, Double cost, String tag) {
+    public AddDeliveryCommand(Name clientName, DateTime dateTime, String remarks, Double cost, String tag) {
         requireNonNull(clientName);
         requireNonNull(dateTime);
         requireNonNull(remarks);
         requireNonNull(cost);
 
-        this.clientName = clientName.trim();
+        this.clientName = clientName;
         this.dateTime = dateTime;
         this.remarks = remarks;
 
@@ -134,7 +135,7 @@ public class AddDeliveryCommand extends Command {
         requireNonNull(toAdd);
 
         this.toAdd = Optional.of(toAdd);
-        this.clientName = toAdd.getClient().getName().fullName;
+        this.clientName = toAdd.getClient().getName();
         this.dateTime = toAdd.getDeliveryDate();
         this.remarks = toAdd.getRemarks();
         this.cost = toAdd.getCost();
@@ -158,11 +159,15 @@ public class AddDeliveryCommand extends Command {
             delivery = this.toAdd.get();
         } else {
             //Find the client by name
-            Person client = model.getFilteredPersonList().stream()
-                    .filter(person -> person.getName().fullName.equals(clientName))
-                    .findFirst()
-                    .orElseThrow(() -> new CommandException(
-                            String.format(MESSAGE_CLIENT_NOT_FOUND, clientName)));
+            Optional<Person> maybePerson = model.getPersonByName(clientName);
+
+            if (maybePerson.isEmpty()) {
+                throw new CommandException(
+                        String.format(MESSAGE_CLIENT_NOT_FOUND, clientName)
+                );
+            }
+
+            Person client = maybePerson.get();
 
             //Generate unique ID
             Integer nextId = generateNextId(model);
@@ -175,6 +180,7 @@ public class AddDeliveryCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
         }
 
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
         model.addDelivery(delivery);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(delivery)),
                 CommandResult.UiPanel.DELIVERIES);

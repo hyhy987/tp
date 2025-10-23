@@ -16,6 +16,7 @@ import java.util.Set;
 import seedu.foodbook.logic.commands.EditClientCommand;
 import seedu.foodbook.logic.commands.EditClientCommand.EditPersonDescriptor;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
+import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.tag.Tag;
 
 /**
@@ -33,15 +34,12 @@ public class EditClientCommandParser implements Parser<EditClientCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG);
 
-        String currentClientName;
-
-
         if (argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     EditClientCommand.MESSAGE_USAGE));
         }
 
-        currentClientName = argMultimap.getPreamble();
+        Name currentClientName = ParserUtil.parseName(argMultimap.getPreamble());
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
 

@@ -6,7 +6,6 @@ import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseSucce
 
 import org.junit.jupiter.api.Test;
 
-import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.DeleteDeliveryCommand;
 
 public class DeleteDeliveryCommandParserTest {
@@ -15,17 +14,17 @@ public class DeleteDeliveryCommandParserTest {
 
     @Test
     public void parse_validArgs_returnsDeleteDeliveryCommand() {
-        assertParseSuccess(parser, "1", new DeleteDeliveryCommand(Index.fromOneBased(1)));
+        assertParseSuccess(parser, "1", new DeleteDeliveryCommand(1));
     }
 
     @Test
     public void parse_validArgsWithWhitespace_returnsDeleteDeliveryCommand() {
-        assertParseSuccess(parser, "  67  ", new DeleteDeliveryCommand(Index.fromOneBased(67)));
+        assertParseSuccess(parser, "  67  ", new DeleteDeliveryCommand(67));
     }
 
     @Test
     public void parse_validLargeDeliveryId_returnsDeleteDeliveryCommand() {
-        assertParseSuccess(parser, "999999", new DeleteDeliveryCommand(Index.fromOneBased(999999)));
+        assertParseSuccess(parser, "999999", new DeleteDeliveryCommand(999999));
     }
 
     @Test

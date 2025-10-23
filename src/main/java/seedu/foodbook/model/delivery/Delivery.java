@@ -15,7 +15,7 @@ public class Delivery {
 
     // Identity fields
     private final Integer id;
-    private boolean isDelivered;
+    private final Boolean isDelivered;
     private final Person client;
     private final DateTime datetime;
     private final String remarks;
@@ -28,8 +28,8 @@ public class Delivery {
      * Every field must be present and not null.
      */
     public Delivery(Integer id, Person client, DateTime datetime,
-                  String remarks, Double cost, String tag) {
-        requireAllNonNull(id, client, datetime, remarks, cost);
+                  String remarks, Double cost, String tag, Boolean isDelivered) {
+        requireAllNonNull(id, client, datetime, remarks, cost, isDelivered);
         this.id = id;
         this.client = client;
         this.datetime = datetime;
@@ -41,7 +41,12 @@ public class Delivery {
             this.tag = tag;
         }
 
-        this.isDelivered = false;
+        this.isDelivered = isDelivered;
+    }
+
+    public Delivery(Integer id, Person client, DateTime datetime,
+                    String remarks, Double cost, String tag) {
+        this(id, client, datetime, remarks, cost, tag, false);
     }
 
     public Integer getId() {
@@ -52,12 +57,35 @@ public class Delivery {
         return this.isDelivered;
     }
 
-    public void markAsDelivered() {
-        this.isDelivered = true;
+    /**
+     * Returns a copy of this delivery, marked as delivered
+     * @return A copy of this delivery, marked as delivered
+     */
+    public Delivery markAsDelivered() {
+        return new Delivery(
+                this.getId(),
+                this.getClient(),
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag(),
+                true
+        );
     }
 
-    public void unmarkAsDelivered() {
-        this.isDelivered = false;
+    /**
+     * Returns a copy of this delivery, unmarked as delivered
+     * @return A copy of this delivery, unmarked as delivered
+     */
+    public Delivery unmarkAsDelivered() {
+        return new Delivery(
+                this.getId(),
+                this.getClient(),
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag()
+        );
     }
 
     public Person getClient() {
@@ -106,7 +134,17 @@ public class Delivery {
 
     /**
      * Returns true if both deliveries have the same id.
+     * This defines a weaker notion of equality between two deliveries.
      */
+    public boolean isSameDelivery(Delivery otherDelivery) {
+        if (otherDelivery == this) {
+            return true;
+        }
+
+        return otherDelivery != null
+                && otherDelivery.getId().equals(getId());
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -118,7 +156,30 @@ public class Delivery {
             return false;
         }
 
-        return this.id.equals(((Delivery) other).id);
+        Delivery otherDelivery = (Delivery) other;
+        return id.equals(otherDelivery.id)
+                && isDelivered.equals(otherDelivery.isDelivered)
+                && client.equals(otherDelivery.client)
+                && datetime.equals(otherDelivery.datetime)
+                && remarks.equals(otherDelivery.remarks)
+                && cost.equals(otherDelivery.cost)
+                && Objects.equals(tag, otherDelivery.tag);
+    }
+
+    /**
+     * Returns copy of this delivery with the new client
+     * @param newClient The new client to replace the current client
+     * @return A copy of this delivery with the new client
+     */
+    public Delivery copyWithNewClient(Person newClient) {
+        return new Delivery(
+                this.getId(),
+                newClient,
+                this.getDeliveryDate(),
+                this.getRemarks(),
+                this.getCost(),
+                this.getTag(),
+                this.getStatus());
     }
 
     @Override

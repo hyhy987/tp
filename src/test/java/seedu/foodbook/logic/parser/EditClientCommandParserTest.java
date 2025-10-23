@@ -76,9 +76,10 @@ public class EditClientCommandParserTest {
         assertParseFailure(parser, VALID_NAME_AMY + " some random string",
                 EditClientCommand.MESSAGE_NOT_EDITED);
 
-        // unknown prefix after the name: also ends up as "no valid fields"
+        // unknown prefix after the name: should be treated as part of "name",
+        // resulting in invalid name (due to /)
         assertParseFailure(parser, VALID_NAME_AMY + " i/ string",
-                EditClientCommand.MESSAGE_NOT_EDITED);
+                Name.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -111,7 +112,7 @@ public class EditClientCommandParserTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY)
                 .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
-        EditClientCommand expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        EditClientCommand expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -122,7 +123,7 @@ public class EditClientCommandParserTest {
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_BOB)
                 .withEmail(VALID_EMAIL_AMY).build();
-        EditClientCommand expectedCommand = new EditClientCommand(VALID_NAME_AMY, descriptor);
+        EditClientCommand expectedCommand = new EditClientCommand(new Name(VALID_NAME_AMY), descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -132,31 +133,31 @@ public class EditClientCommandParserTest {
         // name
         String userInput = VALID_NAME_BOB + NAME_DESC_AMY;
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
-        EditClientCommand expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        EditClientCommand expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // phone
         userInput = VALID_NAME_BOB + PHONE_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_AMY).build();
-        expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // email
         userInput = VALID_NAME_BOB + EMAIL_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
-        expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // address
         userInput = VALID_NAME_BOB + ADDRESS_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withAddress(VALID_ADDRESS_AMY).build();
-        expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // tags
         userInput = VALID_NAME_BOB + TAG_DESC_FRIEND;
         descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_FRIEND).build();
-        expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
 
@@ -197,7 +198,7 @@ public class EditClientCommandParserTest {
         String userInput = VALID_NAME_BOB + TAG_EMPTY;
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
-        EditClientCommand expectedCommand = new EditClientCommand(VALID_NAME_BOB, descriptor);
+        EditClientCommand expectedCommand = new EditClientCommand(new Name(VALID_NAME_BOB), descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
     }

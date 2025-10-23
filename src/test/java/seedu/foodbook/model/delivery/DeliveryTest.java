@@ -8,40 +8,77 @@ import static seedu.foodbook.model.delivery.TagKind.OTHER;
 import static seedu.foodbook.model.delivery.TagKind.PERSONAL;
 import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BENSON_DELIVERY;
+import static seedu.foodbook.testutil.TypicalDeliveries.BOB_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.DELIVERY_SAME_ID_AS_ALICE;
 import static seedu.foodbook.testutil.TypicalDeliveries.ELLE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalPersons.ALICE;
+import static seedu.foodbook.testutil.TypicalPersons.BOB;
 import static seedu.foodbook.testutil.TypicalPersons.CARL;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.foodbook.testutil.DeliveryBuilder;
+
 public class DeliveryTest {
 
     @Test
-    public void equals_sameId_returnsTrue() {
-        // Same id => equal, regardless of other fields
-        assertTrue(ALICE_DELIVERY.equals(DELIVERY_SAME_ID_AS_ALICE));
+    public void isSameDelivery() {
+        // same object -> returns true
+        assertTrue(ALICE_DELIVERY.isSameDelivery(ALICE_DELIVERY));
+
+        // null -> returns false
+        assertFalse(ALICE_DELIVERY.isSameDelivery(null));
+
+        // same name, all other attributes different -> returns true
+        Delivery editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY)
+                .withClient(BOB).withCost(50d)
+                .withRemarks("abc").asDelivered()
+                .build();
+        assertTrue(ALICE_DELIVERY.isSameDelivery(editedAliceDelivery));
+
+        // different name, all other attributes same -> returns false
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withId(50).build();
+        assertFalse(ALICE_DELIVERY.isSameDelivery(editedAliceDelivery));
     }
 
     @Test
-    public void equals_differentId_returnsFalse() {
-        assertFalse(ALICE_DELIVERY.equals(BENSON_DELIVERY));
-    }
+    public void equals() {
+        // same values -> returns true
+        Delivery aliceDeliveryCopy = new DeliveryBuilder(ALICE_DELIVERY).build();
+        assertTrue(ALICE_DELIVERY.equals(aliceDeliveryCopy));
 
-    @Test
-    public void equals_sameObject_returnsTrue() {
+        // same object -> returns true
         assertTrue(ALICE_DELIVERY.equals(ALICE_DELIVERY));
-    }
 
-    @Test
-    public void equals_null_returnsFalse() {
+        // null -> returns false
         assertFalse(ALICE_DELIVERY.equals(null));
-    }
 
-    @Test
-    public void equals_differentType_returnsFalse() {
-        assertFalse(ALICE_DELIVERY.equals("not a delivery"));
+        // different type -> returns false
+        assertFalse(ALICE_DELIVERY.equals(5));
+
+        // different person -> returns false
+        assertFalse(ALICE_DELIVERY.equals(BOB_DELIVERY));
+
+        // different name -> returns false
+        Delivery editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withId(50).build();
+        assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
+
+        // different client -> returns false
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withClient(BOB).build();
+        assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
+
+        // different cost -> returns false
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withCost(40d).build();
+        assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
+
+        // different remarks -> returns false
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withRemarks("abc").build();
+        assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
+
+        // different tags -> returns false
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withTag("personal").build();
+        assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
     }
 
     @Test
@@ -94,11 +131,11 @@ public class DeliveryTest {
         // Initially not delivered
         assertFalse(testDelivery.getStatus());
 
-        testDelivery.markAsDelivered();
-        assertTrue(testDelivery.getStatus());
+        Delivery markedDelivery = testDelivery.markAsDelivered();
+        assertTrue(markedDelivery.getStatus());
 
-        testDelivery.unmarkAsDelivered();
-        assertFalse(testDelivery.getStatus());
+        Delivery unmarkedDelivery = markedDelivery.unmarkAsDelivered();
+        assertFalse(unmarkedDelivery.getStatus());
     }
 
     @Test
