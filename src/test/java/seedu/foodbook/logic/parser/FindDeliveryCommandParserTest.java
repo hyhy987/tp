@@ -30,7 +30,7 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validClientName_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), 
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
                         Optional.of("John Doe"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John Doe", expectedCommand);
 
@@ -42,7 +42,7 @@ public class FindDeliveryCommandParserTest {
     public void parse_validDate_returnsFindDeliveryCommand() {
         LocalDate date = LocalDate.of(2024, 12, 25);
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date), 
+                new DeliveryPredicate(Optional.of(date), Optional.of(date),
                         Optional.empty(), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " d/25/12/2024", expectedCommand);
     }
@@ -50,7 +50,7 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validSingleTag_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), 
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
                         Optional.empty(), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " t/urgent", expectedCommand);
     }
@@ -58,16 +58,16 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validCombinedFilters_returnsFindDeliveryCommand() {
         LocalDate date = LocalDate.of(2024, 12, 25);
-        
+
         // Client name + date
         FindDeliveryCommand expectedCommand1 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date), 
+                new DeliveryPredicate(Optional.of(date), Optional.of(date),
                         Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John d/25/12/2024", expectedCommand1);
 
         // Client name + tags
         FindDeliveryCommand expectedCommand2 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), 
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
                         Optional.of("John"), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " n/John t/urgent", expectedCommand2);
 
@@ -125,7 +125,7 @@ public class FindDeliveryCommandParserTest {
         // Line 88-90: If tagList.isEmpty(), return Optional.empty()
         // This is the normal path when no t/ prefix is provided
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), 
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
                         Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John", expectedCommand);
     }

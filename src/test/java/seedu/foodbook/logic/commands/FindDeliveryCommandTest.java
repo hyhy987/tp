@@ -30,7 +30,7 @@ public class FindDeliveryCommandTest {
     public void equals() {
         LocalDate date1 = LocalDate.of(2024, 12, 25);
         LocalDate date2 = LocalDate.of(2024, 12, 31);
-        
+
         DeliveryPredicate firstPredicate = new DeliveryPredicate(
                 Optional.of(date1), Optional.of(date1), Optional.of("John"), Optional.empty(), Optional.empty());
         DeliveryPredicate secondPredicate = new DeliveryPredicate(
@@ -106,7 +106,7 @@ public class FindDeliveryCommandTest {
     public void execute_nonMatchingFilters_noDeliveryFound() {
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, 0);
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of("NonExistentClient"), 
+                Optional.empty(), Optional.empty(), Optional.of("NonExistentClient"),
                 Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);

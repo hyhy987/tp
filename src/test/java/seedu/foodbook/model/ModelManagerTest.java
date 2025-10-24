@@ -163,7 +163,7 @@ public class ModelManagerTest {
 
         // different filteredList -> returns false
         String searchDate = ALICE_DELIVERY.getDeliveryDate().getDateString();
-        java.time.LocalDate date = java.time.LocalDate.parse(searchDate, 
+        java.time.LocalDate date = java.time.LocalDate.parse(searchDate,
                 java.time.format.DateTimeFormatter.ofPattern("d/M/uuuu"));
         modelManager.updateFilteredDeliveryList(new DeliveryPredicate(
                 Optional.of(date),

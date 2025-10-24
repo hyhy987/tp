@@ -21,9 +21,11 @@ public class DeliveryPredicateTest {
         LocalDate date1 = LocalDate.of(2024, 12, 25);
         LocalDate date2 = LocalDate.of(2024, 12, 26);
 
-        DeliveryPredicate firstPredicate = new DeliveryPredicate(Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
+        DeliveryPredicate firstPredicate = new DeliveryPredicate(
+                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
-        DeliveryPredicate secondPredicate = new DeliveryPredicate(Optional.of(date2), Optional.of(date2), Optional.of("Bob"),
+        DeliveryPredicate secondPredicate = new DeliveryPredicate(
+                Optional.of(date2), Optional.of(date2), Optional.of("Bob"),
                 Optional.of("corporate"), Optional.empty());
 
         // same object -> returns true
@@ -31,7 +33,7 @@ public class DeliveryPredicateTest {
 
         // same values -> returns true
         DeliveryPredicate firstPredicateCopy = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Alice"), 
+                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
         assertTrue(firstPredicate.equals(firstPredicateCopy));
 
@@ -165,19 +167,19 @@ public class DeliveryPredicateTest {
 
         // Client matches, date matches, but tag doesn't match
         DeliveryPredicate predicate1 = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Alice"), 
+                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
                 Optional.of("corporate"), Optional.empty());
         assertFalse(predicate1.test(ALICE_DELIVERY));
 
         // Client matches, tag matches, but date doesn't match
         DeliveryPredicate predicate2 = new DeliveryPredicate(
-                Optional.of(date2), Optional.of(date2), Optional.of("Alice"), 
+                Optional.of(date2), Optional.of(date2), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
         assertFalse(predicate2.test(ALICE_DELIVERY));
 
         // Date matches, tag matches, but client doesn't match
         DeliveryPredicate predicate3 = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Bob"), 
+                Optional.of(date1), Optional.of(date1), Optional.of("Bob"),
                 Optional.of("personal"), Optional.empty());
         assertFalse(predicate3.test(ALICE_DELIVERY));
     }
@@ -203,7 +205,7 @@ public class DeliveryPredicateTest {
     public void test_toString() {
         LocalDate date = LocalDate.of(2024, 12, 25);
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of(date), Optional.of(date), Optional.of("Alice"), 
+                Optional.of(date), Optional.of(date), Optional.of("Alice"),
                 Optional.of("urgent"), Optional.empty());
 
         String result = predicate.toString();
