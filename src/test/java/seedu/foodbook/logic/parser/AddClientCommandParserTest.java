@@ -16,14 +16,17 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.foodbook.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
+import static seedu.foodbook.logic.commands.CommandTestUtil.TAG_DESC_FATHER;
 import static seedu.foodbook.logic.commands.CommandTestUtil.TAG_DESC_FRIEND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
+import static seedu.foodbook.logic.commands.CommandTestUtil.TAG_DESC_PERSONAL;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
+import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_PERSONAL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
@@ -57,7 +60,7 @@ public class AddClientCommandParserTest {
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddClientCommand(expectedPerson));
 
 
-        // multiple tags - all accepted
+        // multiple tags (but <= 3) - all accepted
         Person expectedPersonMultipleTags = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
                 .build();
         assertParseSuccess(parser,
@@ -135,6 +138,14 @@ public class AddClientCommandParserTest {
         Person expectedPerson = new PersonBuilder(AMY).withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
                 new AddClientCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_moreThan3Tags_fail() {
+        assertParseFailure(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND + TAG_DESC_PERSONAL + TAG_DESC_FATHER,
+                Tag.MESSAGE_TOO_MANY_TAGS);
     }
 
     @Test
