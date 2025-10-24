@@ -118,7 +118,7 @@ public class ParserUtil {
      * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
      *
      * @throws ParseException if more than 3 tags are provided
-     * (A client can only have a maximum of 3 tags)
+     *     (A client can only have a maximum of 3 tags)
      */
     public static Set<Tag> parseTags(Collection<String> tags) throws ParseException {
         requireNonNull(tags);

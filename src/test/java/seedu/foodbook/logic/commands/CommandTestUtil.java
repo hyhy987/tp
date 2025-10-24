@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
-import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_PHONE;

@@ -26,7 +26,6 @@ import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
-import static seedu.foodbook.logic.commands.CommandTestUtil.VALID_TAG_PERSONAL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
