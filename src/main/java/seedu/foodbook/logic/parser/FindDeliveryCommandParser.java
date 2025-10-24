@@ -6,6 +6,10 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Optional;
 
 import seedu.foodbook.logic.commands.FindDeliveryCommand;
@@ -46,33 +50,48 @@ public class FindDeliveryCommandParser implements Parser<FindDeliveryCommand> {
         // Verify no duplicate prefixes for single-value fields
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_DATE, PREFIX_TAG);
 
-        Optional<String> clientName = argMultimap.getValue(PREFIX_NAME);
-        Optional<String> date = argMultimap.getValue(PREFIX_DATE);
-        Optional<String> tag = argMultimap.getValue(PREFIX_TAG);
+        Optional<String> clientName = argMultimap.getValue(PREFIX_NAME)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
+        Optional<String> dateString = argMultimap.getValue(PREFIX_DATE);
+        Optional<String> tag = argMultimap.getValue(PREFIX_TAG)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
 
         // Validate client name is not empty if provided
-        if (clientName.isPresent() && clientName.get().trim().isEmpty()) {
+        if (argMultimap.getValue(PREFIX_NAME).isPresent()
+                && argMultimap.getValue(PREFIX_NAME).get().trim().isEmpty()) {
             throw new ParseException("Client name cannot be empty.");
         }
 
-        // Validate date format if provided
-        if (date.isPresent()) {
-            String dateValue = date.get().trim();
+        // Parse date to startDate and endDate (same date for exact match)
+        Optional<LocalDate> startDate = Optional.empty();
+        Optional<LocalDate> endDate = Optional.empty();
+        if (dateString.isPresent()) {
+            String dateValue = dateString.get().trim();
             if (dateValue.isEmpty()) {
                 throw new ParseException("Date cannot be empty.");
             }
             if (!DateTime.isValidDate(dateValue)) {
                 throw new ParseException("Invalid date format. Please use d/M/yyyy format (e.g., 25/12/2024).");
             }
-        }
-
-        // Validate tag is not empty if provided
-        if (tag.isPresent()) {
-            if (tag.get().isEmpty()) {
-                throw new ParseException("Tag cannot be empty.");
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu")
+                        .withResolverStyle(ResolverStyle.STRICT);
+                LocalDate parsedDate = LocalDate.parse(dateValue, formatter);
+                startDate = Optional.of(parsedDate);
+                endDate = Optional.of(parsedDate);
+            } catch (DateTimeParseException e) {
+                throw new ParseException("Invalid date format. Please use d/M/yyyy format (e.g., 25/12/2024).");
             }
         }
 
-        return new FindDeliveryCommand(new DeliveryPredicate(clientName, date, tag));
+        // Validate tag is not empty if provided
+        if (argMultimap.getValue(PREFIX_TAG).isPresent()
+                && argMultimap.getValue(PREFIX_TAG).get().trim().isEmpty()) {
+            throw new ParseException("Tag cannot be empty.");
+        }
+
+        return new FindDeliveryCommand(new DeliveryPredicate(startDate, endDate, clientName, tag, Optional.empty()));
     }
 }

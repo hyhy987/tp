@@ -15,7 +15,7 @@ import seedu.foodbook.model.Model;
 import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;
 import seedu.foodbook.model.delivery.Delivery;
-import seedu.foodbook.model.delivery.RevenueFilterPredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 import seedu.foodbook.testutil.DeliveryBuilder;
 import seedu.foodbook.testutil.PersonBuilder;
 import seedu.foodbook.testutil.TypicalFoodBook;
@@ -37,8 +37,8 @@ public class ListRevenueCommandTest {
     @Test
     public void execute_noFilters_showsAllDeliveries() {
         // Create predicate with no filters
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
 
@@ -85,8 +85,8 @@ public class ListRevenueCommandTest {
         expectedModel.addDelivery(pendingDelivery);
 
         // Filter for delivered only
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(true));
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(true));
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
@@ -134,8 +134,8 @@ public class ListRevenueCommandTest {
         expectedModel.addDelivery(deliveredDelivery);
 
         // Filter for pending only
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(false));
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(false));
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
@@ -178,8 +178,8 @@ public class ListRevenueCommandTest {
         expectedModel.addDelivery(bobDelivery);
 
         // Filter for Alice
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.of("Alice"), Optional.empty());
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.of("Alice"), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
@@ -232,8 +232,8 @@ public class ListRevenueCommandTest {
         LocalDate startDate = LocalDate.of(2024, 1, 1);
         LocalDate endDate = LocalDate.of(2024, 12, 31);
 
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.of(startDate), Optional.of(endDate), Optional.empty(), Optional.empty());
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of(startDate), Optional.of(endDate), Optional.empty(), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
@@ -290,9 +290,9 @@ public class ListRevenueCommandTest {
         LocalDate startDate = LocalDate.of(2024, 1, 1);
         LocalDate endDate = LocalDate.of(2024, 12, 31);
 
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
+        DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(startDate), Optional.of(endDate),
-                Optional.of("Charlie"), Optional.of(true));
+                Optional.of("Charlie"), Optional.empty(), Optional.of(true));
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
@@ -313,8 +313,8 @@ public class ListRevenueCommandTest {
 
     @Test
     public void execute_helpMessageIncluded() {
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command = new ListRevenueCommand(predicate);
 
@@ -333,11 +333,11 @@ public class ListRevenueCommandTest {
 
     @Test
     public void equals() {
-        RevenueFilterPredicate predicate1 = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-        RevenueFilterPredicate predicate2 = new RevenueFilterPredicate(
+        DeliveryPredicate predicate1 = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        DeliveryPredicate predicate2 = new DeliveryPredicate(
                 Optional.of(LocalDate.of(2024, 1, 1)), Optional.empty(),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command1 = new ListRevenueCommand(predicate1);
         ListRevenueCommand command1Copy = new ListRevenueCommand(predicate1);
@@ -361,8 +361,8 @@ public class ListRevenueCommandTest {
 
     @Test
     public void toStringMethod() {
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         ListRevenueCommand command = new ListRevenueCommand(predicate);
 
         String expected = ListRevenueCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";

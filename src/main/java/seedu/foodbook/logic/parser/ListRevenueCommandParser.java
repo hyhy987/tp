@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
-import seedu.foodbook.model.delivery.RevenueFilterPredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Parses input arguments and creates a new ListRevenueCommand object.
@@ -83,8 +83,8 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
             }
         }
 
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(startDate, endDate,
-                clientName, isDelivered);
+        DeliveryPredicate predicate = new DeliveryPredicate(startDate, endDate,
+                clientName, Optional.empty(), isDelivered);
         return new ListRevenueCommand(predicate);
     }
 

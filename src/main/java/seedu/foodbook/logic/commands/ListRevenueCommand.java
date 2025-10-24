@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.Delivery;
-import seedu.foodbook.model.delivery.RevenueFilterPredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Calculates and displays revenue from deliveries with optional filtering.
@@ -37,14 +37,14 @@ public class ListRevenueCommand extends Command {
             + "Usage: " + COMMAND_WORD + " [sd/START_DATE] [ed/END_DATE] [n/CLIENT_NAME] [s/STATUS]\n"
             + "Date format: d/M/yyyy | Status: delivered or not_delivered";
 
-    private final RevenueFilterPredicate predicate;
+    private final DeliveryPredicate predicate;
 
     /**
      * Creates a ListRevenueCommand with the specified filter predicate.
      *
      * @param predicate The predicate to filter deliveries
      */
-    public ListRevenueCommand(RevenueFilterPredicate predicate) {
+    public ListRevenueCommand(DeliveryPredicate predicate) {
         this.predicate = predicate;
     }
 
