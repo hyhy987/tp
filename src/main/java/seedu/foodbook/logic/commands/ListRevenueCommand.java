@@ -25,13 +25,16 @@ public class ListRevenueCommand extends Command {
             + "[s/STATUS]\n"
             + "STATUS can be 'delivered' or 'not_delivered'. Omit to include all deliveries.\n"
             + "Date format: d/M/yyyy (e.g., 25/12/2024)\n"
+            + "Note: If only sd/ is provided, it shows revenue for that exact date only.\n"
             + "Examples:\n"
             + "  " + COMMAND_WORD + " (shows revenue from all deliveries)\n"
+            + "  " + COMMAND_WORD + " sd/1/1/2024 (shows revenue for 1/1/2024 only)\n"
             + "  " + COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024 (shows revenue for date range)\n"
             + "  " + COMMAND_WORD + " s/delivered (shows revenue from completed deliveries only)\n"
             + "  " + COMMAND_WORD + " n/John (shows revenue from deliveries for clients named John)\n"
             + "  " + COMMAND_WORD + " t/urgent (shows revenue from deliveries with urgent tag)\n"
-            + "  " + COMMAND_WORD + " sd/1/1/2024 s/delivered (shows revenue from completed deliveries in 2024)";
+            + "  " + COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024 s/delivered "
+            + "(shows revenue from completed deliveries in date range)";
 
     public static final String MESSAGE_SUCCESS = "Total Revenue: $%.2f\n"
             + "Number of deliveries: %d\n"
@@ -116,15 +119,6 @@ public class ListRevenueCommand extends Command {
         }
 
         return sb.toString();
-    }
-
-    /**
-     * Formats a LocalDate to a readable string format.
-     */
-    private String formatDate(java.time.LocalDate date) {
-        java.time.format.DateTimeFormatter formatter =
-                java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy");
-        return date.format(formatter);
     }
 
     @Override

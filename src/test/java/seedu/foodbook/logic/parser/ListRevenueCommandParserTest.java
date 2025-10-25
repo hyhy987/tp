@@ -38,7 +38,7 @@ public class ListRevenueCommandParserTest {
     public void parse_startDateOnly_returnsListRevenueCommand() {
         String args = " " + PREFIX_START_DATE + "1/1/2024";
         DeliveryPredicate expectedPredicate = new DeliveryPredicate(
-                Optional.of("1/1/2024"), Optional.empty(),
+                Optional.of("1/1/2024"), Optional.of("1/1/2024"),
                 Optional.empty(), Optional.empty(), Optional.empty());
         ListRevenueCommand expectedCommand = new ListRevenueCommand(expectedPredicate);
 
@@ -243,10 +243,9 @@ public class ListRevenueCommandParserTest {
 
     @Test
     public void parse_leapYearDate_returnsListRevenueCommand() {
-        // Test leap year date (Feb 29, 2024)
         String args = " " + PREFIX_START_DATE + "29/2/2024";
         DeliveryPredicate expectedPredicate = new DeliveryPredicate(
-                Optional.of("29/2/2024"), Optional.empty(),
+                Optional.of("29/2/2024"), Optional.of("29/2/2024"),
                 Optional.empty(), Optional.empty(), Optional.empty());
         ListRevenueCommand expectedCommand = new ListRevenueCommand(expectedPredicate);
 

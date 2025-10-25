@@ -77,7 +77,14 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
             }
         }
 
-        DeliveryPredicate predicate = new DeliveryPredicate(startDateString, endDateString,
+        // If only start date provided (no end date), use same date for both (exact date match)
+        Optional<String> finalStartDate = startDateString;
+        Optional<String> finalEndDate = endDateString;
+        if (startDateString.isPresent() && !endDateString.isPresent()) {
+            finalEndDate = startDateString;
+        }
+
+        DeliveryPredicate predicate = new DeliveryPredicate(finalStartDate, finalEndDate,
                 clientName, tag, isDelivered);
         return new ListRevenueCommand(predicate);
     }
