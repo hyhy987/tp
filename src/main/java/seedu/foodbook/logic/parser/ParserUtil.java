@@ -1,6 +1,7 @@
 package seedu.foodbook.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.foodbook.model.tag.Tag.MAX_TAGS;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -115,12 +116,18 @@ public class ParserUtil {
 
     /**
      * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     *
+     * @throws ParseException if more than 3 tags are provided
+     *     (A client can only have a maximum of 3 tags)
      */
     public static Set<Tag> parseTags(Collection<String> tags) throws ParseException {
         requireNonNull(tags);
         final Set<Tag> tagSet = new HashSet<>();
         for (String tagName : tags) {
             tagSet.add(parseTag(tagName));
+        }
+        if (tagSet.size() > MAX_TAGS) {
+            throw new ParseException(Tag.MESSAGE_TOO_MANY_TAGS);
         }
         return tagSet;
     }

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
-import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -44,6 +43,7 @@ public class CommandTestUtil {
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
     public static final String VALID_TAG_PERSONAL = "Personal";
+    public static final String VALID_TAG_FATHER = "Father";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -55,7 +55,8 @@ public class CommandTestUtil {
     public static final String ADDRESS_DESC_BOB = " " + PREFIX_ADDRESS + VALID_ADDRESS_BOB;
     public static final String TAG_DESC_FRIEND = " " + PREFIX_TAG + VALID_TAG_FRIEND;
     public static final String TAG_DESC_HUSBAND = " " + PREFIX_TAG + VALID_TAG_HUSBAND;
-    public static final String TAG_DESC_PERSONAL = " " + PREFIX_DELIVERY_TAG + VALID_TAG_PERSONAL;
+    public static final String TAG_DESC_PERSONAL = " " + PREFIX_TAG + VALID_TAG_PERSONAL;
+    public static final String TAG_DESC_FATHER = " " + PREFIX_TAG + VALID_TAG_FATHER;
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE + "911a"; // 'a' not allowed in phones
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
