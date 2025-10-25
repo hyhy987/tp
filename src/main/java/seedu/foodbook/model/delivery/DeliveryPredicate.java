@@ -1,8 +1,5 @@
 package seedu.foodbook.model.delivery;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -17,8 +14,8 @@ import seedu.foodbook.commons.util.ToStringBuilder;
  */
 public class DeliveryPredicate implements Predicate<Delivery> {
 
-    private final Optional<LocalDate> startDate;
-    private final Optional<LocalDate> endDate;
+    private final Optional<String> startDate;
+    private final Optional<String> endDate;
     private final Optional<String> clientName;
     private final Optional<String> tag;
     private final Optional<Boolean> isDelivered;
@@ -26,34 +23,36 @@ public class DeliveryPredicate implements Predicate<Delivery> {
     /**
      * Constructs a DeliveryPredicate with the specified filters.
      *
-     * @param startDate Optional start date for filtering (inclusive)
-     * @param endDate Optional end date for filtering (inclusive)
+     * @param startDateString Optional start date string for filtering (inclusive, d/M/yyyy format)
+     * @param endDateString Optional end date string for filtering (inclusive, d/M/yyyy format)
      * @param clientName Optional client name to filter by (case-insensitive partial match)
      * @param tag Optional tag to filter by (case-insensitive partial match)
      * @param isDelivered Optional delivery status filter (true for delivered, false for not delivered)
      */
-    public DeliveryPredicate(Optional<LocalDate> startDate,
-                             Optional<LocalDate> endDate,
+    public DeliveryPredicate(Optional<String> startDateString,
+                             Optional<String> endDateString,
                              Optional<String> clientName,
                              Optional<String> tag,
                              Optional<Boolean> isDelivered) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.clientName = clientName;
-        this.tag = tag;
+        // Store string dates directly
+        this.startDate = startDateString.map(String::trim).filter(s -> !s.isEmpty());
+        this.endDate = endDateString.map(String::trim).filter(s -> !s.isEmpty());
+
+        this.clientName = clientName.map(String::trim).filter(s -> !s.isEmpty());
+        this.tag = tag.map(String::trim).filter(s -> !s.isEmpty());
         this.isDelivered = isDelivered;
     }
 
     @Override
     public boolean test(Delivery delivery) {
         boolean matchesStartDate = startDate.map(start -> {
-            LocalDate deliveryDate = parseDate(delivery.getDeliveryDate().getDateString());
-            return !deliveryDate.isBefore(start);
+            DateTime startDateTime = new DateTime(start, "0000");
+            return !delivery.getDeliveryDate().isBefore(startDateTime);
         }).orElse(true);
 
         boolean matchesEndDate = endDate.map(end -> {
-            LocalDate deliveryDate = parseDate(delivery.getDeliveryDate().getDateString());
-            return !deliveryDate.isAfter(end);
+            DateTime endDateTime = new DateTime(end, "2359");
+            return !delivery.getDeliveryDate().isAfter(endDateTime);
         }).orElse(true);
 
         boolean matchesClientName = clientName.map(name ->
@@ -72,20 +71,12 @@ public class DeliveryPredicate implements Predicate<Delivery> {
         return matchesStartDate && matchesEndDate && matchesClientName && matchesTag && matchesStatus;
     }
 
-    /**
-     * Parses a date string in d/M/yyyy format into a LocalDate.
-     */
-    private LocalDate parseDate(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu")
-                .withResolverStyle(ResolverStyle.STRICT);
-        return LocalDate.parse(dateString, formatter);
-    }
 
-    public Optional<LocalDate> getStartDate() {
+    public Optional<String> getStartDate() {
         return startDate;
     }
 
-    public Optional<LocalDate> getEndDate() {
+    public Optional<String> getEndDate() {
         return endDate;
     }
 
@@ -122,8 +113,8 @@ public class DeliveryPredicate implements Predicate<Delivery> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("startDate", startDate.map(LocalDate::toString).orElse(""))
-                .add("endDate", endDate.map(LocalDate::toString).orElse(""))
+                .add("startDate", startDate.orElse(""))
+                .add("endDate", endDate.orElse(""))
                 .add("clientName", clientName.orElse(""))
                 .add("tag", tag.orElse(""))
                 .add("isDelivered", isDelivered.map(Object::toString).orElse(""))

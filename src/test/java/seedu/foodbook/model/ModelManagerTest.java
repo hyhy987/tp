@@ -166,8 +166,8 @@ public class ModelManagerTest {
         java.time.LocalDate date = java.time.LocalDate.parse(searchDate,
                 java.time.format.DateTimeFormatter.ofPattern("d/M/uuuu"));
         modelManager.updateFilteredDeliveryList(new DeliveryPredicate(
-                Optional.of(date),
-                Optional.of(date),
+                Optional.of(searchDate),
+                Optional.of(searchDate),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty()

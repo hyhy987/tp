@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -229,8 +228,8 @@ public class ListRevenueCommandTest {
         expectedModel.addDelivery(dec2025);
 
         // Filter for 2024
-        LocalDate startDate = LocalDate.of(2024, 1, 1);
-        LocalDate endDate = LocalDate.of(2024, 12, 31);
+        String startDate = "1/1/2024";
+        String endDate = "31/12/2024";
 
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(startDate), Optional.of(endDate), Optional.empty(), Optional.empty(), Optional.empty());
@@ -250,6 +249,52 @@ public class ListRevenueCommandTest {
         assertTrue(feedback.contains("Total Revenue:")); // Revenue is displayed
         assertTrue(feedback.contains("from")); // Date range is shown
         assertTrue(feedback.contains("to")); // Date range is shown
+    }
+
+    @Test
+    public void execute_tagFilter_showsFilteredRevenue() {
+        // Add deliveries with specific tags
+        Delivery urgentDelivery = new DeliveryBuilder()
+                .withId(350)
+                .withClient(new PersonBuilder().withName("Charlie Brown").build())
+                .withCost(60.0)
+                .withTag("urgent")
+                .build();
+        Delivery normalDelivery = new DeliveryBuilder()
+                .withId(351)
+                .withClient(new PersonBuilder().withName("David Lee").build())
+                .withCost(40.0)
+                .withTag("normal")
+                .build();
+
+        model.addDelivery(urgentDelivery);
+        model.addDelivery(normalDelivery);
+
+        expectedModel.addDelivery(urgentDelivery);
+        expectedModel.addDelivery(normalDelivery);
+
+        // Filter for urgent tag
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.of("urgent"), Optional.empty());
+
+        ListRevenueCommand command = new ListRevenueCommand(predicate);
+        expectedModel.updateFilteredDeliveryList(predicate);
+
+        CommandResult result = null;
+        try {
+            result = command.execute(model);
+        } catch (Exception e) {
+            throw new AssertionError("Execution should not fail", e);
+        }
+
+        // Verify the result
+        String feedback = result.getFeedbackToUser();
+        assertTrue(feedback.contains("Total Revenue:")); // Revenue is displayed
+        assertTrue(feedback.contains("\"urgent\"")); // Tag filter is shown
+
+        // Verify only urgent deliveries are counted
+        assertTrue(model.getFilteredDeliveryList().stream()
+                .allMatch(delivery -> delivery.getTag() != null && delivery.getTag().toLowerCase().contains("urgent")));
     }
 
     @Test
@@ -287,8 +332,8 @@ public class ListRevenueCommandTest {
         expectedModel.addDelivery(wrongClient);
 
         // Combined filters
-        LocalDate startDate = LocalDate.of(2024, 1, 1);
-        LocalDate endDate = LocalDate.of(2024, 12, 31);
+        String startDate = "1/1/2024";
+        String endDate = "31/12/2024";
 
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(startDate), Optional.of(endDate),
@@ -336,7 +381,7 @@ public class ListRevenueCommandTest {
         DeliveryPredicate predicate1 = new DeliveryPredicate(
                 Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         DeliveryPredicate predicate2 = new DeliveryPredicate(
-                Optional.of(LocalDate.of(2024, 1, 1)), Optional.empty(),
+                Optional.of("1/1/2024"), Optional.empty(),
                 Optional.empty(), Optional.empty(), Optional.empty());
 
         ListRevenueCommand command1 = new ListRevenueCommand(predicate1);

@@ -21,6 +21,7 @@ public class ListRevenueCommand extends Command {
             + "[sd/START_DATE] "
             + "[ed/END_DATE] "
             + "[n/CLIENT_NAME] "
+            + "[t/TAG] "
             + "[s/STATUS]\n"
             + "STATUS can be 'delivered' or 'not_delivered'. Omit to include all deliveries.\n"
             + "Date format: d/M/yyyy (e.g., 25/12/2024)\n"
@@ -29,12 +30,13 @@ public class ListRevenueCommand extends Command {
             + "  " + COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024 (shows revenue for date range)\n"
             + "  " + COMMAND_WORD + " s/delivered (shows revenue from completed deliveries only)\n"
             + "  " + COMMAND_WORD + " n/John (shows revenue from deliveries for clients named John)\n"
+            + "  " + COMMAND_WORD + " t/urgent (shows revenue from deliveries with urgent tag)\n"
             + "  " + COMMAND_WORD + " sd/1/1/2024 s/delivered (shows revenue from completed deliveries in 2024)";
 
     public static final String MESSAGE_SUCCESS = "Total Revenue: $%.2f\n"
             + "Number of deliveries: %d\n"
             + "%s\n\n"
-            + "Usage: " + COMMAND_WORD + " [sd/START_DATE] [ed/END_DATE] [n/CLIENT_NAME] [s/STATUS]\n"
+            + "Usage: " + COMMAND_WORD + " [sd/START_DATE] [ed/END_DATE] [n/CLIENT_NAME] [t/TAG] [s/STATUS]\n"
             + "Date format: d/M/yyyy | Status: delivered or not_delivered";
 
     private final DeliveryPredicate predicate;
@@ -93,19 +95,24 @@ public class ListRevenueCommand extends Command {
             sb.append(" from ");
 
             if (predicate.getStartDate().isPresent() && predicate.getEndDate().isPresent()) {
-                sb.append(formatDate(predicate.getStartDate().get()))
+                sb.append(predicate.getStartDate().get())
                         .append(" to ")
-                        .append(formatDate(predicate.getEndDate().get()));
+                        .append(predicate.getEndDate().get());
             } else if (predicate.getStartDate().isPresent()) {
-                sb.append(formatDate(predicate.getStartDate().get())).append(" onwards");
+                sb.append(predicate.getStartDate().get()).append(" onwards");
             } else {
-                sb.append("beginning to ").append(formatDate(predicate.getEndDate().get()));
+                sb.append("beginning to ").append(predicate.getEndDate().get());
             }
         }
 
         // Check client name filter
         if (predicate.getClientName().isPresent()) {
             sb.append(" for client \"").append(predicate.getClientName().get()).append("\"");
+        }
+
+        // Check tag filter
+        if (predicate.getTag().isPresent()) {
+            sb.append(" with tag \"").append(predicate.getTag().get()).append("\"");
         }
 
         return sb.toString();

@@ -5,7 +5,6 @@ import static seedu.foodbook.logic.Messages.MESSAGE_MISSING_ARGUMENT_FORMAT;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,8 @@ public class FindDeliveryCommandParserTest {
 
     @Test
     public void parse_validDate_returnsFindDeliveryCommand() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date),
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
                         Optional.empty(), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " d/25/12/2024", expectedCommand);
     }
@@ -57,11 +55,10 @@ public class FindDeliveryCommandParserTest {
 
     @Test
     public void parse_validCombinedFilters_returnsFindDeliveryCommand() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
 
         // Client name + date
         FindDeliveryCommand expectedCommand1 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date),
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
                         Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John d/25/12/2024", expectedCommand1);
 
@@ -73,13 +70,13 @@ public class FindDeliveryCommandParserTest {
 
         // Date + tags
         FindDeliveryCommand expectedCommand3 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date),
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
                         Optional.empty(), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " d/25/12/2024 t/urgent", expectedCommand3);
 
         // All three filters
         FindDeliveryCommand expectedCommand4 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of(date), Optional.of(date),
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
                         Optional.of("John Doe"), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " n/John Doe d/25/12/2024 t/urgent", expectedCommand4);
     }

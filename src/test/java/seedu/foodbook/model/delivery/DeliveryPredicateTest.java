@@ -6,7 +6,6 @@ import static seedu.foodbook.testutil.TypicalDeliveries.ALICE_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BOB_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.CARL_DELIVERY;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -18,14 +17,11 @@ public class DeliveryPredicateTest {
 
     @Test
     public void equals() {
-        LocalDate date1 = LocalDate.of(2024, 12, 25);
-        LocalDate date2 = LocalDate.of(2024, 12, 26);
-
         DeliveryPredicate firstPredicate = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
+                Optional.of("25/12/2024"), Optional.of("25/12/2024"), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
         DeliveryPredicate secondPredicate = new DeliveryPredicate(
-                Optional.of(date2), Optional.of(date2), Optional.of("Bob"),
+                Optional.of("26/12/2024"), Optional.of("26/12/2024"), Optional.of("Bob"),
                 Optional.of("corporate"), Optional.empty());
 
         // same object -> returns true
@@ -33,7 +29,7 @@ public class DeliveryPredicateTest {
 
         // same values -> returns true
         DeliveryPredicate firstPredicateCopy = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
+                Optional.of("25/12/2024"), Optional.of("25/12/2024"), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
         assertTrue(firstPredicate.equals(firstPredicateCopy));
 
@@ -105,9 +101,9 @@ public class DeliveryPredicateTest {
     @Test
     public void test_dateDoesNotMatch_returnsFalse() {
         // Different date
-        LocalDate date = LocalDate.of(2024, 12, 31);
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of(date), Optional.of(date), Optional.empty(), Optional.empty(), Optional.empty());
+                Optional.of("31/12/2024"), Optional.of("31/12/2024"), Optional.empty(),
+                Optional.empty(), Optional.empty());
 
         // ALICE_DELIVERY has date "25/12/2024", not "31/12/2024"
         assertFalse(predicate.test(ALICE_DELIVERY));
@@ -162,24 +158,22 @@ public class DeliveryPredicateTest {
     @Test
     public void test_someFiltersMatch_returnsFalse() {
         // AND logic: if ANY filter doesn't match, return false
-        LocalDate date1 = LocalDate.of(2024, 12, 25);
-        LocalDate date2 = LocalDate.of(2024, 12, 31);
 
         // Client matches, date matches, but tag doesn't match
         DeliveryPredicate predicate1 = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Alice"),
+                Optional.of("25/12/2024"), Optional.of("25/12/2024"), Optional.of("Alice"),
                 Optional.of("corporate"), Optional.empty());
         assertFalse(predicate1.test(ALICE_DELIVERY));
 
         // Client matches, tag matches, but date doesn't match
         DeliveryPredicate predicate2 = new DeliveryPredicate(
-                Optional.of(date2), Optional.of(date2), Optional.of("Alice"),
+                Optional.of("31/12/2024"), Optional.of("31/12/2024"), Optional.of("Alice"),
                 Optional.of("personal"), Optional.empty());
         assertFalse(predicate2.test(ALICE_DELIVERY));
 
         // Date matches, tag matches, but client doesn't match
         DeliveryPredicate predicate3 = new DeliveryPredicate(
-                Optional.of(date1), Optional.of(date1), Optional.of("Bob"),
+                Optional.of("25/12/2024"), Optional.of("25/12/2024"), Optional.of("Bob"),
                 Optional.of("personal"), Optional.empty());
         assertFalse(predicate3.test(ALICE_DELIVERY));
     }
@@ -203,9 +197,8 @@ public class DeliveryPredicateTest {
 
     @Test
     public void test_toString() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of(date), Optional.of(date), Optional.of("Alice"),
+                Optional.of("25/12/2024"), Optional.of("25/12/2024"), Optional.of("Alice"),
                 Optional.of("urgent"), Optional.empty());
 
         String result = predicate.toString();

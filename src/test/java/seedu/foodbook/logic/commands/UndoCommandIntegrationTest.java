@@ -285,13 +285,12 @@ public class UndoCommandIntegrationTest {
         // Filter deliveries by a date string from a known delivery
         Delivery sample = model.getFilteredDeliveryList().get(0);
         String dateStr = sample.getDeliveryDate().getDateString();
-        java.time.LocalDate date = java.time.LocalDate.parse(dateStr,
-                java.time.format.DateTimeFormatter.ofPattern("d/M/uuuu"));
+
 
         DeliveryPredicate predicate =
                 new DeliveryPredicate(
-                        Optional.of(date),
-                        Optional.of(date),
+                        Optional.of(dateStr),
+                        Optional.of(dateStr),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty()

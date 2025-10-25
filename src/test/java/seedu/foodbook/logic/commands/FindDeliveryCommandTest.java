@@ -7,7 +7,6 @@ import static seedu.foodbook.logic.Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -28,8 +27,8 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void equals() {
-        LocalDate date1 = LocalDate.of(2024, 12, 25);
-        LocalDate date2 = LocalDate.of(2024, 12, 31);
+        String date1 = "25/12/2024";
+        String date2 = "31/12/2024";
 
         DeliveryPredicate firstPredicate = new DeliveryPredicate(
                 Optional.of(date1), Optional.of(date1), Optional.of("John"), Optional.empty(), Optional.empty());
@@ -69,7 +68,7 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void execute_dateFilter_deliveriesFound() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(date), Optional.of(date), Optional.empty(), Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
@@ -92,7 +91,7 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void execute_combinedFilters_deliveriesFound() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(date), Optional.of(date), Optional.of("Alice"), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
@@ -116,7 +115,7 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void toStringMethod() {
-        LocalDate date = LocalDate.of(2024, 12, 25);
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.of(date), Optional.of(date), Optional.of("John"), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand findCommand = new FindDeliveryCommand(predicate);
