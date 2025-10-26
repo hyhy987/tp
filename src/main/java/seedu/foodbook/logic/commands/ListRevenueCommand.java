@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.Delivery;
-import seedu.foodbook.model.delivery.RevenueFilterPredicate;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Calculates and displays revenue from deliveries with optional filtering.
@@ -21,30 +21,35 @@ public class ListRevenueCommand extends Command {
             + "[sd/START_DATE] "
             + "[ed/END_DATE] "
             + "[n/CLIENT_NAME] "
+            + "[t/TAG] "
             + "[s/STATUS]\n"
             + "STATUS can be 'delivered' or 'not_delivered'. Omit to include all deliveries.\n"
             + "Date format: d/M/yyyy (e.g., 25/12/2024)\n"
+            + "Note: If only sd/ is provided, it shows revenue for that exact date only.\n"
             + "Examples:\n"
             + "  " + COMMAND_WORD + " (shows revenue from all deliveries)\n"
+            + "  " + COMMAND_WORD + " sd/1/1/2024 (shows revenue for 1/1/2024 only)\n"
             + "  " + COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024 (shows revenue for date range)\n"
             + "  " + COMMAND_WORD + " s/delivered (shows revenue from completed deliveries only)\n"
             + "  " + COMMAND_WORD + " n/John (shows revenue from deliveries for clients named John)\n"
-            + "  " + COMMAND_WORD + " sd/1/1/2024 s/delivered (shows revenue from completed deliveries in 2024)";
+            + "  " + COMMAND_WORD + " t/urgent (shows revenue from deliveries with urgent tag)\n"
+            + "  " + COMMAND_WORD + " sd/1/1/2024 ed/31/12/2024 s/delivered "
+            + "(shows revenue from completed deliveries in date range)";
 
     public static final String MESSAGE_SUCCESS = "Total Revenue: $%.2f\n"
             + "Number of deliveries: %d\n"
             + "%s\n\n"
-            + "Usage: " + COMMAND_WORD + " [sd/START_DATE] [ed/END_DATE] [n/CLIENT_NAME] [s/STATUS]\n"
+            + "Usage: " + COMMAND_WORD + " [sd/START_DATE] [ed/END_DATE] [n/CLIENT_NAME] [t/TAG] [s/STATUS]\n"
             + "Date format: d/M/yyyy | Status: delivered or not_delivered";
 
-    private final RevenueFilterPredicate predicate;
+    private final DeliveryPredicate predicate;
 
     /**
      * Creates a ListRevenueCommand with the specified filter predicate.
      *
      * @param predicate The predicate to filter deliveries
      */
-    public ListRevenueCommand(RevenueFilterPredicate predicate) {
+    public ListRevenueCommand(DeliveryPredicate predicate) {
         this.predicate = predicate;
     }
 
@@ -93,13 +98,13 @@ public class ListRevenueCommand extends Command {
             sb.append(" from ");
 
             if (predicate.getStartDate().isPresent() && predicate.getEndDate().isPresent()) {
-                sb.append(formatDate(predicate.getStartDate().get()))
+                sb.append(predicate.getStartDate().get())
                         .append(" to ")
-                        .append(formatDate(predicate.getEndDate().get()));
+                        .append(predicate.getEndDate().get());
             } else if (predicate.getStartDate().isPresent()) {
-                sb.append(formatDate(predicate.getStartDate().get())).append(" onwards");
+                sb.append(predicate.getStartDate().get()).append(" onwards");
             } else {
-                sb.append("beginning to ").append(formatDate(predicate.getEndDate().get()));
+                sb.append("beginning to ").append(predicate.getEndDate().get());
             }
         }
 
@@ -108,16 +113,12 @@ public class ListRevenueCommand extends Command {
             sb.append(" for client \"").append(predicate.getClientName().get()).append("\"");
         }
 
-        return sb.toString();
-    }
+        // Check tag filter
+        if (predicate.getTag().isPresent()) {
+            sb.append(" with tag \"").append(predicate.getTag().get()).append("\"");
+        }
 
-    /**
-     * Formats a LocalDate to a readable string format.
-     */
-    private String formatDate(java.time.LocalDate date) {
-        java.time.format.DateTimeFormatter formatter =
-                java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy");
-        return date.format(formatter);
+        return sb.toString();
     }
 
     @Override

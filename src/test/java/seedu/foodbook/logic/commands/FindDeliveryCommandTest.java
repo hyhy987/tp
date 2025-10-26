@@ -27,10 +27,13 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void equals() {
+        String date1 = "25/12/2024";
+        String date2 = "31/12/2024";
+
         DeliveryPredicate firstPredicate = new DeliveryPredicate(
-                Optional.of("John"), Optional.of("25/12/2024"), Optional.empty());
+                Optional.of(date1), Optional.of(date1), Optional.of("John"), Optional.empty(), Optional.empty());
         DeliveryPredicate secondPredicate = new DeliveryPredicate(
-                Optional.of("Jane"), Optional.of("31/12/2024"), Optional.empty());
+                Optional.of(date2), Optional.of(date2), Optional.of("Jane"), Optional.empty(), Optional.empty());
 
         FindDeliveryCommand findFirstCommand = new FindDeliveryCommand(firstPredicate);
         FindDeliveryCommand findSecondCommand = new FindDeliveryCommand(secondPredicate);
@@ -55,7 +58,7 @@ public class FindDeliveryCommandTest {
     @Test
     public void execute_clientNameFilter_deliveriesFound() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.of("Alice"), Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -65,8 +68,9 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void execute_dateFilter_deliveriesFound() {
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.of("25/12/2024"), Optional.empty());
+                Optional.of(date), Optional.of(date), Optional.empty(), Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -77,7 +81,7 @@ public class FindDeliveryCommandTest {
     @Test
     public void execute_tagFilter_deliveriesFound() {
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.empty(), Optional.empty(), Optional.of("urgent"));
+                Optional.empty(), Optional.empty(), Optional.empty(), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -87,8 +91,9 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void execute_combinedFilters_deliveriesFound() {
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("Alice"), Optional.of("25/12/2024"), Optional.of("urgent"));
+                Optional.of(date), Optional.of(date), Optional.of("Alice"), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
@@ -100,7 +105,8 @@ public class FindDeliveryCommandTest {
     public void execute_nonMatchingFilters_noDeliveryFound() {
         String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, 0);
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("NonExistentClient"), Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.of("NonExistentClient"),
+                Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
@@ -109,8 +115,9 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void toStringMethod() {
+        String date = "25/12/2024";
         DeliveryPredicate predicate = new DeliveryPredicate(
-                Optional.of("John"), Optional.of("25/12/2024"), Optional.of("urgent"));
+                Optional.of(date), Optional.of(date), Optional.of("John"), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand findCommand = new FindDeliveryCommand(predicate);
         String expected = FindDeliveryCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
         assertEquals(expected, findCommand.toString());
