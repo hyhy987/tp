@@ -1,6 +1,7 @@
 package seedu.foodbook.storage;
 
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +11,7 @@ import seedu.foodbook.model.ReadOnlyFoodBook;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * JSON representation of a {@link Delivery}.
@@ -71,7 +73,7 @@ public class JsonAdaptedDelivery {
         time = source.getDeliveryDate().getTimeString();
         remarks = source.getRemarks();
         cost = source.getCost();
-        tag = source.getTag();
+        tag = source.getTag().map(DeliveryTag::getName).orElse(null);
         isDelivered = source.getStatus();
     }
 
@@ -114,11 +116,11 @@ public class JsonAdaptedDelivery {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "cost"));
         }
 
-        String modelTag;
+        Optional<DeliveryTag> modelTag;
         if (tag == null || tag.isBlank()) {
-            modelTag = null;
+            modelTag = Optional.empty();
         } else {
-            modelTag = tag.trim();
+            modelTag = Optional.of(new DeliveryTag(tag.trim()));
         }
 
         Delivery delivery = new Delivery(id, client, dateTime, remarks, cost, modelTag);
