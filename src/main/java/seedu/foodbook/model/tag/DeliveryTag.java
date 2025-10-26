@@ -71,19 +71,14 @@ public final class DeliveryTag {
      * @return the derived {@link TagKind}, never {@code null}
      */
     public TagKind getTagKind() {
-        String s;
-        if (this.name == null) {
-            s = "";
-        } else {
-            s = this.name.trim();
-        }
-        if (s.equals("personal")) {
+        switch (name) {
+        case "personal":
             return TagKind.PERSONAL;
-        }
-        if (s.equals("corporate")) {
+        case "corporate":
             return TagKind.CORPORATE;
+        default:
+            return TagKind.OTHER;
         }
-        return TagKind.OTHER;
     }
 
     /**

@@ -81,4 +81,57 @@ class DeliveryTagTest {
 
         assertEquals("vip", a.toString());
     }
+
+    @Test
+    void equals_sameInstance_true() {
+        DeliveryTag a = new DeliveryTag("vip");
+        assertEquals(a, a); // other == this
+    }
+
+    @Test
+    void equals_nullAndDifferentType_false() {
+        DeliveryTag a = new DeliveryTag("vip");
+        assertNotEquals(a, null);
+        assertNotEquals(a, "vip");
+    }
+
+    @Test
+    void equals_sameCanonicalName_caseInsensitive() {
+        DeliveryTag a = new DeliveryTag("VIP");
+        DeliveryTag b = new DeliveryTag("vip");
+        assertEquals(a, b);
+        assertEquals(b, a);
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    void equals_differentNames_false() {
+        DeliveryTag a = new DeliveryTag("vip");
+        DeliveryTag c = new DeliveryTag("vip1");
+        assertNotEquals(a, c);
+    }
+
+    @Test
+    void equals_transitive() {
+        DeliveryTag a = new DeliveryTag("Personal");
+        DeliveryTag b = new DeliveryTag("PERSONAL");
+        DeliveryTag c = new DeliveryTag("personal");
+        // transitivity
+        assertEquals(a, b);
+        assertEquals(b, c);
+        assertEquals(a, c);
+        // consistency
+        for (int i = 0; i < 3; i++) {
+            assertEquals(a, c);
+        }
+    }
+
+    @Test
+    void toString_hashCode_consistentWithEquals() {
+        DeliveryTag x1 = new DeliveryTag("Corporate");
+        DeliveryTag x2 = new DeliveryTag("corporate");
+        assertEquals("corporate", x1.toString());
+        assertEquals(x1, x2);
+        assertEquals(x1.hashCode(), x2.hashCode());
+    }
 }
