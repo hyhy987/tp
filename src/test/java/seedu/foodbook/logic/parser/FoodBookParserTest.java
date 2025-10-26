@@ -21,7 +21,7 @@ import seedu.foodbook.logic.commands.ExitCommand;
 import seedu.foodbook.logic.commands.FindClientCommand;
 import seedu.foodbook.logic.commands.FindDeliveryCommand;
 import seedu.foodbook.logic.commands.HelpCommand;
-import seedu.foodbook.logic.commands.ListCommand;
+import seedu.foodbook.logic.commands.ListClientCommand;
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
 import seedu.foodbook.logic.commands.UndoCommand;
@@ -125,8 +125,8 @@ public class FoodBookParserTest {
 
     @Test
     public void parseCommand_list() throws Exception {
-        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD) instanceof ListCommand);
-        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3") instanceof ListCommand);
+        assertTrue(parser.parseCommand(ListClientCommand.COMMAND_WORD) instanceof ListClientCommand);
+        assertTrue(parser.parseCommand(ListClientCommand.COMMAND_WORD + " 3") instanceof ListClientCommand);
     }
 
     @Test

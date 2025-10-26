@@ -22,7 +22,7 @@ import org.junit.jupiter.api.io.TempDir;
 import seedu.foodbook.commons.core.GuiSettings;
 import seedu.foodbook.logic.commands.AddClientCommand;
 import seedu.foodbook.logic.commands.CommandResult;
-import seedu.foodbook.logic.commands.ListCommand;
+import seedu.foodbook.logic.commands.ListClientCommand;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.Model;
@@ -68,8 +68,8 @@ public class LogicManagerTest {
 
     @Test
     public void execute_validCommand_success() throws Exception {
-        String listCommand = ListCommand.COMMAND_WORD;
-        assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
+        String listClientCommand = ListClientCommand.COMMAND_WORD;
+        assertCommandSuccess(listClientCommand, ListClientCommand.MESSAGE_SUCCESS, model);
     }
 
     @Test

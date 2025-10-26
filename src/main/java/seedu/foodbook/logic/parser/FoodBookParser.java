@@ -20,7 +20,7 @@ import seedu.foodbook.logic.commands.ExitCommand;
 import seedu.foodbook.logic.commands.FindClientCommand;
 import seedu.foodbook.logic.commands.FindDeliveryCommand;
 import seedu.foodbook.logic.commands.HelpCommand;
-import seedu.foodbook.logic.commands.ListCommand;
+import seedu.foodbook.logic.commands.ListClientCommand;
 import seedu.foodbook.logic.commands.ListDeliveryCommand;
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.commands.MarkCommand;
@@ -80,8 +80,8 @@ public class FoodBookParser {
         case FindClientCommand.COMMAND_WORD:
             return new FindClientCommandParser().parse(arguments);
 
-        case ListCommand.COMMAND_WORD:
-            return new ListCommand();
+        case ListClientCommand.COMMAND_WORD:
+            return new ListClientCommand();
 
         case ListDeliveryCommand.COMMAND_WORD:
             return new ListDeliveryCommand();
