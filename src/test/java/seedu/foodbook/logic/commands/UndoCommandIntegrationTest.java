@@ -286,10 +286,13 @@ public class UndoCommandIntegrationTest {
         Delivery sample = model.getFilteredDeliveryList().get(0);
         String dateStr = sample.getDeliveryDate().getDateString();
 
+
         DeliveryPredicate predicate =
                 new DeliveryPredicate(
-                        Optional.empty(),
                         Optional.of(dateStr),
+                        Optional.of(dateStr),
+                        Optional.empty(),
+                        Optional.empty(),
                         Optional.empty()
                 );
         FindDeliveryCommand find = new FindDeliveryCommand(predicate);

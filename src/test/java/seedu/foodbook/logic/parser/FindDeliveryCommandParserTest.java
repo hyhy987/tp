@@ -29,7 +29,8 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validClientName_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John Doe"), Optional.empty(), Optional.empty()));
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
+                        Optional.of("John Doe"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John Doe", expectedCommand);
 
         // Multiple whitespaces
@@ -39,39 +40,44 @@ public class FindDeliveryCommandParserTest {
     @Test
     public void parse_validDate_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.of("25/12/2024"), Optional.empty()));
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
+                        Optional.empty(), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " d/25/12/2024", expectedCommand);
     }
 
     @Test
     public void parse_validSingleTag_returnsFindDeliveryCommand() {
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.empty(), Optional.of("urgent")));
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
+                        Optional.empty(), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " t/urgent", expectedCommand);
     }
 
     @Test
     public void parse_validCombinedFilters_returnsFindDeliveryCommand() {
+
         // Client name + date
         FindDeliveryCommand expectedCommand1 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John"), Optional.of("25/12/2024"), Optional.empty()));
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
+                        Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John d/25/12/2024", expectedCommand1);
 
         // Client name + tags
         FindDeliveryCommand expectedCommand2 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.of("urgent")));
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
+                        Optional.of("John"), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " n/John t/urgent", expectedCommand2);
 
         // Date + tags
         FindDeliveryCommand expectedCommand3 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.empty(), Optional.of("25/12/2024"),
-                        Optional.of("urgent")));
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
+                        Optional.empty(), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " d/25/12/2024 t/urgent", expectedCommand3);
 
         // All three filters
         FindDeliveryCommand expectedCommand4 = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John Doe"), Optional.of("25/12/2024"),
-                        Optional.of("urgent")));
+                new DeliveryPredicate(Optional.of("25/12/2024"), Optional.of("25/12/2024"),
+                        Optional.of("John Doe"), Optional.of("urgent"), Optional.empty()));
         assertParseSuccess(parser, " n/John Doe d/25/12/2024 t/urgent", expectedCommand4);
     }
 
@@ -116,7 +122,8 @@ public class FindDeliveryCommandParserTest {
         // Line 88-90: If tagList.isEmpty(), return Optional.empty()
         // This is the normal path when no t/ prefix is provided
         FindDeliveryCommand expectedCommand = new FindDeliveryCommand(
-                new DeliveryPredicate(Optional.of("John"), Optional.empty(), Optional.empty()));
+                new DeliveryPredicate(Optional.empty(), Optional.empty(),
+                        Optional.of("John"), Optional.empty(), Optional.empty()));
         assertParseSuccess(parser, " n/John", expectedCommand);
     }
 }

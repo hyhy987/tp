@@ -5,16 +5,14 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_END_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_STATUS;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TAG;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.Optional;
 
 import seedu.foodbook.logic.commands.ListRevenueCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
-import seedu.foodbook.model.delivery.RevenueFilterPredicate;
+import seedu.foodbook.model.delivery.DateTime;
+import seedu.foodbook.model.delivery.DeliveryPredicate;
 
 /**
  * Parses input arguments and creates a new ListRevenueCommand object.
@@ -32,7 +30,7 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
     public ListRevenueCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_START_DATE, PREFIX_END_DATE,
-                        PREFIX_NAME, PREFIX_STATUS);
+                        PREFIX_NAME, PREFIX_STATUS, PREFIX_TAG);
 
         // Check that preamble is empty
         if (!argMultimap.getPreamble().isEmpty()) {
@@ -42,35 +40,31 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
 
         // Ensure no duplicate prefixes
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_START_DATE, PREFIX_END_DATE,
-                PREFIX_NAME, PREFIX_STATUS);
+                PREFIX_NAME, PREFIX_STATUS, PREFIX_TAG);
 
-        // Parse start date (optional)
-        Optional<LocalDate> startDate = Optional.empty();
-        if (argMultimap.getValue(PREFIX_START_DATE).isPresent()) {
-            String startDateString = argMultimap.getValue(PREFIX_START_DATE).get().trim();
-            if (!startDateString.isEmpty()) {
-                startDate = Optional.of(parseDate(startDateString, "start date"));
-            }
+        // Parse dates as strings and validate
+        Optional<String> startDateString = argMultimap.getValue(PREFIX_START_DATE)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
+        if (startDateString.isPresent() && !DateTime.isValidDate(startDateString.get())) {
+            throw new ParseException("Invalid start date format. Expected format: d/M/yyyy (e.g., 25/12/2024)");
         }
 
-        // Parse end date (optional)
-        Optional<LocalDate> endDate = Optional.empty();
-        if (argMultimap.getValue(PREFIX_END_DATE).isPresent()) {
-            String endDateString = argMultimap.getValue(PREFIX_END_DATE).get().trim();
-            if (!endDateString.isEmpty()) {
-                endDate = Optional.of(parseDate(endDateString, "end date"));
-            }
+        Optional<String> endDateString = argMultimap.getValue(PREFIX_END_DATE)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
+        if (endDateString.isPresent() && !DateTime.isValidDate(endDateString.get())) {
+            throw new ParseException("Invalid end date format. Expected format: d/M/yyyy (e.g., 25/12/2024)");
         }
 
-        // Validate date range if both dates are provided
-        if (startDate.isPresent() && endDate.isPresent()) {
-            if (startDate.get().isAfter(endDate.get())) {
-                throw new ParseException("Start date must be before or equal to end date.");
-            }
-        }
 
         // Parse client name (optional)
         Optional<String> clientName = argMultimap.getValue(PREFIX_NAME)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
+
+        // Parse tag (optional)
+        Optional<String> tag = argMultimap.getValue(PREFIX_TAG)
                 .map(String::trim)
                 .filter(s -> !s.isEmpty());
 
@@ -83,29 +77,18 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
             }
         }
 
-        RevenueFilterPredicate predicate = new RevenueFilterPredicate(startDate, endDate,
-                clientName, isDelivered);
+        // If only start date provided (no end date), use same date for both (exact date match)
+        Optional<String> finalStartDate = startDateString;
+        Optional<String> finalEndDate = endDateString;
+        if (startDateString.isPresent() && !endDateString.isPresent()) {
+            finalEndDate = startDateString;
+        }
+
+        DeliveryPredicate predicate = new DeliveryPredicate(finalStartDate, finalEndDate,
+                clientName, tag, isDelivered);
         return new ListRevenueCommand(predicate);
     }
 
-    /**
-     * Parses a date string in d/M/yyyy format into a LocalDate.
-     *
-     * @param dateString The date string to parse
-     * @param fieldName The name of the field (for error messages)
-     * @return The parsed LocalDate
-     * @throws ParseException If the date string is invalid
-     */
-    private LocalDate parseDate(String dateString, String fieldName) throws ParseException {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu")
-                    .withResolverStyle(ResolverStyle.STRICT);
-            return LocalDate.parse(dateString, formatter);
-        } catch (DateTimeParseException e) {
-            throw new ParseException("Invalid " + fieldName + " format. "
-                    + "Expected format: d/M/yyyy (e.g., 25/12/2024)");
-        }
-    }
 
     /**
      * Parses a status string into a boolean.

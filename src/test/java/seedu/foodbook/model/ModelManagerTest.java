@@ -163,9 +163,13 @@ public class ModelManagerTest {
 
         // different filteredList -> returns false
         String searchDate = ALICE_DELIVERY.getDeliveryDate().getDateString();
+        java.time.LocalDate date = java.time.LocalDate.parse(searchDate,
+                java.time.format.DateTimeFormatter.ofPattern("d/M/uuuu"));
         modelManager.updateFilteredDeliveryList(new DeliveryPredicate(
-                Optional.empty(),
                 Optional.of(searchDate),
+                Optional.of(searchDate),
+                Optional.empty(),
+                Optional.empty(),
                 Optional.empty()
                 ));
         assertFalse(modelManager.equals(new ModelManager(foodBook, userPrefs)));
