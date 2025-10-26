@@ -103,7 +103,8 @@ public class AddDeliveryCommand extends Command {
      * @param tag optional tag string; {@code null} or blank indicates no tag.
      * @throws IllegalArgumentException if {@code cost} is negative (defensive check).
      */
-    public AddDeliveryCommand(Name clientName, DateTime dateTime, String remarks, Double cost, Optional<DeliveryTag> tag) {
+    public AddDeliveryCommand(Name clientName, DateTime dateTime,
+                              String remarks, Double cost, Optional<DeliveryTag> tag) {
         requireNonNull(clientName);
         requireNonNull(dateTime);
         requireNonNull(remarks);
