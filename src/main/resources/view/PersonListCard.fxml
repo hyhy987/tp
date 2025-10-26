@@ -2,38 +2,42 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane HBox.hgrow="ALWAYS">
-    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150" />
-    </columnConstraints>
-    <VBox alignment="CENTER_LEFT" minHeight="105" GridPane.columnIndex="0" spacing="6">
+
+  <AnchorPane HBox.hgrow="ALWAYS">
+
+    <VBox alignment="CENTER_LEFT" minHeight="105" spacing="6"
+          AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <padding>
         <Insets top="5" right="5" bottom="5" left="15" />
       </padding>
       <HBox spacing="0.5" alignment="CENTER_LEFT">
         <Label fx:id="id" styleClass="cell_big_label bubble">
           <minWidth>
-            <!-- Ensures that the label text is never truncated -->
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
         <Label fx:id="name" text="\$first" styleClass="cell_big_label" />
       </HBox>
-      <FlowPane fx:id="tags"
-                id="clientTags"
-                styleClass="tag-container client-tags"
-                prefWrapLength="280"/>
-      <Label fx:id="phone" styleClass="bubble" text="\$phone" />
-      <Label fx:id="address" styleClass="bubble" text="\$address" />
-      <Label fx:id="email" styleClass="bubble" text="\$email" />
+
+      <Label fx:id="phone" styleClass="bubble" text="$phone" />
+      <Label fx:id="address" styleClass="bubble" text="$address" />
+      <Label fx:id="email" styleClass="bubble" text="$email" />
     </VBox>
-  </GridPane>
+
+    <VBox fx:id="tags"
+          id="clientTags"
+          styleClass="tag-container client-tags"
+          spacing="6"
+          alignment="BOTTOM_RIGHT"
+          AnchorPane.rightAnchor="15.0"
+          AnchorPane.bottomAnchor="5.0">
+    </VBox>
+
+  </AnchorPane>
 </HBox>
