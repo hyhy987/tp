@@ -56,7 +56,7 @@ public class DeliveryPredicate implements Predicate<Delivery> {
         }).orElse(true);
 
         boolean matchesClientName = clientName.map(name ->
-                StringUtil.containsWordIgnoreCase(delivery.getClient().getName().fullName, name)
+                delivery.getClient().getName().fullName.toLowerCase().contains(name.toLowerCase())
         ).orElse(true);
 
         boolean matchesTag = tag.map(q ->
