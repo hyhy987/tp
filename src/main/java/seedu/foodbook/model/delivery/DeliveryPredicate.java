@@ -3,7 +3,6 @@ package seedu.foodbook.model.delivery;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import seedu.foodbook.commons.util.StringUtil;
 import seedu.foodbook.commons.util.ToStringBuilder;
 
 /**
