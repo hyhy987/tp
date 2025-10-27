@@ -294,7 +294,9 @@ public class ListRevenueCommandTest {
 
         // Verify only urgent deliveries are counted
         assertTrue(model.getFilteredDeliveryList().stream()
-                .allMatch(delivery -> delivery.getTag() != null && delivery.getTag().toLowerCase().contains("urgent")));
+                .allMatch(d -> d.getTag()
+                        .map(t -> t.getName().contains("urgent"))
+                        .orElse(false)));
     }
 
     @Test

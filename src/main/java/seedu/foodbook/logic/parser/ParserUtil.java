@@ -5,6 +5,7 @@ import static seedu.foodbook.model.tag.Tag.MAX_TAGS;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import seedu.foodbook.commons.core.index.Index;
@@ -15,6 +16,7 @@ import seedu.foodbook.model.person.Address;
 import seedu.foodbook.model.person.Email;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Phone;
+import seedu.foodbook.model.tag.DeliveryTag;
 import seedu.foodbook.model.tag.Tag;
 
 /**
@@ -243,4 +245,30 @@ public class ParserUtil {
             throw new ParseException("Delivery ID must be a valid positive integer");
         }
     }
+
+    /**
+     * Parses zero or one delivery tag from the given values.
+     *
+     * <p>Returns {@code Optional.empty()} if no value is supplied.
+     * Throws {@code ParseException} if more than one value is given,
+     * or if the single value is invalid per {@link DeliveryTag#MESSAGE_CONSTRAINT}.
+     *
+     * @param values raw tag values (e.g., from PREFIX_TAG); may be null or empty
+     * @return an {@code Optional} of {@link DeliveryTag}, or {@code Optional.empty()}
+     * @throws ParseException if multiple values are provided or the value is invalid
+     */
+    public static Optional<DeliveryTag> parseOptionalDeliveryTag(Collection<String> values) throws ParseException {
+        if (values == null || values.isEmpty()) {
+            return Optional.empty();
+        }
+        if (values.size() > 1) {
+            throw new ParseException("Only one tag is allowed. Remove extra t/ prefixes.");
+        }
+        String raw = values.iterator().next();
+        if (!DeliveryTag.isValidTagName(raw)) {
+            throw new ParseException(DeliveryTag.MESSAGE_CONSTRAINT);
+        }
+        return Optional.of(new DeliveryTag(raw));
+    }
+
 }

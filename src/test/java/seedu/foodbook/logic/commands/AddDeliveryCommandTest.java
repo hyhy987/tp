@@ -30,6 +30,7 @@ import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 import seedu.foodbook.model.undo.ModelRecord;
 import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.DeliveryBuilder;
@@ -144,7 +145,7 @@ public class AddDeliveryCommandTest {
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = 25.50;
-        String tag = "Personal";
+        Optional<DeliveryTag> tag = Optional.of(new DeliveryTag("Personal"));
 
         AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag);
         // Constructor should not throw exception
@@ -156,7 +157,7 @@ public class AddDeliveryCommandTest {
         DateTime dateTime = new DateTime("01/01/2025", "1000");
         String remarks = "Pizza delivery";
         Double cost = -25.50;
-        String tag = "Personal";
+        Optional<DeliveryTag> tag = Optional.of(new DeliveryTag("Personal"));
 
         assertThrows(IllegalArgumentException.class, () ->
                 new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag));
@@ -182,7 +183,8 @@ public class AddDeliveryCommandTest {
         String remarks = "Pizza delivery";
         Double cost = 25.50;
 
-        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost, "   ");
+        AddDeliveryCommand command = new AddDeliveryCommand(clientName, dateTime, remarks, cost,
+                Optional.empty());
         // Constructor should not throw exception
     }
 
@@ -216,18 +218,24 @@ public class AddDeliveryCommandTest {
         assertEquals(1, modelStub.deliveriesAdded.size());
     }
 
-
     @Test
     public void toStringMethod() {
         AddDeliveryCommand addCommand = new AddDeliveryCommand(ALICE_DELIVERY);
+
+        String tagText = ALICE_DELIVERY.getTag()
+                .map(t -> t.getName())
+                .orElse("(none)");
+
         String expected = AddDeliveryCommand.class.getCanonicalName()
                 + "{clientName=" + ALICE_DELIVERY.getClient().getName() + ", "
                 + "dateTime=" + ALICE_DELIVERY.getDeliveryDate() + ", "
                 + "remarks=" + ALICE_DELIVERY.getRemarks() + ", "
                 + "cost=" + ALICE_DELIVERY.getCost() + ", "
-                + "tag=" + ALICE_DELIVERY.getTag() + "}";
+                + "tag=" + tagText + "}";
+
         assertEquals(expected, addCommand.toString());
     }
+
 
     /**
      * A default model stub that have all the methods failing.

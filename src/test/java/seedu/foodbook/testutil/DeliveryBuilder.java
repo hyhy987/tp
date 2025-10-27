@@ -1,8 +1,11 @@
 package seedu.foodbook.testutil;
 
+import java.util.Optional;
+
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * A utility class to help with building Delivery objects.
@@ -19,14 +22,14 @@ public class DeliveryBuilder {
 
     public static final String DEFAULT_REMARKS = "NIL";
     public static final Double DEFAULT_COST = 0.00;
-    public static final String DEFAULT_TAG = null;
+    public static final Optional<DeliveryTag> DEFAULT_TAG = Optional.empty();
 
     private int id;
     private Person client;
     private DateTime datetime;
     private String remarks;
     private Double cost;
-    private String tag;
+    private Optional<DeliveryTag> tag;
 
     private boolean isDelivered;
 
@@ -101,8 +104,12 @@ public class DeliveryBuilder {
     /**
      * Sets the {@code tag} of the {@code Delivery} that we are building.
      */
-    public DeliveryBuilder withTag(String tag) {
-        this.tag = tag;
+    public DeliveryBuilder withTag(String name) {
+        if (name == null || name.isBlank()) {
+            this.tag = Optional.empty();
+        } else {
+            this.tag = Optional.of(new DeliveryTag(name.trim()));
+        }
         return this;
     }
 

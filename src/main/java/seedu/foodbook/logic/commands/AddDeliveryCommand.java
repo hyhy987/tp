@@ -18,6 +18,7 @@ import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Adds a delivery to the food book.
@@ -35,7 +36,7 @@ public class AddDeliveryCommand extends Command {
             + PREFIX_TIME + "TIME "
             + PREFIX_REMARKS + "REMARKS "
             + PREFIX_COST + "COST\n"
-            + "[" + PREFIX_DELIVERY_TAG + "TAG]\n"
+            + "[" + PREFIX_DELIVERY_TAG + "TAG]  // at most one\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_DATE + "25/12/2024 "
@@ -64,7 +65,7 @@ public class AddDeliveryCommand extends Command {
     private final Double cost;
 
     /** Tag for this delivery */
-    private final String tag;
+    private final Optional<DeliveryTag> tag;
 
     // If delivery is provided directed via constructor
     // Mainly used for testing
@@ -89,7 +90,7 @@ public class AddDeliveryCommand extends Command {
         this.dateTime = dateTime;
         this.remarks = remarks;
         this.cost = cost;
-        this.tag = null;
+        this.tag = Optional.empty();
     }
 
     /**
@@ -102,7 +103,8 @@ public class AddDeliveryCommand extends Command {
      * @param tag optional tag string; {@code null} or blank indicates no tag.
      * @throws IllegalArgumentException if {@code cost} is negative (defensive check).
      */
-    public AddDeliveryCommand(Name clientName, DateTime dateTime, String remarks, Double cost, String tag) {
+    public AddDeliveryCommand(Name clientName, DateTime dateTime,
+                              String remarks, Double cost, Optional<DeliveryTag> tag) {
         requireNonNull(clientName);
         requireNonNull(dateTime);
         requireNonNull(remarks);
@@ -116,12 +118,7 @@ public class AddDeliveryCommand extends Command {
             throw new IllegalArgumentException("Cost must be non-negative.");
         }
         this.cost = cost;
-
-        if (tag == null || tag.isBlank()) {
-            this.tag = null;
-        } else {
-            this.tag = tag.trim();
-        }
+        this.tag = tag;
     }
 
     /**
@@ -223,7 +220,7 @@ public class AddDeliveryCommand extends Command {
                 && dateTime.equals(otherCommand.dateTime)
                 && remarks.equals(otherCommand.remarks)
                 && cost.equals(otherCommand.cost)
-                && ((tag == null && otherCommand.tag == null) || (tag != null && tag.equals(otherCommand.tag)));
+                && tag.equals(otherCommand.tag);
     }
 
     /**
@@ -238,7 +235,7 @@ public class AddDeliveryCommand extends Command {
                 .add("dateTime", dateTime)
                 .add("remarks", remarks)
                 .add("cost", cost)
-                .add("tag", tag == null ? "(none)" : tag)
+                .add("tag", tag.map(DeliveryTag::getName).orElse("(none)"))
                 .toString();
     }
 }
