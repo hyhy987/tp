@@ -13,9 +13,9 @@ import seedu.foodbook.model.ModelManager;
 import seedu.foodbook.model.UserPrefs;
 
 /**
- * Contains integration tests (interaction with the Model) and unit tests for ListCommand.
+ * Contains integration tests (interaction with the Model) and unit tests for ListClientCommand.
  */
-public class ListCommandTest {
+public class ListClientCommandTest {
 
     private Model model;
     private Model expectedModel;
