@@ -323,11 +323,11 @@ public class UndoCommandIntegrationTest {
         // Change the filter first to demonstrate list resets it, yet still non-undoable
         model.updateFilteredPersonList(p -> false);
 
-        ListCommand list = new ListCommand();
+        ListClientCommand list = new ListClientCommand();
         Model expectedAfter = snapshotOf(model);
         expectedAfter.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
-        assertCommandSuccess(list, model, ListCommand.MESSAGE_SUCCESS, expectedAfter);
+        assertCommandSuccess(list, model, ListClientCommand.MESSAGE_SUCCESS, expectedAfter);
         assertCommandFailure(new UndoCommand(), model, UndoCommand.MESSAGE_NO_MORE_UNDO);
     }
 
@@ -362,10 +362,10 @@ public class UndoCommandIntegrationTest {
         assertCommandSuccess(help, model, expectedHelp, snapshotOf(model));
 
 
-        ListCommand list = new ListCommand();
+        ListClientCommand list = new ListClientCommand();
         Model afterListExpected = snapshotOf(model);
         afterListExpected.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        assertCommandSuccess(list, model, ListCommand.MESSAGE_SUCCESS, afterListExpected);
+        assertCommandSuccess(list, model, ListClientCommand.MESSAGE_SUCCESS, afterListExpected);
 
         // 3) Undo should still undo the earlier add_client
         Model expectedAfterUndo = snapshotOf(model);
