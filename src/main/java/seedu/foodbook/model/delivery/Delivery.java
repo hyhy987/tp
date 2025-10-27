@@ -3,9 +3,11 @@ package seedu.foodbook.model.delivery;
 import static seedu.foodbook.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Represents a Delivery in the food book.
@@ -22,30 +24,29 @@ public class Delivery {
     private final Double cost;
 
     //Optional delivery tag
-    private final String tag;
+    private final Optional<DeliveryTag> tag;
 
     /**
      * Every field must be present and not null.
      */
     public Delivery(Integer id, Person client, DateTime datetime,
-                  String remarks, Double cost, String tag, Boolean isDelivered) {
+                  String remarks, Double cost, Optional<DeliveryTag> tag, Boolean isDelivered) {
         requireAllNonNull(id, client, datetime, remarks, cost, isDelivered);
         this.id = id;
         this.client = client;
         this.datetime = datetime;
         this.remarks = remarks;
         this.cost = cost;
-        if (tag == null || tag.isBlank()) {
-            this.tag = null;
+        if (tag == null) {
+            this.tag = Optional.empty();
         } else {
             this.tag = tag;
         }
-
         this.isDelivered = isDelivered;
     }
 
     public Delivery(Integer id, Person client, DateTime datetime,
-                    String remarks, Double cost, String tag) {
+                    String remarks, Double cost, Optional<DeliveryTag> tag) {
         this(id, client, datetime, remarks, cost, tag, false);
     }
 
@@ -104,32 +105,8 @@ public class Delivery {
         return this.cost;
     }
 
-    public String getTag() {
+    public Optional<DeliveryTag> getTag() {
         return this.tag;
-    }
-
-    /**
-     * Classifies the current {@link #getTag()} value into a {@link TagKind} for UI coloring and logic.
-     * <ul>
-     *   <li>Returns {@link TagKind#PERSONAL} when tag equals "personal" (case-insensitive).</li>
-     *   <li>Returns {@link TagKind#CORPORATE} when tag equals "corporate" (case-insensitive).</li>
-     *   <li>Returns {@link TagKind#OTHER} for all other values, including {@code null}.</li>
-     * </ul>
-     *
-     * @return corresponding {@link TagKind}.
-     */
-    public TagKind getTagKind() {
-        if (tag == null) {
-            return TagKind.OTHER;
-        }
-        String s = tag.trim().toLowerCase();
-        if (s.equals("personal")) {
-            return TagKind.PERSONAL;
-        }
-        if (s.equals("corporate")) {
-            return TagKind.CORPORATE;
-        }
-        return TagKind.OTHER;
     }
 
     /**
@@ -196,7 +173,7 @@ public class Delivery {
                 .add("datetime", datetime.toString())
                 .add("remarks", remarks)
                 .add("cost", cost)
-                .add("tag", tag == null ? "(none)" : tag)
+                .add("tag", tag.map(DeliveryTag::getName).orElse("(none)"))
                 .toString();
     }
 

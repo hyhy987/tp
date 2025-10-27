@@ -8,12 +8,14 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import seedu.foodbook.logic.commands.AddDeliveryCommand;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.person.Name;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Parses input arguments and creates a new AddDeliveryCommand object.
@@ -55,10 +57,7 @@ public class AddDeliveryCommandParser implements Parser<AddDeliveryCommand> {
         DateTime dateTime = ParserUtil.parseDateTime(date, time);
         String remarks = ParserUtil.parseRemarks(argMultimap.getValue(PREFIX_REMARKS).get());
         Double cost = ParserUtil.parseCost(argMultimap.getValue(PREFIX_COST).get());
-        String tag = argMultimap.getValue(PREFIX_DELIVERY_TAG)
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .orElse(null);
+        Optional<DeliveryTag> tag = ParserUtil.parseOptionalDeliveryTag(argMultimap.getAllValues(PREFIX_DELIVERY_TAG));
 
         return new AddDeliveryCommand(clientName, dateTime, remarks, cost, tag);
     }

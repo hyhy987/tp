@@ -77,28 +77,28 @@ public class DeliveryTest {
         assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
 
         // different tags -> returns false
-        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withTag("personal").build();
+        editedAliceDelivery = new DeliveryBuilder(ALICE_DELIVERY).withTag("corporate").build();
         assertFalse(ALICE_DELIVERY.equals(editedAliceDelivery));
     }
 
     @Test
     public void getTagKind_aliceDelivery_returnsPersonal() {
-        assertEquals(PERSONAL, ALICE_DELIVERY.getTagKind());
+        assertEquals(PERSONAL, ALICE_DELIVERY.getTag().get().getTagKind());
     }
 
     @Test
     public void getTagKind_bensonDelivery_returnsCorporate() {
-        assertEquals(CORPORATE, BENSON_DELIVERY.getTagKind());
+        assertEquals(CORPORATE, BENSON_DELIVERY.getTag().get().getTagKind());
     }
 
     @Test
     public void getTagKind_carlDelivery_noTag() {
-        assertEquals(OTHER, CARL_DELIVERY.getTagKind());
+        assertTrue(CARL_DELIVERY.getTag().isEmpty());
     }
 
     @Test
     public void getTagKind_ellieDelivery_otherTag() {
-        assertEquals(OTHER, ELLE_DELIVERY.getTagKind());
+        assertEquals(OTHER, ELLE_DELIVERY.getTag().get().getTagKind());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class DeliveryTest {
         assertEquals(ALICE, ALICE_DELIVERY.getClient());
         assertEquals("NIL", ALICE_DELIVERY.getRemarks());
         assertEquals(10.0, ALICE_DELIVERY.getCost());
-        assertEquals("Personal", ALICE_DELIVERY.getTag());
+        assertEquals(PERSONAL, ALICE_DELIVERY.getTag().get().getTagKind());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class DeliveryTest {
         assertTrue(result.contains("Alice")); // Client name
         assertTrue(result.contains("NIL")); // Remarks
         assertTrue(result.contains("10.0")); // Cost
-        assertTrue(result.contains("Personal")); // Tag
+        assertTrue(result.contains("personal")); // Tag
     }
 
 }

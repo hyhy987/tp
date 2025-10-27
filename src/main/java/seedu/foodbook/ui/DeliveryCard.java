@@ -66,31 +66,18 @@ public class DeliveryCard extends UiPart<Region> {
         cost.setText("Cost: $" + delivery.getCost().toString());
         deliveredCheckBox.setSelected(delivery.getStatus());
 
-        String tag = delivery.getTag();
-        if (tag == null || tag.isBlank()) {
-            tagLabel.setVisible(false);
-            tagLabel.setManaged(false);
-        } else {
+        delivery.getTag().ifPresentOrElse(t -> {
+            tagLabel.setText(t.getName());
             tagLabel.setVisible(true);
             tagLabel.setManaged(true);
-            tagLabel.setText(tag);
 
             tagLabel.getStyleClass().removeAll("personal", "corporate", "other");
-
-            String variant;
-            switch (tag.trim().toLowerCase()) {
-            case "personal":
-                variant = "personal";
-                break;
-            case "corporate":
-                variant = "corporate";
-                break;
-            default:
-                variant = "other";
-                break;
-            }
-
+            String variant = t.getTagKind().name().toLowerCase(); // "personal" | "corporate" | "other"
             tagLabel.getStyleClass().add(variant);
-        }
+        }, () -> {
+            tagLabel.setText("");
+            tagLabel.setVisible(false);
+            tagLabel.setManaged(false);
+        });
     }
 }

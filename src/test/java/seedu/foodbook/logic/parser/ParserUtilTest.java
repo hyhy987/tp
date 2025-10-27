@@ -10,6 +10,8 @@ import static seedu.foodbook.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import seedu.foodbook.model.person.Address;
 import seedu.foodbook.model.person.Email;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Phone;
+import seedu.foodbook.model.tag.DeliveryTag;
 import seedu.foodbook.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -345,6 +348,28 @@ public class ParserUtilTest {
     public void parseTagLoose_validInput_returnsTrimmed() {
         assertEquals("Personal", ParserUtil.parseTagLoose("Personal"));
         assertEquals("Work", ParserUtil.parseTagLoose("  Work  "));
+    }
+
+    @Test
+    void parseOptionalDeliveryTag_empty_returnsEmpty() throws Exception {
+        assertEquals(Optional.empty(), ParserUtil.parseOptionalDeliveryTag(List.of()));
+    }
+
+    @Test
+    void parseOptionalDeliveryTag_singleValid_returnsTag() throws Exception {
+        Optional<DeliveryTag> out = ParserUtil.parseOptionalDeliveryTag(List.of("vip"));
+        assertTrue(out.isPresent());
+        assertEquals("vip", out.get().getName());
+    }
+
+    @Test
+    void parseOptionalDeliveryTag_multiple_throws() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseOptionalDeliveryTag(List.of("a", "b")));
+    }
+
+    @Test
+    void parseOptionalDeliveryTag_invalid_throws() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseOptionalDeliveryTag(List.of("bad tag")));
     }
 
 }
