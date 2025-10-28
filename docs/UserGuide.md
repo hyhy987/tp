@@ -21,6 +21,7 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
     - [Editing a delivery : `edit_delivery`](#editing-a-delivery--edit_delivery)
     - [Marking / Unmarking : `mark` / `unmark`](#marking--unmarking--mark--unmark)
     - [Locating deliveries : `find_delivery`](#locating-deliveries--find_delivery)
+    - [Deleting a delivery : `delete_delivery`](#deleting-a-delivery--delete_delivery)
   - [Revenue : `list_revenue`](#revenue--list_revenue)
   - [Undo : `undo`](#undo--undo)
   - [Clearing all entries : `clear`](#clearing-all-entries--clear)
@@ -89,7 +90,7 @@ add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]
 add_client n/May Chen p/81234567 e/mayc@example.com a/Blk 123 #05-12, 560123 t/regular
 add_client n/Acme Catering p/65123456 e/sales@acme.com a/10 Science Park Dr t/corporate
 ```
-![Add](images/add_client.png)
+![add](images/add_client.png)
 
 **Notes:**
 - Phone should be more than 3 digits long.
@@ -103,14 +104,14 @@ Update fields for an existing client by **current name**. Linked deliveries will
 
 **Format:**
 ```
-edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
+edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 ```
 
 **Example:**
 ```
-edit_client Hao Yang n/May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
+edit_client n/May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 ```
-![edit](images/edit_client.png)
+![List](images/edit_client.png)
 
 **Notes:**
 - The `n/CURRENT_NAME` must match exactly.
@@ -133,6 +134,7 @@ find_client n/May
 find_client p/81234567
 find_client e/@acme.com
 ```
+![find](images/find_client.png)
 
 ---
 
@@ -149,6 +151,7 @@ delete_client n/NAME
 ```
 delete_client n/Acme Pte Ltd
 ```
+![delete](images/after_delete_client.png)
 
 ---
 
@@ -159,6 +162,8 @@ delete_client n/Acme Pte Ltd
 Shows all deliveries.
 
 **Format:** `list_delivery`
+
+![List Delivery](images/list_delivery.png)
 
 ---
 
@@ -179,6 +184,8 @@ add_delivery n/May Chen d/4/11/2025 tm/1430 c/28.50 r/2x laksa, leave at recepti
 add_delivery n/Acme Pte Ltd d/4/11/2025 tm/1800 c/420.00 r/Company buffet t/Corporate
 ```
 
+![Add Delivery](images/add_delivery.png)
+
 ---
 
 ### Editing a delivery : `edit_delivery`
@@ -198,6 +205,8 @@ edit_delivery Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00
 
 **Note:** Provide both `d/` and `tm/` when changing schedule.
 
+![Edit Delivery](images/edit_delivery.png)
+
 ---
 
 ### Marking / Unmarking : `mark` / `unmark`
@@ -211,6 +220,8 @@ unmark ID
 ```
 
 **Result:** Card shows `Delivered: True` (or `False`).
+
+![Mark Delivery](images/mark_delivery.png)
 
 ---
 
@@ -229,6 +240,28 @@ find_delivery d/4/11/2025
 find_delivery n/Acme Pte Ltd d/4/11/2025
 find_delivery t/Corporate
 ```
+
+![Find Delivery](images/find_delivery.png)
+
+---
+
+### Deleting a delivery : `delete_delivery`
+
+Delete a delivery by its unique ID.
+
+**Format:**
+```
+delete_delivery ID
+```
+
+**Example:**
+```
+delete_delivery 1
+```
+
+**Note:** Use `list_delivery` to find the delivery ID.
+
+![Delete Delivery](images/delete_delivery.png)
 
 ---
 
@@ -251,6 +284,8 @@ list_revenue n/Acme Pte Ltd sd/1/10/2025 ed/31/10/2025
 list_revenue sd/28/10/2025 s/delivered
 ```
 
+![List Revenue](images/list_revenue.png)
+
 ---
 
 ## Undo : `undo`
@@ -260,6 +295,8 @@ Restore the previous state of clients and deliveries (e.g., after an accidental 
 **Format:** `undo`
 
 **Note:** Redo is not available.
+
+![Undo](images/undo.png)
 
 ---
 
