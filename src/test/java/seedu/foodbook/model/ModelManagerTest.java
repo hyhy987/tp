@@ -14,7 +14,6 @@ import static seedu.foodbook.testutil.TypicalPersons.CARL;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ import seedu.foodbook.commons.core.GuiSettings;
 import seedu.foodbook.logic.commands.CommandResult.UiPanel;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.delivery.DeliveryPredicate;
-import seedu.foodbook.model.person.NameContainsKeywordsPredicate;
+import seedu.foodbook.model.person.ClientMatchesPredicate;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.model.undo.exceptions.NoMoreUndoException;
 import seedu.foodbook.testutil.FoodBookBuilder;
@@ -156,7 +155,11 @@ public class ModelManagerTest {
 
         // different filteredList -> returns false
         String[] keywords = ALICE.getName().fullName.split("\\s+");
-        modelManager.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(keywords)));
+        modelManager.updateFilteredPersonList(new ClientMatchesPredicate(
+                Optional.of(keywords[0]),
+                Optional.empty(),
+                Optional.empty()
+        ));
         assertFalse(modelManager.equals(new ModelManager(foodBook, userPrefs)));
         // resets modelManager to initial state for upcoming tests
         modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);

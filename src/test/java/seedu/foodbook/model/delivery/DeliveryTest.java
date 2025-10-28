@@ -131,10 +131,10 @@ public class DeliveryTest {
         // Initially not delivered
         assertFalse(testDelivery.getStatus());
 
-        Delivery markedDelivery = testDelivery.markAsDelivered();
+        Delivery markedDelivery = testDelivery.copyAsDelivered();
         assertTrue(markedDelivery.getStatus());
 
-        Delivery unmarkedDelivery = markedDelivery.unmarkAsDelivered();
+        Delivery unmarkedDelivery = markedDelivery.copyAsUndelivered();
         assertFalse(unmarkedDelivery.getStatus());
     }
 

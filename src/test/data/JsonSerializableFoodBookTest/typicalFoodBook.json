@@ -51,7 +51,8 @@
       "date": "12/12/2023",
       "time": "1200",
       "remarks": "NIL",
-      "cost": 10.0
+      "cost": 10.0,
+      "isDelivered": true
     },
     {
       "id": 1,
@@ -59,7 +60,8 @@
       "date": "13/12/2023",
       "time": "1300",
       "remarks": "NIL",
-      "cost": 20.0
+      "cost": 20.0,
+      "isDelivered": false
     },
     {
       "id": 2,
@@ -67,7 +69,8 @@
       "date": "14/12/2023",
       "time": "1400",
       "remarks": "NIL",
-      "cost": 30.0
+      "cost": 30.0,
+      "isDelivered": false
     },
     {
       "id": 3,
@@ -75,7 +78,8 @@
       "date": "15/12/2023",
       "time": "1500",
       "remarks": "NIL",
-      "cost": 40.0
+      "cost": 40.0,
+      "isDelivered": false
     },
     {
       "id": 4,
@@ -83,7 +87,8 @@
       "date": "16/12/2023",
       "time": "1600",
       "remarks": "NIL",
-      "cost": 50.0
+      "cost": 50.0,
+      "isDelivered": true
     },
     {
       "id": 5,
@@ -91,7 +96,8 @@
       "date": "17/12/2023",
       "time": "1700",
       "remarks": "NIL",
-      "cost": 60.0
+      "cost": 60.0,
+      "isDelivered": true
     },
     {
       "id": 6,
@@ -99,7 +105,8 @@
       "date": "18/12/2023",
       "time": "1800",
       "remarks": "NIL",
-      "cost": 70.0
+      "cost": 70.0,
+      "isDelivered": true
     }
   ]
 }

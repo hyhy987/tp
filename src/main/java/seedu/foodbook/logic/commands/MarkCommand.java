@@ -57,7 +57,7 @@ public class MarkCommand extends Command {
         }
 
         // Create a new delivery object with marked status
-        Delivery markedDelivery = delivery.markAsDelivered();
+        Delivery markedDelivery = delivery.copyAsDelivered();
 
         model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
 

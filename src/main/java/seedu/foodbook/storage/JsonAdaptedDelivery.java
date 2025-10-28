@@ -115,6 +115,9 @@ public class JsonAdaptedDelivery {
         if (cost == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "cost"));
         }
+        if (isDelivered == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "isDelivered"));
+        }
 
         Optional<DeliveryTag> modelTag;
         if (tag == null || tag.isBlank()) {
@@ -123,10 +126,8 @@ public class JsonAdaptedDelivery {
             modelTag = Optional.of(new DeliveryTag(tag.trim()));
         }
 
-        Delivery delivery = new Delivery(id, client, dateTime, remarks, cost, modelTag);
-        if (Boolean.TRUE.equals(isDelivered)) {
-            delivery.markAsDelivered();
-        }
+        Delivery delivery = new Delivery(id, client, dateTime, remarks, cost, modelTag, isDelivered);
+
         return delivery;
     }
 }
