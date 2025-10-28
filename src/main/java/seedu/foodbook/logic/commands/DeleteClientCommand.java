@@ -15,7 +15,7 @@ import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
 
 /**
- * Deletes a person identified using it's displayed index from the food book.
+ * Deletes a person identified using its displayed name from the food book.
  */
 public class DeleteClientCommand extends Command {
 
