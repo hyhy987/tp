@@ -16,14 +16,14 @@ import static seedu.foodbook.testutil.TypicalDeliveries.AMY_DELIVERY;
 import static seedu.foodbook.testutil.TypicalDeliveries.BOB_DELIVERY;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.FoodBook;
 import seedu.foodbook.model.Model;
-import seedu.foodbook.model.person.NameContainsKeywordsPredicate;
+import seedu.foodbook.model.person.ClientMatchesPredicate;
 import seedu.foodbook.model.person.Person;
 import seedu.foodbook.testutil.EditPersonDescriptorBuilder;
 
@@ -149,7 +149,11 @@ public class CommandTestUtil {
 
         Person person = model.getFilteredPersonList().get(targetIndex.getZeroBased());
         final String[] splitName = person.getName().fullName.split("\\s+");
-        model.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
+        model.updateFilteredPersonList(new ClientMatchesPredicate(
+                Optional.of(splitName[0]),
+                Optional.empty(),
+                Optional.empty()
+        ));
 
         assertEquals(1, model.getFilteredPersonList().size());
     }

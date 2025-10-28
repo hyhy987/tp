@@ -23,7 +23,8 @@
       "date": "31-10-2025",
       "time": "9:30",
       "remarks": "Should fail: bad date/time format",
-      "cost": 8.0
+      "cost": 8.0,
+      "isDelivered": false
     }
   ]
 }
