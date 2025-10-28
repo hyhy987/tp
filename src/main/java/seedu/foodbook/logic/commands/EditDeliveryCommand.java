@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.logic.commands.AddDeliveryCommand.MESSAGE_CLIENT_NOT_FOUND;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
@@ -20,6 +21,7 @@ import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Name;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Edits the details of an existing delivery in the address book.
@@ -36,13 +38,15 @@ public class EditDeliveryCommand extends Command {
             + "[" + PREFIX_DATE + "DATE] "
             + "[" + PREFIX_TIME + "TIME] "
             + "[" + PREFIX_REMARKS + "REMARKS] "
-            + "[" + PREFIX_COST + "COST]\n"
+            + "[" + PREFIX_COST + "COST] "
+            + "[" + PREFIX_DELIVERY_TAG + "TAG]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_NAME + "Jane Doe "
             + PREFIX_DATE + "26/12/2024 "
             + PREFIX_TIME + "1500 "
             + PREFIX_REMARKS + "Updated delivery "
-            + PREFIX_COST + "60.00";
+            + PREFIX_COST + "60.00"
+            + PREFIX_DELIVERY_TAG + "Urgent";
 
     public static final String MESSAGE_EDIT_DELIVERY_SUCCESS = "Edited Delivery: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
@@ -120,6 +124,8 @@ public class EditDeliveryCommand extends Command {
         DateTime updatedDateTime = editDeliveryDescriptor.getDateTime().orElse(deliveryToEdit.getDeliveryDate());
         String updatedRemarks = editDeliveryDescriptor.getRemarks().orElse(deliveryToEdit.getRemarks());
         Double updatedCost = editDeliveryDescriptor.getCost().orElse(deliveryToEdit.getCost());
+        Optional<DeliveryTag> updatedTag = editDeliveryDescriptor.getTag()
+                .or(() -> deliveryToEdit.getTag());
 
         if (updatedCost < 0) {
             throw new CommandException(MESSAGE_INVALID_COST);
@@ -128,7 +134,7 @@ public class EditDeliveryCommand extends Command {
         boolean wasDelivered = deliveryToEdit.getStatus();
 
         Delivery editedDelivery = new Delivery(deliveryToEdit.getId(), updatedClient,
-                updatedDateTime, updatedRemarks, updatedCost, deliveryToEdit.getTag(), wasDelivered);
+                updatedDateTime, updatedRemarks, updatedCost, updatedTag, wasDelivered);
 
         return editedDelivery;
     }
@@ -166,6 +172,7 @@ public class EditDeliveryCommand extends Command {
         private DateTime dateTime;
         private String remarks;
         private Double cost;
+        private DeliveryTag tag;
 
         public EditDeliveryDescriptor() {}
 
@@ -177,13 +184,14 @@ public class EditDeliveryCommand extends Command {
             setDateTime(toCopy.dateTime);
             setRemarks(toCopy.remarks);
             setCost(toCopy.cost);
+            setTag(toCopy.tag);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(clientName, dateTime, remarks, cost);
+            return CollectionUtil.isAnyNonNull(clientName, dateTime, remarks, cost, tag);
         }
 
         public void setClientName(String clientName) {
@@ -218,6 +226,14 @@ public class EditDeliveryCommand extends Command {
             return Optional.ofNullable(cost);
         }
 
+        public void setTag(DeliveryTag tag) {
+            this.tag = tag;
+        }
+
+        public Optional<DeliveryTag> getTag() {
+            return Optional.ofNullable(tag);
+        }
+
         @Override
         public boolean equals(Object other) {
             if (other == this) {
@@ -233,7 +249,8 @@ public class EditDeliveryCommand extends Command {
             return Objects.equals(clientName, otherEditDeliveryDescriptor.clientName)
                     && Objects.equals(dateTime, otherEditDeliveryDescriptor.dateTime)
                     && Objects.equals(remarks, otherEditDeliveryDescriptor.remarks)
-                    && Objects.equals(cost, otherEditDeliveryDescriptor.cost);
+                    && Objects.equals(cost, otherEditDeliveryDescriptor.cost)
+                    && Objects.equals(tag, otherEditDeliveryDescriptor.tag);
         }
 
         @Override
@@ -243,6 +260,7 @@ public class EditDeliveryCommand extends Command {
                     .add("dateTime", dateTime)
                     .add("remarks", remarks)
                     .add("cost", cost)
+                    .add("tag", tag)
                     .toString();
         }
     }

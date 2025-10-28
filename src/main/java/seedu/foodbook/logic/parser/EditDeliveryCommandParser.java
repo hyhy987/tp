@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
@@ -30,7 +31,7 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                        PREFIX_REMARKS, PREFIX_COST);
+                        PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         Integer deliveryId;
 
@@ -47,7 +48,7 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                PREFIX_REMARKS, PREFIX_COST);
+                PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         EditDeliveryDescriptor editDeliveryDescriptor = new EditDeliveryDescriptor();
 
@@ -72,6 +73,10 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
 
         if (argMultimap.getValue(PREFIX_COST).isPresent()) {
             editDeliveryDescriptor.setCost(ParserUtil.parseCost(argMultimap.getValue(PREFIX_COST).get()));
+        }
+
+        if (argMultimap.getValue(PREFIX_DELIVERY_TAG).isPresent()) {
+            editDeliveryDescriptor.setTag(ParserUtil.parseDeliveryTag(argMultimap.getValue(PREFIX_DELIVERY_TAG).get()));
         }
 
         if (!editDeliveryDescriptor.isAnyFieldEdited()) {
