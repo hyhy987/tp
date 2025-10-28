@@ -39,6 +39,7 @@ public class ParserUtilTest {
     private static final String VALID_TAG_2 = "neighbour";
     private static final String VALID_TAG_3 = "mother";
     private static final String VALID_TAG_4 = "father";
+    private static final String VALID_DELIVERY_TAG_1 = "Personal";
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -288,6 +289,29 @@ public class ParserUtilTest {
     public void parseTags_withMoreThan3Tags_throwsParseException() {
         assertThrows(ParseException.class, () ->
                 ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2, VALID_TAG_3, VALID_TAG_4)));
+    }
+
+    @Test
+    public void parseDeliveryTag_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDeliveryTag(null));
+    }
+
+    @Test
+    public void parseDeliveryTag_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryTag("urgent!@#")); // non-alphanumeric
+    }
+
+    @Test
+    public void parseDeliveryTag_validValueWithoutWhitespace_returnsDeliveryTag() throws Exception {
+        DeliveryTag expectedTag = new DeliveryTag("urgent");
+        assertEquals(expectedTag, ParserUtil.parseDeliveryTag("urgent"));
+    }
+
+    @Test
+    public void parseDeliveryTag_validValueWithWhitespace_returnsTrimmedDeliveryTag() throws Exception {
+        String tagWithWhitespace = "  urgent  ";
+        DeliveryTag expectedTag = new DeliveryTag("urgent");
+        assertEquals(expectedTag, ParserUtil.parseDeliveryTag(tagWithWhitespace));
     }
 
     @Test
