@@ -6,367 +6,314 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Quick Start](#quick-start)
-3. [How to Read This Guide](#how-to-read-this-guide)
-4. [UI at a Glance](#ui-at-a-glance)
-5. [Features](#features)
-    - [Clients](#clients)
-    - [Deliveries](#deliveries)
-    - [General Utilities](#general-utilities)
-6. [Data Files & Auto-Save](#data-files--auto-save)
-7. [FAQ](#faq)
-8. [Troubleshooting & Known Issues](#troubleshooting--known-issues)
-9. [Command Summary](#command-summary)
-10. [Glossary](#glossary)
-11. [Attributions](#attributions)
-
----
-
-## Introduction
-
-### Target Users & Assumptions
-
-**Who this is for:**  
-Home-based chefs, micro-F&B owners, and small catering teams who need a **simple, reliable way** to track clients and deliveries.
-
-**Assumptions about prior knowledge:**
-
-- You are comfortable typing commands.
-- You know basic date/time formats: `d/M/yyyy` (e.g., `4/11/2025`) and **24-hour time** without colons (e.g., `1430`).
-- You can run a desktop Java app on Windows/macOS/Linux.
-
-### What You'll Accomplish with FoodBook
-
-- Build a clean **Client list** with contact info and tags.
-- Schedule and track **Deliveries** linked to clients.
-- **Mark** completed deliveries and **find** items by client/date.
-- Work **keyboard-first** for speed; the GUI updates automatically.
+- [Quick Start](#quick-start)
+- [Features](#features)
+  - [Viewing help : `help`](#viewing-help--help)
+  - [Clients](#clients)
+    - [Listing all clients : `list_client`](#listing-all-clients--list_client)
+    - [Adding a client : `add_client`](#adding-a-client--add_client)
+    - [Editing a client : `edit_client`](#editing-a-client--edit_client)
+    - [Locating clients : `find_client`](#locating-clients--find_client)
+    - [Deleting a client : `delete_client`](#deleting-a-client--delete_client)
+  - [Deliveries](#deliveries)
+    - [Listing all deliveries : `list_delivery`](#listing-all-deliveries--list_delivery)
+    - [Adding a delivery : `add_delivery`](#adding-a-delivery--add_delivery)
+    - [Editing a delivery : `edit_delivery`](#editing-a-delivery--edit_delivery)
+    - [Marking / Unmarking : `mark` / `unmark`](#marking--unmarking--mark--unmark)
+    - [Locating deliveries : `find_delivery`](#locating-deliveries--find_delivery)
+  - [Revenue : `list_revenue`](#revenue--list_revenue)
+  - [Undo : `undo`](#undo--undo)
+  - [Clearing all entries : `clear`](#clearing-all-entries--clear)
+  - [Exiting the program : `exit`](#exiting-the-program--exit)
+- [Saving the data](#saving-the-data)
+- [Editing the data file](#editing-the-data-file)
+- [FAQ](#faq)
+- [Known issues](#known-issues)
+- [Command Summary](#command-summary)
 
 ---
 
 ## Quick Start
 
 1. **Install Java 17 or newer.**
-2. **Run the app** from the project root:
+2. Place `foodbook.jar` in your preferred folder.
+3. Run the app:
+   ```bash
+   java -jar foodbook.jar
+   ```
+   FoodBook launches with sample data.
+4. Try:
+   - `help` — quick reference
+   - `list_client` — list all clients
+   - `list_delivery` — list all deliveries
 
-```bash
-./gradlew clean run
-```
-
-FoodBook launches with sample data.
-
-3. Type `help` and press Enter to open the help window.
-
-4. Try these first:
-    - `list` — shows all clients
-    - `find_delivery d/25/12/2024` — shows deliveries for that date
-    - `help` — quick reference
-
-**Tip:** FoodBook auto-saves after every successful command. No manual save required.
-
----
-
-## How to Read This Guide
-
-- Words in `UPPER_CASE` are placeholders — replace them with your values.
-- Items in `[square brackets]` are optional.
-- Parameters can be in any order.
-- **Expected Output** shows what you will typically see after a successful command.
-- **Warnings** flag common mistakes (formatting, missing fields, etc.).
-- **Tips** suggest faster or safer ways to use a feature.
-
-### Date & Time Formats
-
-- **Date:** `d/M/yyyy` (e.g., `4/11/2025` or `04/11/2025` — leading zeros optional)
-- **Time:** 24-hour format without colon, 4 digits (e.g., `1430`, `0800`)
-
----
-
-## UI at a Glance
-
-- **Menu Bar / Help:** Open help or exit.
-- **Command Box:** Type commands and press Enter.
-- **Result Display:** Success/error messages.
-- **List Panels:** Show Clients and Deliveries.
-- **Cards:** Each client/delivery is presented as a card with key fields and tag pills.
-- **Delivery cards show:** Delivery ID, Client name, Date, Time, Price, Remarks, Tag(s), and `Delivered: True/False`.
-
-**Note on tag colours:**  
-Special colours are used for `Personal` and `Corporate` tags. All other tags use a default style.
+**Tip:** FoodBook auto-saves after every successful command.
 
 ---
 
 ## Features
 
-All commands are case-sensitive for their prefixes (e.g., `n/`, `p/`, `d/`, `tm/`, `dt/`).  
-Use `help` anytime to view a quick command reference.
+### Viewing help : `help`
+
+Shows the help window with a quick reference.
+
+**Format:** `help`
+- Example:
+![Help](images/help.png)
 
 ---
 
-### Clients
+## Clients
 
-#### Add Client — `add`
+### Listing all clients : `list_client`
+
+Shows all clients.
+
+**Format:** `list_client`
+- Example:
+![List](images/list_client.png)
+
+---
+
+### Adding a client : `add_client`
 
 Create a client with contact and address details.
 
 **Format:**
 ```
-add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...
+add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]
 ```
 
 **Examples:**
 ```
-add n/May Chen p/81234567 e/mayc@example.com a/Blk 123 #05-12, 560123 t/regular
-add n/Adam Ong p/69881234 e/adam.ong@work.sg a/22 River Valley Rd, 238255
+add_client n/May Chen p/81234567 e/mayc@example.com a/Blk 123 #05-12, 560123 t/regular
+add_client n/Acme Catering p/65123456 e/sales@acme.com a/10 Science Park Dr t/corporate
 ```
+![Add](images/add_client.png)
 
-**Expected Output:**  
-A success message and a new client card appear in the list.
-
-**Warnings:**
-- Phone should be 8 digits.
-- Postal codes in addresses should be 6 digits (if provided).
-- Duplicate detection may warn if name + contact details already exist.
-
-**Tips:**  
-Use short, meaningful `t/` tags (e.g., `t/VIP`, `t/weekly`).
+**Notes:**
+- Phone should be more than 3 digits long.
+- Tags are optional and help with search/organization.
 
 ---
 
-#### Edit Client — `edit_client`
+### Editing a client : `edit_client`
 
-Update any subset of fields for an existing client.
+Update fields for an existing client by **current name**. Linked deliveries will reflect changes.
 
 **Format:**
 ```
-edit_client CLIENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...
+edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 ```
 
 **Example:**
 ```
-edit_client May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/weekly t/vegan
+edit_client Hao Yang n/May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 ```
+![edit](images/edit_client.png)
 
-**Expected Output:**  
-A success message with updated fields. Existing deliveries remain linked to this client.
-
-**Warnings:**
-- `CLIENT_NAME` must match an existing client's name exactly.
-- At least one field to change must be provided.
-
-**Tips:**  
-Keep `t/` tags consistent across clients to make searching easier.
+**Notes:**
+- The `n/CURRENT_NAME` must match exactly.
+- Provide at least one field to change.
 
 ---
 
-#### Delete Client — `delete`
+### Locating clients : `find_client`
 
-Remove a client by index.
-
-**Format:**
-```
-delete INDEX
-```
-
-**Example:**
-```
-delete 2
-```
-
-**Expected Output:**  
-Client removed from the list with a confirmation message.
-
-**Warnings:**
-- Irreversible. Ensure the client has no required records you still need.
-- The index refers to the number shown in the displayed client list.
-
----
-
-#### Find Client — `find`
-
-Search clients by name keywords.
+Search by name keywords, phone, and/or email. Any provided field is matched.
 
 **Format:**
 ```
-find KEYWORD [MORE_KEYWORDS]
+find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]
 ```
 
 **Examples:**
 ```
-find may
-find adam ong
+find_client n/May
+find_client p/81234567
+find_client e/@acme.com
 ```
-
-**Expected Output:**  
-List updates to only the clients whose names contain any of the keywords.
-
-**Tips:**  
-Search is case-insensitive. Use `list` to show all clients again.
 
 ---
 
-### Deliveries
+### Deleting a client : `delete_client`
 
-#### Add Delivery — `add_delivery`
-
-Create a delivery linked to an existing client.
+Delete a client by name. All associated deliveries are removed (cascading).
 
 **Format:**
 ```
-add_delivery n/CLIENT_NAME d/DATE tm/TIME r/REMARKS c/COST [t/TAG]
+delete_client n/NAME
 ```
+
+**Example:**
+```
+delete_client n/Acme Pte Ltd
+```
+
+---
+
+## Deliveries
+
+### Listing all deliveries : `list_delivery`
+
+Shows all deliveries.
+
+**Format:** `list_delivery`
+
+---
+
+### Adding a delivery : `add_delivery`
+
+Create a delivery linked to an existing client. Each delivery gets a unique ID.
+
+**Format:**
+```
+add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST [r/REMARKS] [t/TAG]
+```
+- **Date:** `d/M/yyyy` (e.g., `4/11/2025`)
+- **Time:** `HHmm` 24-hour (e.g., `1430`)
 
 **Examples:**
 ```
 add_delivery n/May Chen d/4/11/2025 tm/1430 c/28.50 r/2x laksa, leave at reception t/Personal
-add_delivery n/Adam Ong d/4/11/2025 tm/1800 c/120.00 r/Company buffet t/Corporate
+add_delivery n/Acme Pte Ltd d/4/11/2025 tm/1800 c/420.00 r/Company buffet t/Corporate
 ```
-
-**Expected Output:**  
-A success message and a new Delivery ID appear. Delivery card shows client, date, time, price, remarks, tag, and `Delivered: False`.
-
-**Warnings:**
-- Client must exist (use exact name from client list).
-- Date must be in `d/M/yyyy` format, time in `HHmm` format.
-- Cost must be non-negative.
-- All fields (`n/`, `d/`, `tm/`, `r/`, `c/`) are required.
-
-**Tips:**  
-Use delivery tags (`t/`) to group runs (e.g., `t/Morning`, `t/Islandwide`) and business type (`t/Personal`, `t/Corporate`).
 
 ---
 
-#### Edit Delivery — `edit_delivery`
+### Editing a delivery : `edit_delivery`
 
-Modify one or more fields of an existing delivery.
+Modify fields of an existing delivery **by client name**.
 
 **Format:**
 ```
-edit_delivery DELIVERY_ID [n/CLIENT_NAME] [d/DATE tm/TIME] [c/COST] [r/REMARKS] 
+edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
 ```
 
-**Example:**
+**Examples:**
 ```
-edit_delivery 1032 tm/1515 r/Customer requested later pickup
+edit_delivery May Chen tm/1515 r/Customer requested later pickup
+edit_delivery Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00
 ```
 
-**Expected Output:**  
-Delivery card updates with the new fields.
-
-**Warnings:**
-- `DELIVERY_ID` must exist (shown on delivery card).
-- At least one field to edit is required.
-- Date and time must be provided together (both `d/` and `tm/`).
+**Note:** Provide both `d/` and `tm/` when changing schedule.
 
 ---
 
-#### Delete Delivery — `delete_delivery`
+### Marking / Unmarking : `mark` / `unmark`
 
-Remove a delivery by ID.
-
-**Format:**
-```
-delete_delivery DELIVERY_ID
-```
-
-**Expected Output:**  
-Delivery removed from the list with a confirmation message.
-
-**Warnings:**  
-Irreversible. Consider backups before cleanup.
-
----
-
-#### Mark/Unmark — `mark` / `unmark`
-
-Toggle delivery completion status.
+Toggle delivery completion status by Delivery **ID**.
 
 **Formats:**
 ```
-mark DELIVERY_ID
-unmark DELIVERY_ID
+mark ID
+unmark ID
 ```
 
-**Expected Output:**  
-The delivery card shows `Delivered: True` (or `False`) and a confirmation message.
-
-**Tips:**  
-Use `find_delivery` (today) → `mark` as you finish each stop to keep a live run-sheet.
+**Result:** Card shows `Delivered: True` (or `False`).
 
 ---
 
-#### Find Delivery (by date) — `find_delivery`
+### Locating deliveries : `find_delivery`
 
-List deliveries on a specific date.
+Filter deliveries by any combination of client/date/tag. **At least one** of `n/`, `d/`, or `t/` must be provided; if none are given, the command fails.
 
 **Format:**
 ```
-find_delivery d/DATE
+find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]
 ```
 
-**Example:**
+**Examples:**
 ```
 find_delivery d/4/11/2025
+find_delivery n/Acme Pte Ltd d/4/11/2025
+find_delivery t/Corporate
 ```
 
-**Expected Output:**  
-All deliveries for that date with ID, client, time, price, remarks, tags.
+---
 
-**Tips:**  
-Use with `mark` during your day to track progress. Use `list_delivery` to show all deliveries again.
+## Revenue : `list_revenue`
+
+Display revenue based on recorded deliveries.
+
+**Format:**
+```
+list_revenue [sd/DATE] [ed/DATE] [n/CLIENT_NAME] [t/tag] [s/delivered|not_delivered]
+```
+- If only `sd/DATE` is provided, it shows that single day.
+- Use `s/delivered` or `s/not_delivered` to filter by completion.
+
+**Examples:**
+```
+list_revenue
+list_revenue sd/1/10/2025 ed/31/10/2025
+list_revenue n/Acme Pte Ltd sd/1/10/2025 ed/31/10/2025
+list_revenue sd/28/10/2025 s/delivered
+```
 
 ---
 
-### General Utilities
+## Undo : `undo`
 
-- `help` — Opens a window with a quick reference.
-- `list` — Shows all clients (useful after searching).
-- `list_delivery` — Shows all deliveries.
-- `clear` — Clears all entries (use with caution).
-- `exit` — Quits the app.
+Restore the previous state of clients and deliveries (e.g., after an accidental edit or delete).
 
-**Keyboard flow:**  
-Type a command → Enter → Read the result → Arrow keys to recall previous commands (system-dependent).
+**Format:** `undo`
+
+**Note:** Redo is not available.
 
 ---
 
-## Data Files & Auto-Save
+## Clearing all entries : `clear`
 
-- FoodBook stores data locally as JSON in `[JAR location]/data/addressbook.json`.
-- Auto-save runs after every successful command.
-- If you manually edit the data and the format becomes invalid, the app may discard all data and start with an empty file on next launch.
+Remove all data from FoodBook.
 
-**Caution:** Only edit JSON directly if you are comfortable with the schema. Always keep backups.
+**Format:** `clear`
+
+**Caution:** Irreversible; consider backups.
+
+---
+
+## Exiting the program : `exit`
+
+Quit the app.
+
+**Format:** `exit`
+
+---
+
+## Saving the data
+
+FoodBook auto-saves to disk after every successful command.
+
+---
+
+## Editing the data file
+
+Data are stored as JSON at:
+```
+[JAR location]/data/foodbook.json
+```
+
+**Caution:** If you corrupt the JSON, FoodBook may start with an empty file on next launch. Keep backups.
 
 ---
 
 ## FAQ
 
-**Q. Can I use keyboard only?**  
-Yes. The app is designed for fast CLI input. The GUI updates as you type commands.
+**Keyboard-only usage?** Yes. The app is designed for fast CLI input; the GUI updates alongside.
 
-**Q. Can I colour-code tags?**  
-Yes. `Personal` and `Corporate` delivery tags have special colours. Other tags appear in a default style.
+**Tag colours?** `Personal` and `Corporate` have special colours; other tags use a default style.
 
-**Q. What happens if I type an invalid date?**  
-The app rejects the command and shows an error with the expected format (`d/M/yyyy`).
+**Invalid dates/times?** Commands are rejected with the expected format: `d/M/yyyy`, `HHmm`.
 
-**Q. Can I undo a mistaken delete?**  
-Deletions are irreversible within the app. Keep regular backups if you need recovery.
+**Undo deletes?** Use `undo` to revert the last change. 
 
 ---
 
-## Troubleshooting & Known Issues
+## Known issues
 
-**App opens off-screen after using a second monitor:**  
-Delete `preferences.json` (the window will reset to defaults on next launch).
-
-**Help window appears once:**  
-If minimized, run `help` again and restore the minimized window (a new one will not open).
-
-**Nothing happens after pressing Enter:**  
-Check that the Command Box is focused. Verify command prefixes (`n/`, `p/`, `d/`, `tm/`, `dt/`, etc.) and date/time formats.
+- **Multi-monitor:** If the app reopens off-screen, delete `preferences.json` and relaunch.
+- **Help window:** If minimized, running `help` again won’t open a new one—restore the minimized window.
 
 ---
 
@@ -374,34 +321,20 @@ Check that the Command Box is focused. Verify command prefixes (`n/`, `p/`, `d/`
 
 | Action | Format |
 |--------|--------|
-| Add Client | `add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...` |
-| Edit Client | `edit_client CLIENT_NAME [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...` |
-| Delete Client | `delete INDEX` |
-| Find Client | `find KEYWORD [MORE_KEYWORDS]` |
-| List Clients | `list` |
-| Add Delivery | `add_delivery n/CLIENT_NAME d/DATE tm/TIME r/REMARKS c/COST [dt/TAG]` |
-| Edit Delivery | `edit_delivery DELIVERY_ID [n/CLIENT_NAME] [d/DATE tm/TIME] [c/COST] [r/REMARKS] [dt/TAG]` |
-| Delete Delivery | `delete_delivery DELIVERY_ID` |
-| Mark/Unmark | `mark DELIVERY_ID` / `unmark DELIVERY_ID` |
-| Find Delivery | `find_delivery d/DATE` |
-| List Deliveries | `list_delivery` |
-| Help | `help` |
-| Clear | `clear` |
-| Exit | `exit` |
+| **List Clients** | `list_client` |
+| **Add Client** | `add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]` |
+| **Edit Client** | `edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]` |
+| **Delete Client** | `delete_client n/NAME` |
+| **Find Client** | `find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]` |
+| **List Deliveries** | `list_delivery` |
+| **Add Delivery** | `add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST [r/REMARKS] [t/TAG]` |
+| **Edit Delivery** | `edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]` |
+| **Delete Delivery** | `delete_delivery ID` |
+| **Mark / Unmark** | `mark ID` / `unmark ID` |
+| **Find Delivery** | `find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]` |
+| **List Revenue** | `list_revenue [sd/DATE] [ed/DATE] [n/CLIENT_NAME] [t/tag] [s/delivered\|not_delivered]` |
+| **Undo** | `undo` |
+| **Help** | `help` |
+| **Clear** | `clear` |
+| **Exit** | `exit` |
 
----
-
-## Glossary
-
-- **Client Name:** The full name of a client as stored in FoodBook. Must match exactly for commands like `edit_client`.
-- **Delivery ID:** Unique identifier shown on the delivery card; use it for edit/mark/delete operations.
-- **Tag:** A label you attach to clients (using `t/`) or deliveries (using `dt/`). Examples: `Personal`, `Corporate`, `VIP`, `MorningRun`.
-- **Card:** The visual block showing a client or delivery in the list panel.
-- **Index:** The number shown next to each client in the displayed list (used for `delete` command).
-
----
-
-## Attributions
-
-Built with Java, JavaFX, Gradle, Jackson, and JUnit.  
-Based on the AddressBook-Level3 (AB3) educational codebase and adapted for FoodBook's delivery workflow.
