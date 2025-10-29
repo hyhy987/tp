@@ -278,8 +278,8 @@
 #resultDisplay,
 .resultDisplay,
 .result-display {
-    -fx-control-inner-background: #FFF7DD;
-    -fx-background-color: #FFF7DD;
+    -fx-control-inner-background: #E5F3FD;
+    -fx-background-color: #E5F3FD;
     -fx-text-fill: #1F2937;
 }
 
@@ -291,7 +291,7 @@
     -fx-background-radius: 8;
 }
 
-/* Keep scroll container transparent so the cream shows through */
+/* Keep scroll container transparent so the colour shows through */
 #resultDisplay .scroll-pane,
 #resultDisplay .viewport,
 .resultDisplay .scroll-pane,
@@ -339,5 +339,7 @@
     -fx-effect: dropshadow(gaussian, -color-shadow, 6, 0.18, 0, 1);
 }
 
-
+.status-label {
+    -fx-font-weight: bold;
+}
 

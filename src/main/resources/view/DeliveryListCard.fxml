@@ -45,7 +45,7 @@
             </TextFlow>
             <HBox spacing="8" alignment="BASELINE_LEFT" styleClass="bubble" VBox.vgrow="NEVER">
                 <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
-                <Label fx:id="deliveredLabel" text="Delivered:"/>
+                <Label fx:id="delivered" text="Delivered:" styleClass="status-label"/>
                 <CheckBox fx:id="deliveredCheckBox" disable="true"/>
             </HBox>
 
