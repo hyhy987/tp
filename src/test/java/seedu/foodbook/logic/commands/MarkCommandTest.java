@@ -53,7 +53,7 @@ public class MarkCommandTest {
         // Create a test person and delivery
 
         Delivery testDelivery = new DeliveryBuilder().build();
-        Delivery markedDelivery = testDelivery.markAsDelivered(); // Mark as delivered first
+        Delivery markedDelivery = testDelivery.copyAsDelivered(); // Mark as delivered first
         model.addDelivery(markedDelivery);
 
         MarkCommand markCommand = new MarkCommand(testDelivery.getId());

@@ -2,17 +2,53 @@
 skin rose
 skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
+skinparam ActivityBorderColor #555555
+skinparam ActivityBackgroundColor #f8f8f8
+skinparam ArrowColor #555555
+skinparam NoteBackgroundColor #fffde7
+skinparam NoteBorderColor #bdbdbd
+title FoodBook — Commit Flow with Undo (No Redo)
+
 start
-:User executes command;
+:User executes a CLI command;
 
-'Since the beta syntax does not support placing the condition outside the
-'diamond we place it as the true branch instead.
-
-if () then ([command commits AddressBook])
-    :Purge redundant states;
-    :Save AddressBook to
-    addressBookStateList;
-else ([else])
+' 1) Handle UNDO explicitly (no Redo feature in app)
+if ("Is the command 'undo'?") then (Yes)
+  if ("Undo history not empty?") then (Yes)
+    :Restore previous Model snapshot\n(from Undo history);
+    :Auto-save to JSON;
+    :Show 'Command undone: [command]';
+  else (No)
+    :Show 'You cannot undo any further';
+  endif
+  stop
 endif
+
+' 2) For non-undo commands, check if they modify data
+if ("Does the command MODIFY stored data?") then (Yes)
+  :Validate inputs (formats, duplicates, existence);
+  :Push current Model snapshot onto Undo history;
+  :Apply change to in-memory Model;
+  :Auto-save to JSON;
+  note right
+    Commands that MODIFY (commit):
+    • add_client, edit_client, delete_client
+    • add_delivery, edit_delivery, delete_delivery
+    • mark, unmark
+    • clear
+  end note
+  :Show success message;
+else (No)
+  :No data change recorded;
+  :Update filtered lists / UI only;
+  note right
+    Read-only (no commit):
+    • list, list_delivery, list_revenue
+    • find, find_delivery
+    • help, exit
+  end note
+  :Show result/help message;
+endif
+
 stop
 @enduml

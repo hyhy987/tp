@@ -3,7 +3,6 @@ package seedu.foodbook.model.delivery;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import seedu.foodbook.commons.util.StringUtil;
 import seedu.foodbook.commons.util.ToStringBuilder;
 
 /**
@@ -56,11 +55,12 @@ public class DeliveryPredicate implements Predicate<Delivery> {
         }).orElse(true);
 
         boolean matchesClientName = clientName.map(name ->
-                StringUtil.containsWordIgnoreCase(delivery.getClient().getName().fullName, name)
+                delivery.getClient().getName().fullName.toLowerCase().contains(name.toLowerCase())
         ).orElse(true);
 
         boolean matchesTag = tag.map(q ->
-                delivery.getTag().map(dt -> dt.getName().contains(q.toLowerCase()))
+                delivery.getTag().map(dt -> dt.getName().toLowerCase()
+                                .contains(q.toLowerCase()))
                         .orElse(false)
         ).orElse(true);
 

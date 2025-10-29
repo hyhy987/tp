@@ -30,7 +30,7 @@ public class UnmarkCommandTest {
 
         ModelManager expectedModel = new ModelManager(model.getFoodBook(), new UserPrefs());
         Delivery markedDelivery = new DeliveryBuilder().asDelivered().build();
-        Delivery unmarkedDelivery = markedDelivery.unmarkAsDelivered();
+        Delivery unmarkedDelivery = markedDelivery.copyAsUndelivered();
         expectedModel.addDelivery(unmarkedDelivery);
 
         model.addDelivery(testDelivery);

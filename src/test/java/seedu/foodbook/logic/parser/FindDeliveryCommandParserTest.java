@@ -1,7 +1,6 @@
 package seedu.foodbook.logic.parser;
 
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.foodbook.logic.Messages.MESSAGE_MISSING_ARGUMENT_FORMAT;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.foodbook.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
@@ -23,7 +22,7 @@ public class FindDeliveryCommandParserTest {
     public void parse_emptyArg_returnsFalse() {
 
         assertParseFailure(parser, "",
-                String.format(MESSAGE_MISSING_ARGUMENT_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
     }
 
     @Test

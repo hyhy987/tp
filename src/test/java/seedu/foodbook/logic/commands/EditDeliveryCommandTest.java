@@ -192,7 +192,7 @@ public class EditDeliveryCommandTest {
         Model model = new ModelManager(getTypicalFoodBook(), new UserPrefs());
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         Delivery target = model.getFilteredDeliveryList().get(0);
-        Delivery markedTarget = target.markAsDelivered();
+        Delivery markedTarget = target.copyAsDelivered();
         model.setDelivery(model.getFilteredDeliveryList().get(0), markedTarget);
 
         EditDeliveryCommand.EditDeliveryDescriptor desc = new EditDeliveryCommand.EditDeliveryDescriptor();
