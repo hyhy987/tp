@@ -163,7 +163,7 @@ find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]
 
 **Examples:**
 ```
-find_client n/May                    # Finds "May Chen", "Maya Restaurant", etc.
+find_client n/May                   # Finds "May Chen", "Maya Restaurant", etc.
 find_client p/81234567              # Finds exact phone match
 find_client e/@acme.com             # Finds emails containing "@acme.com"
 find_client n/chen e/mayc           # Finds clients with "chen" in name OR "mayc" in email
@@ -271,21 +271,21 @@ add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00
 
 ### Editing a delivery : `edit_delivery`
 
-Updates an existing delivery record by specifying the client name. If a client has multiple deliveries, this command will modify the **most recent** delivery for that client. You can change any combination of delivery details.
+Updates an existing delivery record by specifying the unique delivery ID. You can change any combination of delivery details.
 
 **Format:**
 ```
-edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
+edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
 ```
 
 **How it works:**
-- Finds the most recent delivery for the specified client
+- Finds the delivery specified by the delivery ID to edit
 - Updates only the fields you specify
 - If changing client name, the new client must already exist
 - At least one field must be provided to update
 
 **Parameter Details:**
-- `CLIENT_NAME`: Current client name (must match exactly, case-sensitive)
+- `DELIVERY_ID`: Unique delivery ID (must currently exist)
 - `n/NEW_NAME`: Transfer delivery to a different existing client
 - `d/DATE tm/TIME`: New delivery date and time (must provide both together)
 - `r/REMARKS`: Update or replace special instructions
@@ -293,19 +293,19 @@ edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
 
 **Examples:**
 ```
-edit_delivery May Chen tm/1515 r/Customer requested later pickup
-edit_delivery Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00
-edit_delivery John Doe n/Jane Doe r/Address changed to office
+edit_delivery 3 n/May Chen tm/1515 r/Customer requested later pickup
+edit_delivery 2 n/Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00
+edit_delivery 4 n/John Doe n/Jane Doe r/Address changed to office
 ```
 
 ![Edit Delivery](images/edit_delivery.png)
 
 **Important Notes:**
-- **Targets the most recent delivery** for the specified client
+- **Targets the specified delivery ID** supplied to edit 
 - Client name must match exactly (case-sensitive)
 - When changing schedule, you **must provide both date and time** together
 - New client name (if changing) must already exist in your client list
-- Use `list_delivery` to see delivery IDs if you need to edit a specific delivery
+- Use `list_delivery` to see delivery IDs if they currently exist
 - The delivery's completion status (delivered/not delivered) is not affected
 
 ---
