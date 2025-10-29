@@ -77,6 +77,7 @@ class JsonSerializableFoodBook {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
         }
+
         for (JsonAdaptedDelivery jsonDelivery : deliveries) {
             Delivery delivery = jsonDelivery.toModelType(foodBook);
             if (foodBook.hasDelivery(delivery)) {

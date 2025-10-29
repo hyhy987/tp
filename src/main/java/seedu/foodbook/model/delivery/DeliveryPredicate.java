@@ -59,7 +59,8 @@ public class DeliveryPredicate implements Predicate<Delivery> {
         ).orElse(true);
 
         boolean matchesTag = tag.map(q ->
-                delivery.getTag().map(dt -> dt.getName().contains(q.toLowerCase()))
+                delivery.getTag().map(dt -> dt.getName().toLowerCase()
+                                .contains(q.toLowerCase()))
                         .orElse(false)
         ).orElse(true);
 

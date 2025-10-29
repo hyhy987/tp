@@ -197,10 +197,10 @@ public class UndoCommandIntegrationTest {
         MarkCommand mark = new MarkCommand(target.getId());
         String markMsg = String.format(
                 MarkCommand.MESSAGE_MARK_DELIVERY_SUCCESS,
-                Messages.format(target.markAsDelivered())
+                Messages.format(target.copyAsDelivered())
         );
         Model afterMarkExpected = snapshotOf(model);
-        afterMarkExpected.setDelivery(target, target.markAsDelivered());
+        afterMarkExpected.setDelivery(target, target.copyAsDelivered());
         assertCommandSuccess(mark, model, markMsg, afterMarkExpected);
 
         String undoMsg = String.format(UndoCommand.MESSAGE_SUCCESS, "mark");
@@ -215,7 +215,7 @@ public class UndoCommandIntegrationTest {
             // mark it first (this will push a checkpoint)
             MarkCommand mark = new MarkCommand(initially.getId());
             Model afterMarkExpected = snapshotOf(model);
-            Delivery marked = initially.markAsDelivered();
+            Delivery marked = initially.copyAsDelivered();
             String markMsg = String.format(MarkCommand.MESSAGE_MARK_DELIVERY_SUCCESS, Messages.format(marked));
             afterMarkExpected.setDelivery(initially, marked);
             assertCommandSuccess(mark, model, markMsg, afterMarkExpected);
@@ -226,13 +226,13 @@ public class UndoCommandIntegrationTest {
         }
 
         // Re-pick target on the fresh model and make sure it's delivered
-        Delivery target = model.getFilteredDeliveryList().get(0).markAsDelivered();
+        Delivery target = model.getFilteredDeliveryList().get(0).copyAsDelivered();
         model.setDelivery(model.getFilteredDeliveryList().get(0), target);
 
         Model expectedBefore = snapshotOf(model);
 
         UnmarkCommand unmark = new UnmarkCommand(target.getId());
-        Delivery expectedUnmarked = target.unmarkAsDelivered();
+        Delivery expectedUnmarked = target.copyAsUndelivered();
         String unmarkMsg = String.format(
                 UnmarkCommand.MESSAGE_UNMARK_DELIVERY_SUCCESS,
                 Messages.format(expectedUnmarked)

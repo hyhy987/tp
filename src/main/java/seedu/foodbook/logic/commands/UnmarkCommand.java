@@ -56,7 +56,7 @@ public class UnmarkCommand extends Command {
             throw new CommandException(MESSAGE_DELIVERY_ALREADY_UNMARKED);
         }
 
-        Delivery unmarkedDelivery = delivery.unmarkAsDelivered();
+        Delivery unmarkedDelivery = delivery.copyAsUndelivered();
 
         model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
 
