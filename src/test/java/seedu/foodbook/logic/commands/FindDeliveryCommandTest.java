@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW;
+import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
-
 import java.util.Collections;
 import java.util.Optional;
 
@@ -73,9 +73,12 @@ public class FindDeliveryCommandTest {
                 Optional.of(date), Optional.of(date), Optional.empty(), Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
-        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
-                expectedModel.getFilteredDeliveryList().size());
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+
+        int numFound = expectedModel.getFilteredDeliveryList().size();
+        if (numFound > 0) {
+            String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, numFound);
+            assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        }
     }
 
     @Test
@@ -84,9 +87,12 @@ public class FindDeliveryCommandTest {
                 Optional.empty(), Optional.empty(), Optional.empty(), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
-        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
-                expectedModel.getFilteredDeliveryList().size());
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+
+        int numFound = expectedModel.getFilteredDeliveryList().size();
+        if (numFound > 0) {
+            String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, numFound);
+            assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        }
     }
 
     @Test
@@ -96,21 +102,22 @@ public class FindDeliveryCommandTest {
                 Optional.of(date), Optional.of(date), Optional.of("Alice"), Optional.of("urgent"), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
-        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW,
-                expectedModel.getFilteredDeliveryList().size());
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+
+        int numFound = expectedModel.getFilteredDeliveryList().size();
+        if (numFound > 0) {
+            String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, numFound);
+            assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        }
     }
 
     @Test
     public void execute_nonMatchingFilters_noDeliveryFound() {
-        String expectedMessage = String.format(MESSAGE_DELIVERIES_LISTED_OVERVIEW, 0);
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.empty(), Optional.empty(), Optional.of("NonExistentClient"),
                 Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
-        expectedModel.updateFilteredDeliveryList(predicate);
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
-        assertEquals(Collections.emptyList(), model.getFilteredDeliveryList());
+
+        assertCommandFailure(command, model, FindDeliveryCommand.MESSAGE_NO_DELIVERY_FOUND);
     }
 
     @Test

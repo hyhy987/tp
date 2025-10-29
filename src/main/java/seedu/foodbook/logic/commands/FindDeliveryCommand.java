@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.foodbook.commons.util.ToStringBuilder;
 import seedu.foodbook.logic.Messages;
+import seedu.foodbook.logic.commands.exceptions.CommandException;
 import seedu.foodbook.model.Model;
 import seedu.foodbook.model.delivery.DeliveryPredicate;
 
@@ -36,14 +37,14 @@ public class FindDeliveryCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         model.updateFilteredDeliveryList(predicate);
 
-        int numDeliveriesFound = model.getFilteredPersonList().size();
+        int numDeliveriesFound = model.getFilteredDeliveryList().size();
 
         if (numDeliveriesFound == 0) {
-            return new CommandResult(MESSAGE_NO_DELIVERY_FOUND, CommandResult.UiPanel.DELIVERIES);
+            throw new CommandException(MESSAGE_NO_DELIVERY_FOUND);
         }
         return new CommandResult(
                 String.format(Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW, model.getFilteredDeliveryList().size()),
