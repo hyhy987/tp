@@ -155,7 +155,7 @@ public class DeliveryTest {
         assertTrue(result.contains("Alice")); // Client name
         assertTrue(result.contains("NIL")); // Remarks
         assertTrue(result.contains("10.0")); // Cost
-        assertTrue(result.contains("personal")); // Tag
+        assertTrue(result.contains("Personal")); // Tag
     }
 
 }
