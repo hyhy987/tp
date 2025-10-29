@@ -1,7 +1,6 @@
 package seedu.foodbook.logic.parser;
 
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.foodbook.logic.Messages.MESSAGE_MISSING_ARGUMENT_FORMAT;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TAG;
@@ -28,7 +27,7 @@ public class FindDeliveryCommandParser implements Parser<FindDeliveryCommand> {
 
         if (trimmedArgs.isEmpty()) {
             throw new ParseException(
-                    String.format(MESSAGE_MISSING_ARGUMENT_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindDeliveryCommand.MESSAGE_USAGE));
         }
 
         ArgumentMultimap argMultimap =

@@ -21,7 +21,6 @@ public class FindDeliveryCommand extends Command {
             + "When no filters are specified, displays all deliveries.\n"
             + "Parameters: [n/CLIENT_NAME] [d/DATE] [t/TAG]...\n"
             + "Examples:\n"
-            + "- " + COMMAND_WORD + " (lists all deliveries)\n"
             + "- " + COMMAND_WORD + " n/John Doe\n"
             + "- " + COMMAND_WORD + " d/25/12/2024\n"
             + "- " + COMMAND_WORD + " t/urgent\n"
@@ -65,4 +64,3 @@ public class FindDeliveryCommand extends Command {
                 .toString();
     }
 }
-

@@ -14,7 +14,8 @@
       "date": "13/10/2025",
       "time": "1420",
       "remarks": "Should fail: non-existing client",
-      "cost": 8.0
+      "cost": 8.0,
+      "isDelivered": true
     }
   ]
 }

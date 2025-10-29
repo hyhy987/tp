@@ -62,7 +62,7 @@ public class Delivery {
      * Returns a copy of this delivery, marked as delivered
      * @return A copy of this delivery, marked as delivered
      */
-    public Delivery markAsDelivered() {
+    public Delivery copyAsDelivered() {
         return new Delivery(
                 this.getId(),
                 this.getClient(),
@@ -78,7 +78,7 @@ public class Delivery {
      * Returns a copy of this delivery, unmarked as delivered
      * @return A copy of this delivery, unmarked as delivered
      */
-    public Delivery unmarkAsDelivered() {
+    public Delivery copyAsUndelivered() {
         return new Delivery(
                 this.getId(),
                 this.getClient(),

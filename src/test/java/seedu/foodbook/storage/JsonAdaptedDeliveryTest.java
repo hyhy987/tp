@@ -38,8 +38,8 @@ public class JsonAdaptedDeliveryTest {
     @Test
     public void toModelType_isDeliveredTrue_returnsDeliveredDelivery() throws Exception {
         Delivery testDelivery = new Delivery(ALICE_DELIVERY.getId(), ALICE_DELIVERY.getClient(),
-                VALID_FUTURE_DATETIME, ALICE_DELIVERY.getRemarks(), ALICE_DELIVERY.getCost(), ALICE_DELIVERY.getTag());
-        testDelivery.markAsDelivered();
+                VALID_FUTURE_DATETIME, ALICE_DELIVERY.getRemarks(), ALICE_DELIVERY.getCost(), ALICE_DELIVERY.getTag(),
+                true);
         JsonAdaptedDelivery adaptedDelivery = new JsonAdaptedDelivery(testDelivery);
 
         FoodBook foodBook = new FoodBook();
