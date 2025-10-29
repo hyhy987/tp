@@ -154,21 +154,6 @@ public class ParserUtil {
     }
 
     /**
-     * Parses a {@code String tag} into a {@code DeliveryTag}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code deliveryTag} is invalid.
-     */
-    public static DeliveryTag parseDeliveryTag(String deliveryTag) throws ParseException {
-        requireNonNull(deliveryTag);
-        String trimmedDeliveryTag = deliveryTag.trim();
-        if (!DeliveryTag.isValidTagName(trimmedDeliveryTag)) {
-            throw new ParseException(DeliveryTag.MESSAGE_CONSTRAINT);
-        }
-        return new DeliveryTag(trimmedDeliveryTag);
-    }
-
-    /**
      * Parses date and time strings into a {@code DateTime}.
      * Leading and trailing whitespaces will be trimmed from both inputs.
      *

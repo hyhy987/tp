@@ -9,12 +9,14 @@ import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import seedu.foodbook.logic.commands.EditDeliveryCommand;
 import seedu.foodbook.logic.commands.EditDeliveryCommand.EditDeliveryDescriptor;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.DateTime;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Parses input arguments and creates a new EditDeliveryCommand object
@@ -75,9 +77,10 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
             editDeliveryDescriptor.setCost(ParserUtil.parseCost(argMultimap.getValue(PREFIX_COST).get()));
         }
 
-        if (argMultimap.getValue(PREFIX_DELIVERY_TAG).isPresent()) {
-            editDeliveryDescriptor.setTag(ParserUtil.parseDeliveryTag(argMultimap.getValue(PREFIX_DELIVERY_TAG).get()));
-        }
+        Optional<DeliveryTag> parsedTag = ParserUtil.parseOptionalDeliveryTag(
+                argMultimap.getAllValues(PREFIX_DELIVERY_TAG)
+        );
+        parsedTag.ifPresent(editDeliveryDescriptor::setTag);
 
         if (!editDeliveryDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditDeliveryCommand.MESSAGE_NOT_EDITED);

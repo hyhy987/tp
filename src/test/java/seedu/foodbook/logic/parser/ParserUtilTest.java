@@ -292,29 +292,6 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parseDeliveryTag_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> ParserUtil.parseDeliveryTag(null));
-    }
-
-    @Test
-    public void parseDeliveryTag_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryTag("urgent!@#")); // non-alphanumeric
-    }
-
-    @Test
-    public void parseDeliveryTag_validValueWithoutWhitespace_returnsDeliveryTag() throws Exception {
-        DeliveryTag expectedTag = new DeliveryTag("urgent");
-        assertEquals(expectedTag, ParserUtil.parseDeliveryTag("urgent"));
-    }
-
-    @Test
-    public void parseDeliveryTag_validValueWithWhitespace_returnsTrimmedDeliveryTag() throws Exception {
-        String tagWithWhitespace = "  urgent  ";
-        DeliveryTag expectedTag = new DeliveryTag("urgent");
-        assertEquals(expectedTag, ParserUtil.parseDeliveryTag(tagWithWhitespace));
-    }
-
-    @Test
     public void parseDeliveryId_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseDeliveryId(null));
     }
