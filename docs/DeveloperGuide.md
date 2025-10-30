@@ -322,6 +322,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 #### Data Integrity & Validation
 1. **Enforce input formats** (phone, email, unit, postal).
 2. **Prevent accidental duplicates** via soft checks (same name + phone).
+3. **Validate data consistency** before persisting changes to storage.
 
 #### Security & Privacy
 1. **Store data locally**; **no external network** by default.
