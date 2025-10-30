@@ -62,8 +62,10 @@ public class DeliveryCard extends UiPart<Region> {
         remarksHeader.setStyle("-fx-font-weight: bold;");
         remarks.getChildren().addAll(remarksHeader, new Text(delivery.getRemarks()));
 
-
+        // Cost
         cost.setText("Cost: $" + delivery.getCost().toString());
+
+        // Delivery Status
         deliveredCheckBox.setSelected(delivery.getStatus());
 
         delivery.getTag().ifPresentOrElse(t -> {
