@@ -18,13 +18,13 @@ public class FindDeliveryCommand extends Command {
     /** Usage message showing the correct format for this command. */
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds deliveries by various filters "
             + "and displays them as a list with index numbers.\n"
-            + "When no filters are specified, displays all deliveries.\n"
-            + "Parameters: [n/CLIENT_NAME] [d/DATE] [t/TAG]...\n"
+            + "At least one filter must be present. Else, throws CommandException.\n"
+            + "Parameters: [n/CLIENT_NAME] [d/DATE] [t/TAG]\n"
             + "Examples:\n"
-            + "- " + COMMAND_WORD + " n/John Doe\n"
-            + "- " + COMMAND_WORD + " d/25/12/2024\n"
-            + "- " + COMMAND_WORD + " t/urgent\n"
-            + "- " + COMMAND_WORD + " n/John d/25/12/2024 t/urgent";
+            + "- " + COMMAND_WORD + " n/John Doe (shows deliveries to John Doe)\n"
+            + "- " + COMMAND_WORD + " d/25/12/2024 (shows deliveries on 25/12/2024)\n"
+            + "- " + COMMAND_WORD + " t/urgent (shows deliveries with tag 'urgent')\n"
+            + "- " + COMMAND_WORD + " n/John Doe d/25/12/2024 t/urgent (shows deliveries with all 3 filters)";
 
     public static final String MESSAGE_NO_DELIVERY_FOUND = "Error: No delivery found.";
 
