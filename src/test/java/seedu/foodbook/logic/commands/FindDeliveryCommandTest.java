@@ -7,7 +7,7 @@ import static seedu.foodbook.logic.Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
-import java.util.Collections;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
