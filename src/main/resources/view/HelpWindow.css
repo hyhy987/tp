@@ -17,3 +17,51 @@
 #helpMessageContainer {
     -fx-background-color: derive(#1d1d1d, 20%);
 }
+
+/* Styles for command categories and text */
+.command-category {
+    -fx-text-fill: white;
+}
+
+.command-text {
+    -fx-text-fill: #d3d3d3;
+}
+
+.header {
+    -fx-text-fill: white;
+}
+
+.subheader {
+    -fx-text-fill: white;
+}
+
+/* Hyperlink styling */
+.hyperlink-text {
+    -fx-text-fill: white;
+}
+
+#userGuideLink {
+    -fx-text-fill: #6495ED;
+}
+
+#userGuideLink:hover {
+    -fx-text-fill: #87CEEB;
+    -fx-underline: true;
+}
+
+#userGuideLink:visited {
+    -fx-text-fill: #6495ED;
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .content {
+    -fx-background-color: derive(#1d1d1d, 20%);
+}

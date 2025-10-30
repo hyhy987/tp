@@ -20,13 +20,13 @@ public class AddClientCommand extends Command {
 
     public static final String COMMAND_WORD = "add_client";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a client to the food book. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a client to the food book. \n"
             + "Parameters: "
             + PREFIX_NAME + "NAME "
             + PREFIX_PHONE + "PHONE "
             + PREFIX_EMAIL + "EMAIL "
             + PREFIX_ADDRESS + "ADDRESS "
-            + "[" + PREFIX_TAG + "TAG]...\n"
+            + "[" + PREFIX_TAG + "TAG]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_PHONE + "98765432 "

@@ -29,20 +29,20 @@ public class AddDeliveryCommand extends Command {
     public static final String COMMAND_WORD = "add_delivery";
 
     /** Usage message showing the correct format for this command. */
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a delivery to the food book. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a delivery to the food book. \n"
             + "Parameters: "
             + PREFIX_NAME + "CLIENT_NAME "
             + PREFIX_DATE + "DATE "
             + PREFIX_TIME + "TIME "
             + PREFIX_REMARKS + "REMARKS "
-            + PREFIX_COST + "COST\n"
-            + "[" + PREFIX_DELIVERY_TAG + "TAG]  // at most one\n"
+            + PREFIX_COST + "COST "
+            + "[" + PREFIX_DELIVERY_TAG + "TAG]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_DATE + "25/12/2024 "
             + PREFIX_TIME + "1430 "
             + PREFIX_REMARKS + "Birthday cake delivery "
-            + PREFIX_COST + "50.00"
+            + PREFIX_COST + "50.00 "
             + PREFIX_DELIVERY_TAG + "Personal";
 
     /** Success message template when a delivery is successfully added. */

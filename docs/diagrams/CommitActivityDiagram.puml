@@ -7,7 +7,7 @@ skinparam ActivityBackgroundColor #f8f8f8
 skinparam ArrowColor #555555
 skinparam NoteBackgroundColor #fffde7
 skinparam NoteBorderColor #bdbdbd
-title FoodBook — Commit Flow with Undo (No Redo)
+title FoodBook — Commit Flow
 
 start
 :User executes a CLI command;
@@ -29,15 +29,13 @@ if ("Does the command MODIFY stored data?") then (Yes)
   :Validate inputs (formats, duplicates, existence);
   :Push current Model snapshot onto Undo history;
   :Apply change to in-memory Model;
-  :Auto-save to JSON;
-  note right
+  note left
     Commands that MODIFY (commit):
     • add_client, edit_client, delete_client
     • add_delivery, edit_delivery, delete_delivery
     • mark, unmark
     • clear
   end note
-  :Show success message;
 else (No)
   :No data change recorded;
   :Update filtered lists / UI only;
@@ -47,8 +45,8 @@ else (No)
     • find, find_delivery
     • help, exit
   end note
-  :Show result/help message;
 endif
-
+:Auto-save to JSON;
+:Show  message;
 stop
 @enduml
