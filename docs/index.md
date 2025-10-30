@@ -12,7 +12,7 @@
 
 **FoodBok is a desktop application for small businees owners to manage their deliveries.** While it has a GUI, most of the user interactions happen using a CLI (Command Line Interface).
 
-* If you are interested about developing FoodBook, the [**Developer Guide**](DeveloperGuide.md) is a good place to start.
+* If you are interested about developing FoodBook, the [**Developer Guide**](./DeveloperGuide.md) is a good place to start.
 
 
 **Acknowledgements**
