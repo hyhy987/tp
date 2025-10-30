@@ -59,8 +59,6 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
 Shows the help window with a quick reference.
 
 **Format:** `help`
-- Example:
-![Help](images/help.png)
 
 ---
 
@@ -163,10 +161,10 @@ find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]
 
 **Examples:**
 ```
-find_client n/May                   # Finds "May Chen", "Maya Restaurant", etc.
-find_client p/81234567              # Finds exact phone match
-find_client e/@acme.com             # Finds emails containing "@acme.com"
-find_client n/chen e/mayc           # Finds clients with "chen" in name OR "mayc" in email
+find_client n/May                   // Finds "May Chen", "Maya Restaurant", etc.
+find_client p/81234567              // Finds exact phone match
+find_client e/@acme.com             // Finds emails containing "@acme.com"
+find_client n/chen e/mayc           // Finds clients with "chen" in name OR "mayc" in email
 ```
 
 ![find](images/find_client.png)
@@ -181,7 +179,7 @@ find_client n/chen e/mayc           # Finds clients with "chen" in name OR "mayc
 
 ### Deleting a client : `delete_client`
 
-Permanently removes a client from FoodBook. **This action also deletes all deliveries associated with that client** - this cannot be undone except by using the `undo` command immediately after.
+Permanently removes a client from FoodBook. **This action also deletes all deliveries associated with that client** - this cannot be undone except by using the `undo` command.
 
 **Format:**
 ```
@@ -201,7 +199,7 @@ delete_client n/Acme Pte Ltd
 ![delete](images/after_delete_client.png)
 
 **Important Warnings:**
-- **This action is irreversible** (except via immediate `undo`)
+- **This action is irreversible** (except via `undo`)
 - The client name must match **exactly** (case-sensitive)
 - All associated delivery records will be permanently lost
 - Revenue calculations will be affected if you delete clients with completed deliveries
@@ -383,7 +381,7 @@ find_delivery n/Acme Pte Ltd
 
 ### Deleting a delivery : `delete_delivery`
 
-Permanently removes a specific delivery record from FoodBook using its unique ID. This action cannot be undone except by using the `undo` command immediately after deletion.
+Permanently deletes a specific delivery record from FoodBook using its unique ID. This action cannot be undone except by using the `undo` command.
 
 **Format:**
 ```
@@ -412,7 +410,7 @@ delete_delivery 203      # Deletes delivery with ID 203
 - Use `find_delivery` to locate specific deliveries first
 
 **⚠️ Important Warnings:**
-- **This action is permanent** (except via immediate `undo`)
+- **This action is permanent** (except via `undo`)
 - The delivery ID must exist - you'll get an error for invalid IDs
 - Revenue totals will be recalculated after deletion
 - The associated client remains in your system (only the delivery is removed)
@@ -488,7 +486,7 @@ Reverses the most recent change made to your FoodBook data, restoring clients an
 - Any command that modified your data
 
 **How it works:**
-- Only affects the **most recent** data-changing command
+- You may undo a maximum of **5** times consecutively.
 - Restores the complete previous state of your database
 - Works immediately after the unwanted action
 - Cannot undo multiple actions in sequence
@@ -508,9 +506,9 @@ undo                      # Restores everything
 ![Undo](images/undo.png)
 
 **Important Limitations:**
+- You may undo a maximum of **5** times consecutively.
 - **Redo is not available** - once you undo, the "undone" action is lost forever
 - Commands like `list_client` or `find_delivery` cannot be undone (they don't change data)
-- Making a new change after `undo` prevents re-doing the undone action
 
 **Best Practices:**
 - Use `undo` immediately after making a mistake
@@ -539,8 +537,7 @@ Remove all data from FoodBook.
 - Ensure you have business records elsewhere if needed for accounting/tax purposes
 
 **Recovery options:**
-- Use `undo` **immediately** after `clear` to restore everything
-- If you've made any other command after `clear`, your data is permanently lost
+- Use `undo` after `clear` to restore everything
 - Restore from external backups if available
 
 **When to use:**
