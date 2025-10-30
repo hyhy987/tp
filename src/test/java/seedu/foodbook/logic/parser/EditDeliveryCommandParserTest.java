@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import seedu.foodbook.logic.commands.EditDeliveryCommand;
 import seedu.foodbook.logic.commands.EditDeliveryCommand.EditDeliveryDescriptor;
 import seedu.foodbook.model.delivery.DateTime;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 public class EditDeliveryCommandParserTest {
 
@@ -71,17 +72,35 @@ public class EditDeliveryCommandParserTest {
                 "Date should be in d/M/yyyy format (e.g., 21/10/2003) and time in HHmm format (e.g., 1430, 0800)");
     }
 
+    // === Tag Edge Cases ===
+
+    @Test
+    public void parse_invalidTag_throwsParseException() {
+        String userInput = "1 t/urgent!@#";
+        assertParseFailure(parser, userInput, DeliveryTag.MESSAGE_CONSTRAINT);
+    }
+
+    @Test
+    public void parse_validTag_success() {
+        String userInput = "1 t/urgent";
+        EditDeliveryDescriptor descriptor = new EditDeliveryDescriptor();
+        descriptor.setTag(new DeliveryTag("urgent"));
+        EditDeliveryCommand expectedCommand = new EditDeliveryCommand(1, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
     // === Valid Cases ===
 
     @Test
     public void parse_validAllFields_success() {
-        String userInput = "1 n/Client A d/21/10/2024 tm/1430 r/Fragile c/15.50";
+        String userInput = "1 n/Client A d/21/10/2024 tm/1430 r/Fragile c/15.50 t/Personal";
 
         EditDeliveryDescriptor descriptor = new EditDeliveryDescriptor();
         descriptor.setClientName("Client A");
         descriptor.setDateTime(new DateTime("21/10/2024", "1430"));
         descriptor.setRemarks("Fragile");
         descriptor.setCost(15.50);
+        descriptor.setTag(new DeliveryTag("Personal"));
 
         EditDeliveryCommand expectedCommand = new EditDeliveryCommand(1, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);

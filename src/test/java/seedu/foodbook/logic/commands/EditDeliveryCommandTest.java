@@ -21,6 +21,7 @@ import seedu.foodbook.model.UserPrefs;
 import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.delivery.Delivery;
 import seedu.foodbook.model.person.Person;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 public class EditDeliveryCommandTest {
 
@@ -42,6 +43,7 @@ public class EditDeliveryCommandTest {
         descriptor.setDateTime(new DateTime("21/10/2029", "1830"));
         descriptor.setRemarks("Updated remarks");
         descriptor.setCost(88.80);
+        descriptor.setTag(new DeliveryTag("Personal"));
 
         EditDeliveryCommand command = new EditDeliveryCommand(target.getId(), descriptor);
 
