@@ -37,7 +37,7 @@ public final class DeliveryTag {
     public DeliveryTag(String name) {
         requireNonNull(name);
         checkArgument(isValidTagName(name), MESSAGE_CONSTRAINT);
-        this.name = name.toLowerCase();
+        this.name = name;
     }
 
     /**
@@ -71,7 +71,7 @@ public final class DeliveryTag {
      * @return the derived {@link TagKind}, never {@code null}
      */
     public TagKind getTagKind() {
-        switch (name) {
+        switch (name.toLowerCase()) {
         case "personal":
             return TagKind.PERSONAL;
         case "corporate":
