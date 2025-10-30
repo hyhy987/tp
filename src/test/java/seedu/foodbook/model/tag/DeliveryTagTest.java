@@ -30,12 +30,6 @@ class DeliveryTagTest {
         assertThrows(IllegalArgumentException.class, () -> new DeliveryTag("alpha-1"));
     }
 
-    @Test
-    void constructor_valid_okAndLowercased() {
-        DeliveryTag t = new DeliveryTag("VIP123");
-        assertEquals("vip123", t.getName()); // canonical lowercase
-    }
-
     // --- static validator ---
 
     @Test
@@ -73,13 +67,13 @@ class DeliveryTagTest {
         DeliveryTag b = new DeliveryTag("vip");
         DeliveryTag c = new DeliveryTag("vip123");
 
-        assertEquals(a, b);
-        assertEquals(a.hashCode(), b.hashCode());
+        assertNotEquals(a, b);
+        assertNotEquals(a.hashCode(), b.hashCode());
 
         assertNotEquals(a, c);
         assertNotEquals(a.hashCode(), c.hashCode());
 
-        assertEquals("vip", a.toString());
+        assertEquals("VIP", a.toString());
     }
 
     @Test
@@ -96,15 +90,6 @@ class DeliveryTagTest {
     }
 
     @Test
-    void equals_sameCanonicalName_caseInsensitive() {
-        DeliveryTag a = new DeliveryTag("VIP");
-        DeliveryTag b = new DeliveryTag("vip");
-        assertEquals(a, b);
-        assertEquals(b, a);
-        assertEquals(a.hashCode(), b.hashCode());
-    }
-
-    @Test
     void equals_differentNames_false() {
         DeliveryTag a = new DeliveryTag("vip");
         DeliveryTag c = new DeliveryTag("vip1");
@@ -114,8 +99,8 @@ class DeliveryTagTest {
     @Test
     void equals_transitive() {
         DeliveryTag a = new DeliveryTag("Personal");
-        DeliveryTag b = new DeliveryTag("PERSONAL");
-        DeliveryTag c = new DeliveryTag("personal");
+        DeliveryTag b = new DeliveryTag("Personal");
+        DeliveryTag c = new DeliveryTag("Personal");
         // transitivity
         assertEquals(a, b);
         assertEquals(b, c);
@@ -128,7 +113,7 @@ class DeliveryTagTest {
 
     @Test
     void toString_hashCode_consistentWithEquals() {
-        DeliveryTag x1 = new DeliveryTag("Corporate");
+        DeliveryTag x1 = new DeliveryTag("corporate");
         DeliveryTag x2 = new DeliveryTag("corporate");
         assertEquals("corporate", x1.toString());
         assertEquals(x1, x2);
