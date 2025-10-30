@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.foodbook.logic.Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW;
-import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.foodbook.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.foodbook.testutil.TypicalFoodBook.getTypicalFoodBook;
 
@@ -112,12 +111,17 @@ public class FindDeliveryCommandTest {
 
     @Test
     public void execute_nonMatchingFilters_noDeliveryFound() {
+        String expectedMessage = FindDeliveryCommand.MESSAGE_NO_DELIVERY_FOUND;
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.empty(), Optional.empty(), Optional.of("NonExistentClient"),
                 Optional.empty(), Optional.empty());
         FindDeliveryCommand command = new FindDeliveryCommand(predicate);
 
-        assertCommandFailure(command, model, FindDeliveryCommand.MESSAGE_NO_DELIVERY_FOUND);
+        Model expectedModel = new ModelManager(getTypicalFoodBook(), new UserPrefs());
+        expectedModel.updateFilteredDeliveryList(predicate);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(0, model.getFilteredDeliveryList().size());
     }
 
     @Test

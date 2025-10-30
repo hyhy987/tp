@@ -44,7 +44,7 @@ public class FindDeliveryCommand extends Command {
         int numDeliveriesFound = model.getFilteredDeliveryList().size();
 
         if (numDeliveriesFound == 0) {
-            throw new CommandException(MESSAGE_NO_DELIVERY_FOUND);
+            return new CommandResult(MESSAGE_NO_DELIVERY_FOUND, CommandResult.UiPanel.DELIVERIES);
         }
         return new CommandResult(
                 String.format(Messages.MESSAGE_DELIVERIES_LISTED_OVERVIEW, model.getFilteredDeliveryList().size()),
