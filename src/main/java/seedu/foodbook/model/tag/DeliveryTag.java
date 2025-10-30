@@ -18,7 +18,7 @@ import seedu.foodbook.model.delivery.TagKind;
 public final class DeliveryTag {
 
     /** Error message shown when a tag name violates {@link #VALIDATION_REGEX}. */
-    public static final String MESSAGE_CONSTRAINT = "Tag name should be alphanumeric without spaces";
+    public static final String MESSAGE_CONSTRAINT = "Tag name should be a single alphanumeric word";
 
     /** Valid tag names: one or more alphanumeric characters; no spaces, underscores, or hyphens. */
     public static final String VALIDATION_REGEX = "\\p{Alnum}+";
