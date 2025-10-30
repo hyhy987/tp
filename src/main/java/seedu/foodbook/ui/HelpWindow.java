@@ -1,10 +1,14 @@
 package seedu.foodbook.ui;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
@@ -25,7 +29,7 @@ public class HelpWindow extends UiPart<Stage> {
     private Button copyButton;
 
     @FXML
-    private Label helpMessage;
+    private Hyperlink userGuideLink;
 
     /**
      * Creates a new HelpWindow.
@@ -34,7 +38,6 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
     }
 
     /**
@@ -98,5 +101,26 @@ public class HelpWindow extends UiPart<Stage> {
         final ClipboardContent url = new ClipboardContent();
         url.putString(USERGUIDE_URL);
         clipboard.setContent(url);
+    }
+
+    /**
+     * Opens the user guide URL in the default web browser.
+     */
+    @FXML
+    private void openUserGuide() {
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(USERGUIDE_URL));
+                logger.info("Opening user guide in browser: " + USERGUIDE_URL);
+            } else {
+                logger.warning("Desktop browsing not supported on this system.");
+                // Fallback: copy URL to clipboard
+                copyUrl();
+            }
+        } catch (URISyntaxException e) {
+            logger.warning("Invalid URI syntax: " + USERGUIDE_URL);
+        } catch (IOException e) {
+            logger.warning("Failed to open browser: " + e.getMessage());
+        }
     }
 }
