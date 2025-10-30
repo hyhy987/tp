@@ -39,6 +39,7 @@ public class ParserUtilTest {
     private static final String VALID_TAG_2 = "neighbour";
     private static final String VALID_TAG_3 = "mother";
     private static final String VALID_TAG_4 = "father";
+    private static final String VALID_DELIVERY_TAG_1 = "Personal";
 
     private static final String WHITESPACE = " \t\r\n";
 

@@ -4,16 +4,19 @@ import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_DELIVERY_TAG;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_REMARKS;
 import static seedu.foodbook.logic.parser.CliSyntax.PREFIX_TIME;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import seedu.foodbook.logic.commands.EditDeliveryCommand;
 import seedu.foodbook.logic.commands.EditDeliveryCommand.EditDeliveryDescriptor;
 import seedu.foodbook.logic.parser.exceptions.ParseException;
 import seedu.foodbook.model.delivery.DateTime;
+import seedu.foodbook.model.tag.DeliveryTag;
 
 /**
  * Parses input arguments and creates a new EditDeliveryCommand object
@@ -30,7 +33,7 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                        PREFIX_REMARKS, PREFIX_COST);
+                        PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         Integer deliveryId;
 
@@ -47,7 +50,7 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_DATE, PREFIX_TIME,
-                PREFIX_REMARKS, PREFIX_COST);
+                PREFIX_REMARKS, PREFIX_COST, PREFIX_DELIVERY_TAG);
 
         EditDeliveryDescriptor editDeliveryDescriptor = new EditDeliveryDescriptor();
 
@@ -73,6 +76,11 @@ public class EditDeliveryCommandParser implements Parser<EditDeliveryCommand> {
         if (argMultimap.getValue(PREFIX_COST).isPresent()) {
             editDeliveryDescriptor.setCost(ParserUtil.parseCost(argMultimap.getValue(PREFIX_COST).get()));
         }
+
+        Optional<DeliveryTag> parsedTag = ParserUtil.parseOptionalDeliveryTag(
+                argMultimap.getAllValues(PREFIX_DELIVERY_TAG)
+        );
+        parsedTag.ifPresent(editDeliveryDescriptor::setTag);
 
         if (!editDeliveryDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditDeliveryCommand.MESSAGE_NOT_EDITED);
