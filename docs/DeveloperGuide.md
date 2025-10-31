@@ -302,6 +302,86 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 * **1a. Invalid date format**
   → System shows “Invalid date provided.” **Use case ends.**
 
+  → **Use case ends.**
+
+### UC07 – Delete a client
+
+**Precondition:** Client exists.
+
+**MSS:**
+
+1. User searches for the client:  
+   ````find_client n/John```
+2. System shows matching clients.
+3. User enters:  
+   ```delete_client John Doe```
+4. System checks for associated deliveries.
+5. System removes the client and all associated deliveries.
+6. System confirms successful deletion with count of deliveries removed.  
+   **Use case ends.**
+
+**Extensions**
+
+- **2a. No matching client**  
+  → System shows "Client not found." **Use case ends.**
+
+### UC08 – Delete a delivery
+
+**Precondition:** Delivery exists.
+
+**MSS:**
+
+1. User finds the delivery:  
+   ````````````find_delivery d/20/12/2025```
+2. System displays matching deliveries with their IDs.
+3. User enters:  
+   ```````````delete_delivery 67```
+5. System finds the delivery with matching deliveryID.
+6. System removes the delivery and confirms success.  
+   **Use case ends.**
+
+**Extensions**
+
+- **2a. No deliveries found**  
+  → System shows "No deliveries found." **Use case ends.**
+
+- **3a. Invalid delivery ID**  
+  → System shows "Delivery does not exist." **Use case ends.**
+
+### UC09 – Edit a delivery
+
+**Precondition:** Delivery exists.
+
+**MSS:**
+
+1. User searches for the delivery:  
+   ``````````find_delivery n/Alice```
+2. System displays matching deliveries with their IDs.
+3. User enters:  
+   `````````edit_delivery 67 d/21/12/2025 t/1500```
+4. System validates the new fields.
+5. System updates the delivery and confirms success.  
+   **Use case ends.**
+
+**Extensions**
+
+- **2a. No matching deliveries**  
+  → System shows "No deliveries found." **Use case ends.**
+
+- **3a. Invalid delivery ID**  
+  → System shows "Delivery does not exist." **Use case ends.**
+
+- **4a. Invalid date/time/price format**  
+  → System shows specific error message.  
+  → Use case resumes at **Step 3**.
+
+- **4b. New date is in the past**  
+  → System shows "Cannot schedule delivery in the past."  
+  → Use case resumes at **Step 3**.
+
+---
+
+
 ### Non-Functional Requirements
 
 #### Performance
