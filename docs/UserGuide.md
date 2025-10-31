@@ -183,7 +183,7 @@ Permanently removes a client from FoodBook. **This action also deletes all deliv
 
 **Format:**
 ```
-delete_client n/NAME
+delete_client NAME
 ```
 
 **What gets deleted:**
@@ -193,7 +193,7 @@ delete_client n/NAME
 
 **Example:**
 ```
-delete_client n/Acme Pte Ltd
+delete_client Acme Pte Ltd
 ```
 
 ![delete](images/after_delete_client.png)
@@ -273,7 +273,7 @@ Updates an existing delivery record by specifying the unique delivery ID. You ca
 
 **Format:**
 ```
-edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
+edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST] [t/TAG]
 ```
 
 **How it works:**
@@ -288,11 +288,12 @@ edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]
 - `d/DATE tm/TIME`: New delivery date and time (must provide both together)
 - `r/REMARKS`: Update or replace special instructions
 - `c/COST`: Change the delivery cost
+- `t/TAG`: Change the delivery tag
 
 **Examples:**
 ```
 edit_delivery 3 n/May Chen tm/1515 r/Customer requested later pickup
-edit_delivery 2 n/Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00
+edit_delivery 2 n/Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00 t/Personal
 edit_delivery 4 n/John Doe n/Jane Doe r/Address changed to office
 ```
 
@@ -634,4 +635,3 @@ Data are stored as JSON at:
 | **Help** | `help` |
 | **Clear** | `clear` |
 | **Exit** | `exit` |
-
