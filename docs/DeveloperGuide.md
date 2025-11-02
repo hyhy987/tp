@@ -416,3 +416,88 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 - **High-priority** — Tag indicating preferred servicing order.
 - **Capacity** — Daily/route limit to prevent overbooking.
 - **Validation** — Input checks (format/range/consistency) performed before saving.
+
+## Appendix: Instructions for Manual Testing
+
+> **Setup tips**  
+> • Use `clear` to start clean.  
+> • Use `undo` right after a mistake to revert recent changes.
+
+### A. Minimal Test Flow
+
+**A1. Prepare a clean state**
+1. Launch the app.
+2. Run `clear`.
+3. Confirm empty lists via `list_client`, `list_delivery`.
+
+**A2. Add 3 clients (copy-paste one per line)**
+- `add_client n/May Chen p/81234567 e/mayc@example.com a/Blk 123 #05-12, 560123 t/regular`
+- `add_client n/Acme Pte Ltd p/65123456 e/sales@acme.com a/10 Science Park Dr t/corporate`
+- `add_client n/John Doe p/60000001 e/john@demo.sg a/1 Clementi Ave 3, 129907`
+
+*Expected:* 3 client cards appear.
+
+**A3. Quick edit (spot check)**
+- `edit_client May Chen p/95551234 e/mayc@example.com a/11 Holland Dr #02-15, 270011 t/weekly`
+
+*Expected:* May’s fields update.
+
+**A4. Add deliveries**
+- `add_delivery n/May Chen d/3/11/2025 tm/1430 c/28.50 r/2x laksa, leave at reception t/Personal`
+- `add_delivery n/Acme Pte Ltd d/3/11/2025 tm/1800 c/420.00 r/Company buffet t/Corporate`
+- `add_delivery n/John Doe d/4/11/2025 tm/0900 c/15.00 r/Breakfast set`
+
+*Expected:* Each returns a **Delivery ID**; cards show delivery status with an empty checkbox.
+
+**A5. List & note IDs**
+- `list_delivery`
+
+*Expected:* All deliveries with unique IDs.
+
+**A6. Edit one delivery (replace X with an actual ID)**
+- `edit_delivery X d/11/11/2025 tm/1830 r/Customer requested later pickup`
+
+*Expected:* Delivery X updated.
+
+**A7. Filter then reset**
+- `find_delivery d/3/11/2025`
+- `list_delivery`
+
+*Expected:* Filter shows only that date; `list_delivery` resets view.
+
+### B. Mark / Unmark
+
+**B1. Toggle status (replace X)**
+- `mark X`
+- `unmark X`
+
+*Expected:* Card checks/unchecks delivery status box.
+
+### C. Revenue
+
+**C1. Baseline**
+- `list_revenue`
+
+*Expected:* Totals the cost of all deliveries.
+
+**C2. Date ranges (inclusive)**
+- `list_revenue sd/3/11/2025 ed/3/11/2025`
+- `list_revenue sd/3/11/2025 ed/12/11/2025`
+
+*Expected:* Lists revenue of only 1 day; Lists total of all delivery within time period
+
+**C4. Client / tag / status filters**
+- `list_revenue n/Acme Pte Ltd`
+- `list_revenue t/Corporate`
+- `list_revenue s/not_delivered`
+
+*Expected:* Lists revenue of delivery named Acme Pte Ltd; Lists revenue of deliveries tagged with corporate;
+Lists revenue of all uncompleted deliveries. 
+
+### D. Undo
+
+Try one destructive change then `undo`:
+1. `edit_delivery X c/999.99`
+2. `undo`
+
+*Expected:* Previous state restored (within the undo limit).
