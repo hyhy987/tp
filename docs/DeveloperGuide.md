@@ -1,6 +1,6 @@
 # FoodBook Developer Guide
 
-## **Acknowledements**
+## **Acknowledgements**
 
 This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
 
@@ -20,7 +20,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-F14a-1/tp/blob/master/src/main/java/seedu/foodbook/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-F14a-1/tp/blob/master/src/main/java/seedu/foodbook/MainApp.java) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-F14a-1/tp/blob/master/src/main/java/seedu/foodbook/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-F14a-1/tp/blob/master/src/main/java/seedu/foodbook/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -165,20 +165,20 @@ Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter,
 
 **Legend:** High (must have) – ``***``  |  Medium (nice to have) – ``**``  |  Low (later/considered) – ``*``
 
-| Priority | As a …              | I want to …                                                | So that I can …                                                          |
-|:------:|----------------------|------------------------------------------------------------|--------------------------------------------------------------------------|
-| ``***`` | food business owner  | add a client with name/phone/email/unit/postal             | keep accurate contact/address records                                    |
-| ``***`` | food business owner  | edit a client’s details                                    | keep information up-to-date                                              |
-| ``***`` | food business owner  | delete a client                                            | remove outdated entries                                                  |
-| ``***`` | food business owner  | add a delivery (date/time/remarks/price, linked to client) | schedule jobs and avoid forgetting                                       |
-| ``***`` | food business owner  | mark/unmark a delivery as completed                        | see what’s pending vs done                                               |
-| ``***`` | food business owner  | edit a delivery                                            | change delivery details dynamically                                      |
-| ``***`` | food business owner  | delete a delivery                                          | Remove dud deliveries                                                    |
-| ``***`` | food business owner  | search clients by name/phone/email                         | find a client quickly                                                    |
-| ``***`` | food business owner  | search deliveries by date, client, status                  | trackk all jobs of a a particular type (e.g. deliveries on the same day) |
-| ``**`` | food business owner  | undo a recent change                                       | recover from mistakes                                                    |
-| ``**`` | food business owner  | tag deliveries as corporate or personal                    | prioritise important deliveries                                          |
-| ``*``  | food business owner  | list revenue by varios criteria                            | analyze business patterns and growth                                     |
+| Priority | As a …              | I want to …                                                | So that I can …                                                         |
+|:------:|----------------------|------------------------------------------------------------|-------------------------------------------------------------------------|
+| ``***`` | food business owner  | add a client with name/phone/email/unit/postal             | keep accurate contact/address records                                   |
+| ``***`` | food business owner  | edit a client’s details                                    | keep information up-to-date                                             |
+| ``***`` | food business owner  | delete a client                                            | remove outdated entries                                                 |
+| ``***`` | food business owner  | add a delivery (date/time/remarks/price, linked to client) | schedule jobs and avoid forgetting                                      |
+| ``***`` | food business owner  | mark/unmark a delivery as completed                        | see what’s pending vs done                                              |
+| ``***`` | food business owner  | edit a delivery                                            | change delivery details dynamically                                     |
+| ``***`` | food business owner  | delete a delivery                                          | Remove dud deliveries                                                   |
+| ``***`` | food business owner  | search clients by name/phone/email                         | find a client quickly                                                   |
+| ``***`` | food business owner  | search deliveries by date, client, status                  | track all jobs of a a particular type (e.g. deliveries on the same day) |
+| ``**`` | food business owner  | undo a recent change                                       | recover from mistakes                                                   |
+| ``**`` | food business owner  | tag deliveries as corporate or personal                    | prioritise important deliveries                                         |
+| ``*``  | food business owner  | list revenue by various criteria                           | analyze business patterns and growth                                    |
 
 *Items marked ``*`` are considered but not required for MVP; keep if time permits.*
 
@@ -213,11 +213,9 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 **MSS**
 
-1. User searches the client:
-   ```find_client n/Alice```
+1. User searches the client.
 2. System shows matching clients.
-3. User enters:  
-   ```edit_client Alice Tan /p 98765432```
+3. User edits the client.
 4. System validates new fields and updates the client.
 5. System confirms success.  
    **Use case ends.**
