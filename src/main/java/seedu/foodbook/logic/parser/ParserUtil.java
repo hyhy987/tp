@@ -216,7 +216,7 @@ public class ParserUtil {
             if (bd.compareTo(BigDecimal.ZERO) < 0) {
                 throw new ParseException(MESSAGE_INVALID_COST);
             }
-            return bd.doubleValue(); // keep Double return type; consider storing BigDecimal for money
+            return bd.doubleValue();
         } catch (NumberFormatException ex) {
             throw new ParseException(MESSAGE_INVALID_COST);
         }
