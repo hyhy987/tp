@@ -407,6 +407,29 @@ public class ListRevenueCommandTest {
     }
 
     @Test
+    public void execute_endDateBeforeStartDate_throwsParseException() {
+        // Set end date before the start date
+        String startDate = "15/12/2025"; // Later date
+        String endDate = "15/1/2024"; // Earlier date
+
+        // Create the DeliveryPredicate for filtering deliveries by the invalid date range
+        DeliveryPredicate predicate = new DeliveryPredicate(
+                Optional.of(startDate), Optional.of(endDate), Optional.empty(), Optional.empty(), Optional.empty());
+
+        ListRevenueCommand command = new ListRevenueCommand(predicate);
+
+        // Execute the command and catch the exception
+        CommandResult result = null;
+        try {
+            result = command.execute(model);
+        } catch (Exception e) {
+            // Validate the exception message
+            assertEquals("End date cannot be before the start date.", e.getMessage());
+        }
+    }
+
+
+    @Test
     public void toStringMethod() {
         DeliveryPredicate predicate = new DeliveryPredicate(
                 Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
