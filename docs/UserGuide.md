@@ -53,6 +53,7 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
 
 ## Features
 
+<a id="viewing-help--help"></a>
 ### Viewing help : `help`
 
 Shows the help window with a quick reference.
@@ -63,6 +64,7 @@ Shows the help window with a quick reference.
 
 ## Clients
 
+<a id="listing-all-clients--list_client"></a>
 ### Listing all clients : `list_client`
 
 Displays all clients currently stored in FoodBook. Each client is shown with their name, phone number, email, address, and any tags. This provides a complete overview of your client database.
@@ -78,6 +80,7 @@ Displays all clients currently stored in FoodBook. Each client is shown with the
 
 ---
 
+<a id="adding-a-client--add_client"></a>
 ### Adding a client : `add_client`
 
 Adds a new client to FoodBook with their contact and delivery information. Each client must have a unique name - you cannot add two clients with the same name.
@@ -92,7 +95,7 @@ add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]
 - `p/PHONE`: Contact number (minimum 3 digits, numbers only)
 - `e/EMAIL`: Valid email address (must contain @ symbol)
 - `a/ADDRESS`: Full delivery address (cannot be empty)  
-- `t/TAG`: Optional label for categorization (alphanumeric only)
+- `t/TAG`: Optional label for categorization (alphanumeric only), maximum of 3 tags
 
 **Examples:**
 ```
@@ -108,9 +111,11 @@ add_client n/Acme Catering p/65123456 e/sales@acme.com a/10 Science Park Dr t/co
 - Email addresses are validated for proper format
 - Tags help organize clients but are completely optional
 - All fields except tags are required
+- There can be a maximum of 3 tags
 
 ---
 
+<a id="editing-a-client--edit_client"></a>
 ### Editing a client : `edit_client`
 
 Updates information for an existing client in FoodBook. You identify the client by their current name, then specify which fields to update. Any linked deliveries will automatically reflect the client's updated information.
@@ -143,6 +148,7 @@ edit_client May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 
 ---
 
+<a id="locating-clients--find_client"></a>
 ### Locating clients : `find_client`
 
 Searches for clients based on name keywords, phone numbers, or email addresses. You can search by any combination of these fields, and clients matching **any** of the provided criteria will be shown.
@@ -176,6 +182,7 @@ find_client n/chen e/mayc           // Finds clients with "chen" in name OR "may
 
 ---
 
+<a id="deleting-a-client--delete_client"></a>
 ### Deleting a client : `delete_client`
 
 Permanently removes a client from FoodBook. **This action also deletes all deliveries associated with that client** - this cannot be undone except by using the `undo` command.
@@ -213,9 +220,10 @@ delete_client Acme Pte Ltd
 
 ## Deliveries
 
+<a id="listing-all-deliveries--list_delivery"></a>
 ### Listing all deliveries : `list_delivery`
 
-Displays all delivery records in FoodBook, showing comprehensive information about each delivery including client details, schedule, cost, and completion status. This gives you a complete overview of your delivery operations.
+Displays all delivery records in FoodBook, showing comprehensive information about each delivery including client details, schedule, item cost, and completion status. This gives you a complete overview of your delivery operations.
 
 **Format:** `list_delivery`
 
@@ -230,6 +238,7 @@ Displays all delivery records in FoodBook, showing comprehensive information abo
 
 ---
 
+<a id="adding-a-delivery--add_delivery"></a>
 ### Adding a delivery : `add_delivery`
 
 Creates a new delivery record linked to an existing client. The client must already exist in your FoodBook before you can add a delivery for them. Each delivery is automatically assigned a unique ID for easy tracking.
@@ -266,6 +275,7 @@ add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00 r/Nil
 
 ---
 
+<a id="editing-a-delivery--edit_delivery"></a>
 ### Editing a delivery : `edit_delivery`
 
 Updates an existing delivery record by specifying the unique delivery ID. You can change any combination of delivery details.
@@ -308,6 +318,7 @@ edit_delivery 4 n/John Doe n/Jane Doe r/Address changed to office
 
 ---
 
+<a id="marking--unmarking--mark--unmark"></a>
 ### Marking / Unmarking : `mark` / `unmark`
 
 Updates the completion status of a delivery using its unique ID. Use `mark` when a delivery is completed, and `unmark` if you need to revert a delivery back to pending status.
@@ -346,6 +357,7 @@ mark 15         # Marks delivery #15 as completed
 
 ---
 
+<a id="locating-deliveries--find_delivery"></a>
 ### Locating deliveries : `find_delivery`
 
 Searches for deliveries based on client name, delivery date, or tags. You can combine multiple search criteria to narrow down results. The command uses **AND** logic - deliveries must match **all** provided criteria to be shown.
@@ -379,6 +391,7 @@ find_delivery n/Acme Pte Ltd
 
 ---
 
+<a id="deleting-a-delivery--delete_delivery"></a>
 ### Deleting a delivery : `delete_delivery`
 
 Permanently deletes a specific delivery record from FoodBook using its unique ID. This action cannot be undone except by using the `undo` command.
@@ -423,9 +436,10 @@ delete_delivery 203      # Deletes delivery with ID 203
 
 ---
 
+<a id="revenue--list_revenue"></a>
 ## Revenue : `list_revenue`
 
-Generates comprehensive revenue reports based on your delivery records. Only **completed (marked)** deliveries are included in revenue calculations. You can filter by date range, specific clients, tags, or delivery status to get detailed financial insights.
+Generates comprehensive revenue reports based on your delivery records. Both **completed (marked) and uncompleted (unmarked)** deliveries are included in revenue calculations. You can filter by date range, specific clients, tags, or delivery status to get detailed financial insights.
 
 **Format:**
 ```
@@ -437,8 +451,8 @@ list_revenue [sd/DATE] [ed/DATE] [n/CLIENT_NAME] [t/TAG] [s/delivered|not_delive
 - `ed/DATE`: End date for the revenue period (inclusive)  
 - `n/CLIENT_NAME`: Show revenue from a specific client only
 - `t/TAG`: Filter deliveries by tag (e.g., "Corporate", "Personal")
-- `s/delivered`: Show only completed deliveries (default behavior)
-- `s/not_delivered`: Show only pending deliveries (useful for pending revenue)
+- `s/delivered`: Show only completed deliveries 
+- `s/not_delivered`: Show only pending deliveries 
 
 **Date Range Behavior:**
 - No dates: Shows all-time revenue
@@ -448,9 +462,8 @@ list_revenue [sd/DATE] [ed/DATE] [n/CLIENT_NAME] [t/TAG] [s/delivered|not_delive
 
 **Examples:**
 ```
-list_revenue                                    # All-time total revenue
+list_revenue                                    
 list_revenue sd/1/10/2025 ed/31/10/2025        # October 2025 revenue
-list_revenue n/Acme Pte Ltd                    # Revenue from Acme Pte Ltd only
 list_revenue sd/28/10/2025 s/delivered         # Completed deliveries on Oct 28
 list_revenue t/Corporate sd/1/11/2025 ed/30/11/2025  # Corporate deliveries in November
 list_revenue s/not_delivered                   # Pending revenue (undelivered orders)
@@ -465,13 +478,12 @@ list_revenue s/not_delivered                   # Pending revenue (undelivered or
 - Breakdown by completion status if relevant
 
 **Important Notes:**
-- **Only completed deliveries** contribute to revenue (use `mark` command first)
-- Revenue calculations update automatically when deliveries are marked/unmarked
 - Use date filters for monthly, weekly, or daily revenue reports
 - Combine filters for detailed analysis (e.g., corporate clients in a specific month)
 
 ---
 
+<a id="undo--undo"></a>
 ## Undo : `undo`
 
 Reverses the most recent change made to your FoodBook data, restoring clients and deliveries to their previous state. This is your safety net for accidental edits, deletions, or unwanted changes.
@@ -493,7 +505,7 @@ Reverses the most recent change made to your FoodBook data, restoring clients an
 
 **Examples:**
 ```
-delete_client n/John Doe     # Accidentally deleted client
+delete_client John Doe     # Accidentally deleted client
 undo                        # Restores John Doe and all his deliveries
 
 edit_delivery May Chen c/999.99    # Wrong cost entered
@@ -518,6 +530,7 @@ undo                      # Restores everything
 
 ---
 
+<a id="clearing-all-entries--clear"></a>
 ## Clearing all entries : `clear`
 
 Remove all data from FoodBook.
@@ -548,6 +561,7 @@ Remove all data from FoodBook.
 
 ---
 
+<a id="exiting-the-program--exit"></a>
 ## Exiting the program : `exit`
 
 Safely closes FoodBook and terminates the application. All your data is automatically saved before the program exits, so you don't need to worry about losing any information.
@@ -621,10 +635,10 @@ Data are stored as JSON at:
 | **List Clients** | `list_client` |
 | **Add Client** | `add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]` |
 | **Edit Client** | `edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]` |
-| **Delete Client** | `delete_client n/NAME` |
+| **Delete Client** | `delete_client NAME` |
 | **Find Client** | `find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]` |
 | **List Deliveries** | `list_delivery` |
-| **Add Delivery** | `add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST [r/REMARKS] [t/TAG]` |
+| **Add Delivery** | `add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]` |
 | **Edit Delivery** | `edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]` |
 | **Delete Delivery** | `delete_delivery ID` |
 | **Mark / Unmark** | `mark ID` / `unmark ID` |

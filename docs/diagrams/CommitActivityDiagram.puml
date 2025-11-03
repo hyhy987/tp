@@ -13,19 +13,20 @@ start
 :User executes a CLI command;
 
 ' 1) Handle UNDO explicitly (no Redo feature in app)
-if ("Is the command 'undo'?") then (Yes)
-  if ("Undo history not empty?") then (Yes)
+if () then ([command = 'undo'])
+  if () then ([Undo History Not Empty])
     :Restore previous Model snapshot\n(from Undo history);
     :Auto-save to JSON;
     :Show 'Command undone: [command]';
-  else (No)
+  else ([else])
     :Show 'You cannot undo any further';
   endif
   stop
+  else ([else])
 endif
 
 ' 2) For non-undo commands, check if they modify data
-if ("Does the command MODIFY stored data?") then (Yes)
+if () then ([Modifies Stored Data])
   :Validate inputs (formats, duplicates, existence);
   :Push current Model snapshot onto Undo history;
   :Apply change to in-memory Model;
@@ -36,7 +37,7 @@ if ("Does the command MODIFY stored data?") then (Yes)
     • mark, unmark
     • clear
   end note
-else (No)
+else ([else])
   :No data change recorded;
   :Update filtered lists / UI only;
   note right

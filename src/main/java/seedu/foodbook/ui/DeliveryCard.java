@@ -22,6 +22,7 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML private Label client;
     @FXML private TextFlow deliveryId;
     @FXML private TextFlow datetime;
+    @FXML private TextFlow address;
     @FXML private TextFlow remarks;
     @FXML private Label cost;
     @FXML private Label tagLabel;
@@ -57,13 +58,18 @@ public class DeliveryCard extends UiPart<Region> {
 
         datetime.getChildren().addAll(datetimeHeader, datetimeValue);
 
+        // Address
+        Text addressHeader = new Text("Address: \n");
+        addressHeader.setStyle("-fx-font-weight: bold;");
+        address.getChildren().addAll(addressHeader, new Text(delivery.getClient().getAddress().value));
+
         // Remarks
         Text remarksHeader = new Text("Remarks: \n");
         remarksHeader.setStyle("-fx-font-weight: bold;");
         remarks.getChildren().addAll(remarksHeader, new Text(delivery.getRemarks()));
 
         // Cost
-        cost.setText("Cost: $" + delivery.getCost().toString());
+        cost.setText("Cost: $" + String.format("%.2f", delivery.getCost()));
 
         // Delivery Status
         deliveredCheckBox.setSelected(delivery.getStatus());

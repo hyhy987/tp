@@ -61,15 +61,23 @@ public class EditDeliveryCommandParserTest {
     @Test
     public void parse_invalidDateFormat_throwsParseException() {
         String userInput = "1 d/2024-10-21 tm/1430";
-        assertParseFailure(parser, userInput,
-                "Date should be in d/M/yyyy format (e.g., 21/10/2003) and time in HHmm format (e.g., 1430, 0800)");
+        assertParseFailure(parser, userInput, DateTime.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_impossibleDateFormat_throwsParseException() {
+        String userInput = "1 d/32/12/2025 tm/1430";
+        assertParseFailure(parser, userInput, DateTime.MESSAGE_IMPOSSIBLE);
+
+        userInput = "1 d/30/12/2025 tm/2600";
+        assertParseFailure(parser, userInput, DateTime.MESSAGE_IMPOSSIBLE);
     }
 
     @Test
     public void parse_invalidTimeFormat_throwsParseException() {
         String userInput = "1 d/21/10/2024 tm/14:30";
         assertParseFailure(parser, userInput,
-                "Date should be in d/M/yyyy format (e.g., 21/10/2003) and time in HHmm format (e.g., 1430, 0800)");
+                DateTime.MESSAGE_CONSTRAINTS);
     }
 
     // === Tag Edge Cases ===
