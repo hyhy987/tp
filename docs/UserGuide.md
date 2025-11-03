@@ -356,7 +356,7 @@ find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]
 ```
 
 **Search Behavior:**
-- `n/CLIENT_NAME`: Searches for deliveries by exact client name match (case-sensitive)
+- `n/CLIENT_NAME`: Searches for deliveries by client name match (partial match, case-insensitive)
 - `d/DATE`: Finds deliveries on a specific date in `d/M/yyyy` format  
 - `t/TAG`: Searches for deliveries with matching tags (partial match, case-insensitive)
 - **At least one** search parameter must be provided
@@ -371,7 +371,7 @@ find_delivery n/Acme Pte Ltd
 ![Find Delivery](images/find_delivery.png)
 
 **Search Tips:**
-- Client name searches require **exact** matches (case-sensitive)
+- Client name searches are case-insensitive and allow partial matches
 - Date searches show deliveries for that specific day only
 - Tag searches are case-insensitive and allow partial matches
 - Use `list_delivery` to see all deliveries if your search returns no results
