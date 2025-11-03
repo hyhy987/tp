@@ -353,3 +353,24 @@
     -fx-font-weight: bold;
 }
 
+/* Dark-green delivered tick */
+.check-box#deliveredCheckBox .box {
+    -fx-background-color: white;
+    -fx-border-color: #166534;          /* dark green border */
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+.check-box#deliveredCheckBox:selected .box {
+    -fx-border-color: #166534;          /* keep border dark when selected */
+}
+
+/* The tick (mark) itself — make it dark green */
+.check-box#deliveredCheckBox:selected .box .mark {
+    -fx-background-color: #15803d;      /* darker green tick */
+}
+
+/* Keep it fully visible even though the control is disabled */
+.check-box#deliveredCheckBox:disabled {
+    -fx-opacity: 1.0;
+}
