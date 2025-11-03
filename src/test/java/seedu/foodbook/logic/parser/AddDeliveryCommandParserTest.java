@@ -196,7 +196,7 @@ public class AddDeliveryCommandParserTest {
                         + TIME_DESC_BOB_DELIVERY
                         + REMARKS_DESC_BOB_DELIVERY
                         + COST_DESC_BOB_DELIVERY,
-                DateTime.MESSAGE_CONSTRAINTS);
+                DateTime.MESSAGE_IMPOSSIBLE);
 
         // invalid date
         assertParseFailure(parser,
@@ -205,7 +205,6 @@ public class AddDeliveryCommandParserTest {
                         + INVALID_TIME_DESC
                         + REMARKS_DESC_BOB_DELIVERY
                         + COST_DESC_BOB_DELIVERY,
-                DateTime.MESSAGE_CONSTRAINTS);
-
+                DateTime.MESSAGE_IMPOSSIBLE);
     }
 }
