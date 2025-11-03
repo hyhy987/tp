@@ -85,7 +85,13 @@
 .tab:selected { -fx-background-color: -color-accent-weak; }
 
 /* ---- Lists & cards ---- */
-.list-view, .scroll-pane, .scroll-pane .viewport { -fx-background-color: transparent; }
+.scroll-pane, .scroll-pane .viewport { -fx-background-color: transparent; }
+
+.list-view {
+    -fx-control-inner-background: white;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
 
 .list-cell:filled {
     -fx-background-color: transparent;
@@ -102,6 +108,10 @@
 .list-cell:filled:selected {
     -fx-background-color: linear-gradient(to bottom, #D3E2EE, #CDE6E5); /* blue→teal */
     -fx-border-color: derive(-color-accent, -35%);
+}
+
+.list-cell:empty {
+    -fx-background-color: white;
 }
 
 /* Common card wrapper */
