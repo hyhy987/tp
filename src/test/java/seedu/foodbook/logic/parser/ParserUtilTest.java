@@ -17,6 +17,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.foodbook.logic.parser.exceptions.ParseException;
+import seedu.foodbook.model.delivery.DateTime;
 import seedu.foodbook.model.person.Address;
 import seedu.foodbook.model.person.Email;
 import seedu.foodbook.model.person.Name;
@@ -155,6 +156,102 @@ public class ParserUtilTest {
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
     }
 
+    @Test
+    public void parseCost_scientificNotation_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1e3"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1E3"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("2e-2"));
+    }
+
+    @Test
+    public void parseCost_suffixesOrTrailingGarbage_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("20.00f"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34F"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34d"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34D"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34L"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34$"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34abc"));
+    }
+
+    @Test
+    public void parseCost_plusSignOrNegativeZero_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("+1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("+0.99"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("-0"));
+    }
+
+    @Test
+    public void parseCost_missingOrExtraDecimalDigits_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("10."));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(".50"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1.234"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1.230"));
+    }
+
+    @Test
+    public void parseCost_multipleDotsOrMalformed_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12..34"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12.34.56"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("."));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost(".."));
+    }
+
+    @Test
+    public void parseCost_internalSpacesOrSeparators_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1 0"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12 .34"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("1,234.56"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12,34"));
+    }
+
+    @Test
+    public void parseCost_leadingZerosAccepted_returnsDouble() throws Exception {
+        assertEquals(5.0, ParserUtil.parseCost("05"));
+        assertEquals(12.34, ParserUtil.parseCost("00012.34"));
+        assertEquals(0.5, ParserUtil.parseCost("00.50"));
+        assertEquals(0.0, ParserUtil.parseCost("000"));
+        assertEquals(0.0, ParserUtil.parseCost("000.00"));
+        assertEquals(0.1, ParserUtil.parseCost("000.10"));
+    }
+
+    @Test
+    public void parseCost_zeroVariants_accepted() throws Exception {
+        assertEquals(0.0, ParserUtil.parseCost("0"));
+        assertEquals(0.0, ParserUtil.parseCost("0.0"));
+        assertEquals(0.0, ParserUtil.parseCost("0.00"));
+    }
+
+    @Test
+    public void parseCost_upToTwoDecimalPlaces_accepted() throws Exception {
+        assertEquals(1.0, ParserUtil.parseCost("1"));
+        assertEquals(1.2, ParserUtil.parseCost("1.2"));
+        assertEquals(1.23, ParserUtil.parseCost("1.23"));
+        assertEquals(99.99, ParserUtil.parseCost("99.99"));
+    }
+
+    @Test
+    public void parseCost_trimmingWhitespace_stillAccepted() throws Exception {
+        assertEquals(7.0, ParserUtil.parseCost(" \t\n7.00\r "));
+        assertEquals(12.3, ParserUtil.parseCost("  12.3  "));
+    }
+
+    @Test
+    public void parseCost_largeButValidNumbers_accepted() throws Exception {
+        assertEquals(1234567890.0, ParserUtil.parseCost("1234567890"));
+        assertEquals(1234567890.12, ParserUtil.parseCost("1234567890.12"));
+    }
+
+    @Test
+    public void parseCost_localeCommaDecimal_rejected() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseCost("12,50"));
+    }
+
+    @Test
+    public void parseCost_leadingZeroThenDecimalsAccepted_onlyWhenZero() throws Exception {
+        // "0.xx" is fine, but "00.xx" already covered as reject
+        assertEquals(0.75, ParserUtil.parseCost("0.75"));
+    }
 
     @Test
     public void parseCost_validInput_success() throws Exception {
@@ -371,6 +468,145 @@ public class ParserUtilTest {
     @Test
     void parseOptionalDeliveryTag_invalid_throws() {
         assertThrows(ParseException.class, () -> ParserUtil.parseOptionalDeliveryTag(List.of("bad tag")));
+    }
+
+    @Test
+    public void parseDateTime_nullDate_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDateTime(null, "1200"));
+    }
+
+    @Test
+    public void parseDateTime_nullTime_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDateTime("1/1/2020", null));
+    }
+
+    @Test
+    public void parseDateTime_blankOrWhitespace_throwsParseException() {
+        // blank date
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("   ", "1200"));
+
+        // blank time
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", ""));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "   "));
+    }
+
+    @Test
+    public void parseDateTime_validInput_success() throws Exception {
+        DateTime expected1 = new DateTime("1/1/2020", "0905");
+        assertEquals(expected1.toString(), ParserUtil.parseDateTime("1/1/2020", "0905").toString());
+
+        DateTime expected2 = new DateTime("31/12/2021", "2359");
+        assertEquals(expected2.toString(), ParserUtil.parseDateTime("31/12/2021", "2359").toString());
+    }
+
+    @Test
+    public void parseDateTime_trimmingWhitespace_returnsTrimmed() throws Exception {
+        DateTime out = ParserUtil.parseDateTime(WHITESPACE + "1/1/2020" + WHITESPACE,
+                WHITESPACE + "0905" + WHITESPACE);
+        assertEquals("1 January 2020 0905hrs", out.toString());
+    }
+
+    @Test
+    public void parseDateTime_canonicalization_visibleInToString() throws Exception {
+        DateTime out = ParserUtil.parseDateTime("01/01/2020", "0000");
+        assertEquals("1 January 2020 0000hrs", out.toString());
+    }
+
+    @Test
+    public void parseDateTime_wrongFormat_throwsParseException() {
+        // date shape/separators
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1-1-2020", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("2019/12/01", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/20", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("ab/cd/efgh", "1200"));
+
+        // time shape
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "12:00"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "900"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "120"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "12000"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "1O00")); // letter O
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "OO00"));
+
+        // internal spaces inside date -> still format error
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1 /1/2020", "0900"));
+    }
+
+    @Test
+    public void parseDateTime_impossibleDate_throwsParseException() {
+        // out-of-range day/month that still matches format
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("32/01/2020", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("31/11/2021", "1200")); // Nov has 30
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("00/01/2020", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("01/00/2020", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("01/13/2020", "1200"));
+
+        // leap-year negatives
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("29/02/2019", "1200"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("29/02/1900", "1200")); // 1900 not leap
+    }
+
+    @Test
+    public void parseDateTime_impossibleTime_throwsParseException() {
+        // HHmm outside 0000..2359
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "2400"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "2360"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "2460"));
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "9999"));
+    }
+
+    @Test
+    public void parseDateTime_boundaryTimes_success() throws Exception {
+        assertEquals("2 January 2020 0000hrs",
+                ParserUtil.parseDateTime("2/1/2020", "0000").toString());
+        assertEquals("2 January 2020 2359hrs",
+                ParserUtil.parseDateTime("2/1/2020", "2359").toString());
+    }
+
+    @Test
+    public void parseDateTime_leapYearPositives_success() throws Exception {
+        assertEquals("29 February 2020 0700hrs",
+                ParserUtil.parseDateTime("29/02/2020", "0700").toString());
+        assertEquals("29 February 2000 0700hrs",
+                ParserUtil.parseDateTime("29/02/2000", "0700").toString()); // 2000 is leap
+    }
+
+    @Test
+    public void parseDateTime_formatVsImpossible_messageSeparation() {
+        // format error -> MESSAGE_CONSTRAINTS
+        assertThrows(ParseException.class, DateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("1/1/2020", "23:59"));
+
+        // impossible value (but formatted correctly) -> MESSAGE_IMPOSSIBLE
+        assertThrows(ParseException.class, DateTime.MESSAGE_IMPOSSIBLE, ()
+                -> ParserUtil.parseDateTime("31/11/2021", "1200"));
     }
 
 }

@@ -3,10 +3,12 @@ package seedu.foodbook.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.foodbook.model.tag.Tag.MAX_TAGS;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import seedu.foodbook.commons.core.index.Index;
 import seedu.foodbook.commons.util.StringUtil;
@@ -26,7 +28,10 @@ public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_COST =
-            "Cost must be a non-negative number (e.g., 0, 3, 12.50).";
+            "Cost must be a non-negative number, with up to 2 decimal places (e.g., 0, 3, 12.50).";
+
+    private static final Pattern COST_PATTERN =
+            Pattern.compile("^\\d+(?:\\.\\d{1,2})?$"); // e.g. 0, 12, 12.3, 12.34
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
@@ -168,8 +173,15 @@ public class ParserUtil {
         requireNonNull(time);
         String trimmedDate = date.trim();
         String trimmedTime = time.trim();
-        if (!DateTime.isValidDateTime(trimmedDate, trimmedTime)) {
+
+        // If wrong format is provided
+        if (!DateTime.hasCorrectFormat(trimmedDate, trimmedTime)) {
             throw new ParseException(DateTime.MESSAGE_CONSTRAINTS);
+        }
+
+        // Impossible date/time
+        if (!DateTime.isValidDateTime(trimmedDate, trimmedTime)) {
+            throw new ParseException(DateTime.MESSAGE_IMPOSSIBLE);
         }
         return new DateTime(trimmedDate, trimmedTime);
     }
@@ -192,12 +204,19 @@ public class ParserUtil {
         if (s.isEmpty()) {
             throw new ParseException(MESSAGE_INVALID_COST);
         }
+
+        // Reject 1e3, 20.00f, 1.222, 10., etc.
+        if (!COST_PATTERN.matcher(s).matches()) {
+            throw new ParseException(MESSAGE_INVALID_COST);
+        }
+
+        // Safe numeric parse (avoids floating quirks while parsing)
         try {
-            double value = Double.parseDouble(s);
-            if (Double.isNaN(value) || Double.isInfinite(value) || value < 0) {
+            BigDecimal bd = new BigDecimal(s);
+            if (bd.compareTo(BigDecimal.ZERO) < 0) {
                 throw new ParseException(MESSAGE_INVALID_COST);
             }
-            return value;
+            return bd.doubleValue();
         } catch (NumberFormatException ex) {
             throw new ParseException(MESSAGE_INVALID_COST);
         }

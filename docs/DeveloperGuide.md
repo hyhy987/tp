@@ -175,7 +175,7 @@ Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter,
 | ``***`` | food business owner  | edit a delivery                                            | change delivery details dynamically                                     |
 | ``***`` | food business owner  | delete a delivery                                          | Remove dud deliveries                                                   |
 | ``***`` | food business owner  | search clients by name/phone/email                         | find a client quickly                                                   |
-| ``***`` | food business owner  | search deliveries by date, client, status                  | track all jobs of a a particular type (e.g. deliveries on the same day) |
+| ``***`` | food business owner  | search deliveries by date, client, tag                     | track all jobs of a a particular type (e.g. deliveries on the same day) |
 | ``**`` | food business owner  | undo a recent change                                       | recover from mistakes                                                   |
 | ``**`` | food business owner  | tag deliveries as corporate or personal                    | prioritise important deliveries                                         |
 | ``*``  | food business owner  | list revenue by various criteria                           | analyze business patterns and growth                                    |
@@ -186,196 +186,212 @@ Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter,
 
 _(For all use cases below, the System is FoodBook and the Actor is the user unless specified otherwise.)_
 
+----------
+
 ### UC01 – Add a client
 
-**MSS:**
+**Goal:** Create a new client record.
 
-1. User enters:  
-   ```add_client n/NAME p/PHONE e/EMAIL a/ADDRESS```
-2. System saves the client.
-4. System confirms success.  
-   **Use case ends.**
+**Main Success Scenario (MSS):**
 
-**Extensions**
+1.  User provides the required client details.
 
-- **2a. Any field invalid**  
-  → 2a1. System shows specific error (e.g., “Phone numbers should only contain numbers, and it should be at least 3 digits long.”)  
-  → Use case resumes at **Step 1**.
+2.  System validates the details and saves the client.
 
-- **2a. Duplicate Client found**  
-  → 3a1. System warns “This person already exists in the food book”  
-  → 3a2. User cancels or proceeds with a different name/phone.  
-  → Use case resumes at **Step 1**.
+3.  System confirms success. **Use case ends.**
+
+
+**Extensions:**
+
+-   **1a. Any field is invalid** → System shows a specific error. → Use case resumes at Step 1.
+
+-   **1b. Duplicate client detected** → System warns that a similar client already exists and offers options (cancel or modify details). → Use case resumes at Step 1.
+
+
+----------
 
 ### UC02 – Edit a client
 
-**Precondition:** Client exists.
+**Precondition:** Target client exists.  
+**Goal:** Update an existing client’s details.
 
-**MSS**
+**MSS:**
 
-1. User searches the client.
-2. System shows matching clients.
-3. User edits the client.
-4. System validates new fields and updates the client.
-5. System confirms success.  
-   **Use case ends.**
+1.  User selects the target client.
 
-**Extensions**
+2.  System shows current client details.
 
-- **2a. No matching client**  
-  → System shows “Client not found.” **Use case ends.**
+3.  User provides updated details.
+
+4.  System validates and updates the record.
+
+5.  System confirms success. **Use case ends.**
+
+
+**Extensions:**
+
+-   **1a. No such client** → System informs “Client not found.” **Use case ends.**
+
+-   **4a. Updated details are invalid or conflict** → System shows a specific error. → Use case resumes at Step 3.
+
+
+----------
 
 ### UC03 – Add a delivery for a client
 
-**Precondition:** Target client exists.
+**Precondition:** Target client exists.  
+**Goal:** Create a new delivery linked to a client.
 
-**MSS**
+**MSS:**
 
-1. User confirms client (e.g., ```find_client /n Alice```)
-   and notes the exact name.
-2. User enters:  
-   ```add_delivery n/Alice Tan d/20/09/2025 t/1300 r/3x Bento c/7```
-3. System creates delivery with a unique ID.
-5. System confirms success and displays the new delivery ID.  
-   **Use case ends.**
+1.  User selects the client and provides delivery details (date/time, items/remarks, cost).
 
-**Extensions**
+2.  System validates details and creates the delivery with a unique identifier.
 
-- **2a. Client does not exist**  
-  → System shows “Client does not exist.” **Use case ends.**
+3.  System confirms success and displays the delivery identifier. **Use case ends.**
 
-- **3a. Date in the past / invalid time / invalid price**  
-  → System shows specific error and does not create the delivery.  
-  → Use case resumes at **Step 2**.
+
+**Extensions:**
+
+-   **1a. Client does not exist** → System informs “Client not found.” **Use case ends.**
+
+-   **1b. Invalid date/time/cost** → System shows a specific error. → Use case resumes at Step 1.
+
+
+----------
 
 ### UC04 – View and mark deliveries for a day
 
-**MSS**
+**Goal:** Review deliveries on a date and mark completion.
 
-1. User enters:  
-   ```find_delivery d/20/12/2025```
-2. System lists all deliveries on that date with IDs and status.
-3. User enters to mark a delivery completed:
-   ```mark 67```
-4. System updates status and confirms.  
-   **Use case ends.**
+**MSS:**
 
-**Extensions**
+1.  User specifies a date to view deliveries.
 
-- **1a. Invalid date format**  
-  → System shows “Invalid date provided.” **Use case ends.**
+2.  System lists deliveries on that date with identifiers and statuses.
 
-- **2a. No deliveries found**  
-  → System shows “No deliveries found.” **Use case ends.**
+3.  User selects a delivery to mark as completed.
 
-- **3a. Delivery ID not found**  
-  → System shows “Delivery does not exist.” **Use case ends.**
+4.  System updates the status and confirms. **Use case ends.**
+
+
+**Extensions:**
+
+-   **1a. Invalid date** → System shows “Invalid date provided.” **Use case ends.**
+
+-   **2a. No deliveries on that date** → System shows “No deliveries found.” **Use case ends.**
+
+-   **3a. Delivery not found (stale list/ID mismatch)** → System shows “Delivery does not exist.” **Use case ends.**
+
+
+----------
 
 ### UC05 – Undo last change
 
-**MSS**
+**Precondition:** At least one reversible change exists.  
+**Goal:** Revert the most recent change.
 
-1. A change has been made earlier (e.g. user marked a delivery completed):
-   `mark 67`
-2. User enters:
-   `undo`
-3. System reverts the last change (e.g. delivery 67 set back to “pending”) and confirms.  
-   **Use case ends.**
+**MSS:**
 
-**Extensions**
+1.  User requests to undo the most recent change.
 
-* **2a. Nothing to undo or Undo history limit reached**
-  → System shows “Nothing to undo.” **Use case ends.**
+2.  System reverts the change (e.g., status back to pending, record restored) and confirms. **Use case ends.**
+
+
+**Extensions:**
+
+-   **1a. Nothing to undo / history limit reached** → System shows “You cannot undo any further.” **Use case ends.**
+
+
+----------
 
 ### UC06 – List revenue for a period
 
-**MSS**
+**Goal:** View revenue aggregated for a date range.
 
-1. User enters either a range query: `list_revenue sd/01/12/2025 ed/31/12/2025`
-2. System calculates revenue from deliveries in the specified period and displays it for the user.  
-**Use case ends.**
+**MSS:**
 
-**Extensions**
+1.  User specifies a start date and an end date.
 
-* **1a. Invalid date format**
-  → System shows “Invalid date provided.” **Use case ends.**
+2.  System calculates and displays revenue for deliveries within the period. **Use case ends.**
 
-  → **Use case ends.**
+
+**Extensions:**
+
+-   **1a. Invalid date(s) or start after end** → System shows “Invalid date provided.” **Use case ends.**
+
+
+----------
 
 ### UC07 – Delete a client
 
-**Precondition:** Client exists.
+**Precondition:** Target client exists.  
+**Goal:** Remove a client (and related deliveries).
 
 **MSS:**
 
-1. User searches for the client:  
-   ````find_client n/John```
-2. System shows matching clients.
-3. User enters:  
-   ```delete_client John Doe```
-4. System checks for associated deliveries.
-5. System removes the client and all associated deliveries.
-6. System confirms successful deletion with count of deliveries removed.  
-   **Use case ends.**
+1.  User selects the client to delete.
 
-**Extensions**
+2.  System identifies any associated deliveries.
 
-- **2a. No matching client**  
-  → System shows "Client not found." **Use case ends.**
+3.  System deletes the client and all associated deliveries.
+
+4.  System confirms deletion and indicates number of deliveries removed. **Use case ends.**
+
+
+**Extensions:**
+
+-   **1a. Client not found** → System shows “Client not found.” **Use case ends.**
+
+-   **1b. User cancels at confirmation** → System aborts deletion. **Use case ends.**
+
+
+----------
 
 ### UC08 – Delete a delivery
 
-**Precondition:** Delivery exists.
+**Precondition:** Target delivery exists.  
+**Goal:** Remove a delivery.
 
 **MSS:**
 
-1. User finds the delivery:  
-   ````````````find_delivery d/20/12/2025```
-2. System displays matching deliveries with their IDs.
-3. User enters:  
-   ```````````delete_delivery 67```
-5. System finds the delivery with matching deliveryID.
-6. System removes the delivery and confirms success.  
-   **Use case ends.**
+1.  User selects the delivery to delete.
 
-**Extensions**
+2.  System removes the delivery.
 
-- **2a. No deliveries found**  
-  → System shows "No deliveries found." **Use case ends.**
+3.  System confirms success. **Use case ends.**
 
-- **3a. Invalid delivery ID**  
-  → System shows "Delivery does not exist." **Use case ends.**
+
+**Extensions:**
+
+-   **1a. Delivery not found** → System shows “No delivery found.” **Use case ends.**
+
+
+----------
 
 ### UC09 – Edit a delivery
 
-**Precondition:** Delivery exists.
+**Precondition:** Target delivery exists.  
+**Goal:** Update delivery details.
 
 **MSS:**
 
-1. User searches for the delivery:  
-   ``````````find_delivery n/Alice```
-2. System displays matching deliveries with their IDs.
-3. User enters:  
-   `````````edit_delivery 67 d/21/12/2025 t/1500```
-4. System validates the new fields.
-5. System updates the delivery and confirms success.  
-   **Use case ends.**
+1.  User selects the delivery to edit.
 
-**Extensions**
+2.  System shows current delivery details.
 
-- **2a. No matching deliveries**  
-  → System shows "No deliveries found." **Use case ends.**
+3.  User provides updated details (e.g., date/time, remarks, cost).
 
-- **3a. Invalid delivery ID**  
-  → System shows "Delivery does not exist." **Use case ends.**
+4.  System validates and updates the delivery.
 
-- **4a. Invalid date/time/price format**  
-  → System shows specific error message.  
-  → Use case resumes at **Step 3**.
+5.  System confirms success. **Use case ends.**
 
-- **4b. New date is in the past**  
-  → System shows "Cannot schedule delivery in the past."  
-  → Use case resumes at **Step 3**.
+
+**Extensions:**
+
+-   **1a. Delivery not found** → System shows “Delivery does not exist.” **Use case ends.**
+
+-   **4a. Invalid date/time/cost** → System shows a specific error. → Use case resumes at Step 3.
 
 ---
 
@@ -416,6 +432,12 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 - **High-priority** — Tag indicating preferred servicing order.
 - **Capacity** — Daily/route limit to prevent overbooking.
 - **Validation** — Input checks (format/range/consistency) performed before saving.
+- **Micro-F&B food owners:** Owner-run food businesses with 1–5 staff
+    (hawker stalls, home kitchens, kiosks, single cafés), doing roughly SGD 5k–50k/month, 10–150 orders/day, and 50–600
+    active regulars. They use lightweight tools (POS/QR pay, spreadsheets, messaging), keep small, fast-turn inventory, and
+    market locally/social-first.
+  - Primary needs: cash-flow visibility, repeat-customer focus, quick turnaround, and simple,
+    mobile-friendly workflows (not heavy multi-store/analytics).
 
 ## Appendix: Instructions for Manual Testing
 
