@@ -48,7 +48,6 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
    - `list_client` — list all clients
    - `list_delivery` — list all deliveries
 
-**Tip:** FoodBook auto-saves after every successful command.
 
 ---
 
@@ -123,7 +122,7 @@ Updates information for an existing client in FoodBook. You identify the client 
 
 **Format:**
 ```
-edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
+edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 ```
 
 **How it works:**
@@ -134,7 +133,7 @@ edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 
 **Example:**
 ```
-edit_client n/May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
+edit_client May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 ```
 
 ![List](images/edit_client.png)
@@ -195,7 +194,7 @@ delete_client NAME
 
 **What gets deleted:**
 - The client's complete record (name, phone, email, address, tags)
-- **All past and future deliveries** linked to this client
+- **All existing deliveries** linked to this client
 - All revenue records from those deliveries
 
 **Example:**
@@ -215,6 +214,7 @@ delete_client Acme Pte Ltd
 **Before deleting:**
 - Double-check the client name spelling and capitalization
 - Consider if you want to keep delivery history for business records
+- Use `find_delivery n/CLIENT_NAME` to see what deliveries will be lost
 
 ---
 
@@ -256,9 +256,11 @@ add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]
 - `r/REMARKS`: Special instructions or notes
 - `t/TAG`: Optional label for categorization (alphanumeric only)
 
-**Example:**
+**Examples:**
 ```
+add_delivery n/May Chen d/4/11/2025 tm/1430 c/28.50 r/2x laksa, leave at reception t/Personal
 add_delivery n/Acme Pte Ltd d/4/11/2025 tm/1800 c/420.00 r/Company buffet t/Corporate
+add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00 r/Nil
 ```
 
 ![Add Delivery](images/add_delivery.png)
@@ -366,7 +368,7 @@ find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]
 ```
 
 **Search Behavior:**
-- `n/CLIENT_NAME`: Searches for deliveries by exact client name match (case-sensitive)
+- `n/CLIENT_NAME`: Searches for deliveries by client name match (partial match, case-insensitive)
 - `d/DATE`: Finds deliveries on a specific date in `d/M/yyyy` format  
 - `t/TAG`: Searches for deliveries with matching tags (partial match, case-insensitive)
 - **At least one** search parameter must be provided
@@ -381,7 +383,7 @@ find_delivery n/Acme Pte Ltd
 ![Find Delivery](images/find_delivery.png)
 
 **Search Tips:**
-- Client name searches require **exact** matches (non case-sensitive)
+- Client name searches are case-insensitive and allow partial matches
 - Date searches show deliveries for that specific day only
 - Tag searches are case-insensitive and allow partial matches
 - Use `list_delivery` to see all deliveries if your search returns no results
@@ -537,7 +539,7 @@ Remove all data from FoodBook.
 
 **What gets deleted:**
 - **All client records** (names, contacts, addresses, tags)
-- **All delivery records** (past, present, and future deliveries)
+- **All existing delivery records** 
 - **All revenue history** and financial data
 - **Everything** - your database becomes completely empty
 
