@@ -123,8 +123,8 @@
         </ScrollPane>
 
         <!-- Bottom section with hyperlink and copy button -->
-        <HBox alignment="CENTER" spacing="10">
-          <Label text="For more details, refer to the" styleClass="hyperlink-text"/>
+        <HBox alignment="CENTER" spacing="0">
+          <Label text="For more details, refer to the " styleClass="hyperlink-text"/>
           <Hyperlink fx:id="userGuideLink" text="User Guide" onAction="#openUserGuide" />
         </HBox>
 

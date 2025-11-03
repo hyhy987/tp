@@ -9,7 +9,7 @@ import static seedu.foodbook.commons.util.AppUtil.checkArgument;
  */
 public class Tag {
 
-    public static final String MESSAGE_CONSTRAINTS = "Tags names should be alphanumeric";
+    public static final String MESSAGE_CONSTRAINTS = "Tag name should be a single alphanumeric word";
 
     public static final Integer MAX_TAGS = 3;
     public static final String MESSAGE_TOO_MANY_TAGS = "A client can only have a maximum of "

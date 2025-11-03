@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.regex.Pattern;
 
 /**
  * The DateTime class represents a date and time in FoodBook's deliveries.
@@ -16,7 +17,23 @@ import java.time.format.ResolverStyle;
 public class DateTime {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Date should be in d/M/yyyy format (e.g., 21/10/2003) and time in HHmm format (e.g., 1430, 0800)";
+            "Date should be in d/M/yyyy format (e.g. 21/10/2003) and time in HHmm format (e.g. 1430, 0800)";
+
+    public static final String MESSAGE_IMPOSSIBLE =
+            "That date/time does not exist.";
+
+
+    private static final String DATE_PATTERN = "d/M/uuuu";
+    private static final String TIME_PATTERN = "HHmm";
+    private static final String FULL_DATETIME_PATTERN = DATE_PATTERN + " " + TIME_PATTERN;
+
+    private static final DateTimeFormatter FULL_FMT =
+            DateTimeFormatter.ofPattern(FULL_DATETIME_PATTERN)
+                    .withResolverStyle(ResolverStyle.STRICT);
+
+
+    private static final Pattern DATE_SHAPE = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
+    private static final Pattern TIME_SHAPE = Pattern.compile("\\d{4}");
 
     /**
      * The LocalDateTime containing this object's dateTime
@@ -34,24 +51,22 @@ public class DateTime {
     public DateTime(String dateString, String timeString) throws DateTimeParseException {
         requireNonNull(dateString);
         requireNonNull(timeString);
-        checkArgument(isValidDateTime(dateString, timeString), MESSAGE_CONSTRAINTS);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu HHmm")
-            .withResolverStyle(ResolverStyle.STRICT);
-        LocalDateTime parsedDateTime = LocalDateTime.parse(dateString + " " + timeString, formatter);
 
-        this.dateTime = parsedDateTime;
+        checkArgument(isValidDateTime(dateString, timeString), MESSAGE_CONSTRAINTS);
+
+        this.dateTime = LocalDateTime.parse(dateString + " " + timeString, FULL_FMT);
 
         assert this.dateTime != null;
     }
 
     /**
      * Returns true if the given date and time string are valid.
+     * @param dateString The string representing the date
+     * @param timeString The string representing the time
      */
     public static boolean isValidDateTime(String dateString, String timeString) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu HHmm")
-                    .withResolverStyle(ResolverStyle.STRICT);
-            LocalDateTime.parse(dateString + " " + timeString, formatter);
+            LocalDateTime.parse(dateString + " " + timeString, FULL_FMT);
             return true;
         } catch (DateTimeParseException e) {
             return false;
@@ -60,9 +75,8 @@ public class DateTime {
 
     /**
      * Returns true if the given string is a valid date in d/M/yyyy format.
+     * @param dateString The string representing the date
      */
-    // Right now this is useful in the current implementation of FindDeliveryCommand,
-    // since we are only searching by date.
     public static boolean isValidDate(String dateString) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/uuuu")
@@ -75,8 +89,18 @@ public class DateTime {
     }
 
     /**
-     * Returns the delivery date as a string in ISO-8601 format (d/MM/uuuu).
-     * Example: "08/10/2025"
+     * Returns true if the date and time match the expected regex
+     * Does not check whether it is actually a valid datetime
+     * @param dateString The string representing the date
+     * @param timeString The string representing the time
+     */
+    public static boolean hasCorrectFormat(String dateString, String timeString) {
+        return DATE_SHAPE.matcher(dateString).matches() && TIME_SHAPE.matcher(timeString).matches();
+    }
+
+    /**
+     * Returns the delivery date as a string in foodboook format (d/MM/uuuu).
+     * Example: "8/10/2025"
      *
      * @return String representation of the date
      */
@@ -85,7 +109,7 @@ public class DateTime {
     }
 
     /**
-     * Returns the delivery time as a string in ISO-8601 format (HHmm).
+     * Returns the delivery time as a string in foodbook format (HHmm).
      * Example: "1036"
      *
      * @return String representation of the time
