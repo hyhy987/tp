@@ -22,7 +22,7 @@ public class DeleteDeliveryCommand extends Command {
             + "Parameters: DELIVERY_ID (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 67";
 
-    public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Delivery deleted.";
+    public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Delivery deleted: %1$s";
     public static final String MESSAGE_DELIVERY_NOT_FOUND = "Error: No delivery found with id %1$d";
 
     private final Integer deliveryId;
@@ -50,7 +50,7 @@ public class DeleteDeliveryCommand extends Command {
 
         Delivery deliveryToDelete = maybeDelivery.get();
 
-        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.PERSONS);
+        model.checkpoint(COMMAND_WORD, CommandResult.UiPanel.DELIVERIES);
 
         model.deleteDelivery(deliveryToDelete);
         return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS,

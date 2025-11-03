@@ -175,7 +175,7 @@ Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter,
 | ``***`` | food business owner  | edit a delivery                                            | change delivery details dynamically                                     |
 | ``***`` | food business owner  | delete a delivery                                          | Remove dud deliveries                                                   |
 | ``***`` | food business owner  | search clients by name/phone/email                         | find a client quickly                                                   |
-| ``***`` | food business owner  | search deliveries by date, client, status                  | track all jobs of a a particular type (e.g. deliveries on the same day) |
+| ``***`` | food business owner  | search deliveries by date, client, tag                     | track all jobs of a a particular type (e.g. deliveries on the same day) |
 | ``**`` | food business owner  | undo a recent change                                       | recover from mistakes                                                   |
 | ``**`` | food business owner  | tag deliveries as corporate or personal                    | prioritise important deliveries                                         |
 | ``*``  | food business owner  | list revenue by various criteria                           | analyze business patterns and growth                                    |

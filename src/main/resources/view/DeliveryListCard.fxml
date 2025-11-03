@@ -34,10 +34,15 @@
             </HBox>
 
             <!-- Key/Value rows -->
-            <TextFlow fx:id="deliveryId" styleClass="bubble">
-                <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
-            </TextFlow>
-            <TextFlow fx:id="datetime"   styleClass="bubble">
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <TextFlow fx:id="deliveryId" styleClass="bubble">
+                    <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+                </TextFlow>
+                <TextFlow fx:id="datetime"   styleClass="bubble">
+                    <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
+                </TextFlow>
+            </HBox>
+            <TextFlow fx:id="address"   styleClass="bubble">
                 <maxWidth><Region fx:constant="USE_PREF_SIZE"/></maxWidth>
             </TextFlow>
             <TextFlow fx:id="remarks"    styleClass="bubble">
