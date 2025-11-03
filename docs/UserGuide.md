@@ -48,7 +48,6 @@ FoodBook is a **desktop app for small food businesses to manage clients and deli
    - `list_client` — list all clients
    - `list_delivery` — list all deliveries
 
-**Tip:** FoodBook auto-saves after every successful command.
 
 ---
 
@@ -118,7 +117,7 @@ Updates information for an existing client in FoodBook. You identify the client 
 
 **Format:**
 ```
-edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
+edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 ```
 
 **How it works:**
@@ -129,7 +128,7 @@ edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 
 **Example:**
 ```
-edit_client n/May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
+edit_client May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 ```
 
 ![List](images/edit_client.png)
@@ -188,7 +187,7 @@ delete_client NAME
 
 **What gets deleted:**
 - The client's complete record (name, phone, email, address, tags)
-- **All past and future deliveries** linked to this client
+- **All past deliveries** linked to this client
 - All revenue records from those deliveries
 
 **Example:**
@@ -208,7 +207,7 @@ delete_client Acme Pte Ltd
 **Before deleting:**
 - Double-check the client name spelling and capitalization
 - Consider if you want to keep delivery history for business records
-- Use `list_delivery n/CLIENT_NAME` to see what deliveries will be lost
+- Use `find_delivery n/CLIENT_NAME` to see what deliveries will be lost
 
 ---
 
