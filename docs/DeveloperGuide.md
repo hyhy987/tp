@@ -79,12 +79,12 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 ![DeleteClientSequence.png](images/DeleteClientSequence.png)
 
- **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+ **Note:** The lifeline for `DeleteClientCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 
 How the `Logic` component works:
 
-1. When `Logic` is called upon to execute a command, it is passed to an `FoodBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteClientCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteClientCommand`) which is executed by the `LogicManager`.
+1. When `Logic` is called upon to execute a command, it is passed to an `FoodBookParser` object which in turn creates a parser that matches the command (e.g. `DeleteClientCommandParser`) and uses it to parse the command.
+1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g. `DeleteClientCommand`) which is executed by the `LogicManager`.
 1. The command can communicate with the `Model` when it is executed (e.g. to delete a person and associated deliveries).<br>
    Note that in the code this can take several interactions (between the command object and the `Model`) to achieve.
 1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
@@ -94,8 +94,8 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 ![ParserClass.png](images/ParserClass.png)
 
 How the parsing works:
-* When called upon to parse a user command, the `FoodBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddClientCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddClientCommand`) which the `FoodBookParser` returns back as a `Command` object.
-* All `XYZCommandParser` classes (e.g., `AddClientCommandParser`, `DeleteDeliveryCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+* When called upon to parse a user command, the `FoodBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g. `AddClientCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g. `AddClientCommand`) which the `FoodBookParser` returns back as a `Command` object.
+* All `XYZCommandParser` classes (e.g. `AddClientCommandParser`, `DeleteDeliveryCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
 The **API** of this component is specified in [`Model.java`](https://github.com/AY2526S1-CS2103T-F14a-1/tp/blob/master/src/main/java/seedu/foodbook/model/Model.java)
@@ -104,8 +104,8 @@ The **API** of this component is specified in [`Model.java`](https://github.com/
 
 The `Model` component,
 
-* stores the food book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object) and `Delivery` objects (which are contained in a `UniqueDeliveryList` object).
-* stores the currently 'selected' `Person` and `Delivery` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` and `ObservableList<Delivery>` respectively.  These can be 'observed' e.g. the UI can be bound to these lists so that the UI automatically updates when the data in the list change.
+* stores the food book data i.e. all `Person` objects (which are contained in a `UniquePersonList` object) and `Delivery` objects (which are contained in a `UniqueDeliveryList` object).
+* stores the currently 'selected' `Person` and `Delivery` objects (e.g. results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` and `ObservableList<Delivery>` respectively.  These can be 'observed' e.g. the UI can be bound to these lists so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
@@ -131,7 +131,39 @@ Classes used by multiple components are in the `seedu.foodbook.commons` package.
 The diagram above gives a full overview of the workflow of FoodBook.
 
 --------------------------------------------------------------------------------------------------------------------
+## **Future Enhancements**
 
+### 1. Unlink delivery address from client
+Currently, FoodBook assumes the delivery address of a delivery is the same as that of the associated client.
+This is likely sufficient for smaller F&B businesses who will mostly be making home deliveries.
+
+However, in the future, as we upscale, we may seek to serve larger F&B companies, who may have direct
+Business-To-Business (B2B) operations. In such scenarios, our system would likely need to support delivery addresses (e.g. business address)
+that are distinct from that of the associated client.
+
+### 2. Group Clients / Deliveries By Address
+Another useful feature could be to group deliveries by delivery address to make it easier for business owners to plan routes
+when scheduling deliveries.
+
+However, this would likely need some external API / algorithm to figure out which addresses are near each other (from their string representation).
+
+### 3. Support Small Screens On Mac
+When using a Mac, and minimizing the FoodBook UI to be smaller than the initial size on boot-up, the command output box
+can get cut-off. This only happens when the screen is minimized beyond a certain point.
+
+Occasionally, the last letter of client names can also appear slightly cut-off.
+
+Our development process was largely carried out on Windows, so in the future, we will need to streamline such minor UI issues
+on Mac.
+
+### 4. Support Recovery From Corrupt JSON Storage
+Currently, if the JSON storage is malformed / corrupt, the system silently detects an error and starts up fresh (i.e. with no data loaded).
+On typing the ```exit``` command, the corrupt JSON is overwritten with the blank data.
+
+In the future, we will add a more explicit warning to the user when a malformed / corrupt JSON is identified, and provide steps for
+recovery.
+
+--------------------------------------------------------------------------------------------------------------------
 ## **Documentation, logging, testing, configuration, dev-ops**
 
 * [Documentation guide](./Documentation.md)
@@ -146,8 +178,8 @@ The diagram above gives a full overview of the workflow of FoodBook.
 
 ### Product scope
 
-*Target user profile**:
-- small food business owners in Singapore (e.g., home-based caterers, micro-F&B doing deliveries)
+*Target user profile & requirements*:
+- small food business owners in Singapore (e.g. home-based caterers, micro-F&B doing deliveries), focus on home deliveries
 
 - manage many client addresses and recurring deliveries
 
@@ -158,7 +190,7 @@ The diagram above gives a full overview of the workflow of FoodBook.
 - store data locally
 
 **Value proposition**: FoodBook provides a fast, reliable CLI to store, search, and manage clients and deliveries.
-Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter, validation & duplication warnings, status tracking, and simple reporting, improving delivery accuracy and day-to-day efficiency.
+Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter commands, validation & duplication warnings, status tracking, and simple reporting - helping improve delivery accuracy and day-to-day efficiency.
 
 
 ### User Stories
@@ -167,13 +199,13 @@ Compared to notes/spreadsheets, it reduces admin time via quick add/edit/filter,
 
 | Priority | As a …              | I want to …                                                | So that I can …                                                         |
 |:------:|----------------------|------------------------------------------------------------|-------------------------------------------------------------------------|
-| ``***`` | food business owner  | add a client with name/phone/email/unit/postal             | keep accurate contact/address records                                   |
+| ``***`` | food business owner  | add a client with name/phone/email/unit/address            | keep accurate contact/address records                                   |
 | ``***`` | food business owner  | edit a client’s details                                    | keep information up-to-date                                             |
 | ``***`` | food business owner  | delete a client                                            | remove outdated entries                                                 |
 | ``***`` | food business owner  | add a delivery (date/time/remarks/price, linked to client) | schedule jobs and avoid forgetting                                      |
 | ``***`` | food business owner  | mark/unmark a delivery as completed                        | see what’s pending vs done                                              |
 | ``***`` | food business owner  | edit a delivery                                            | change delivery details dynamically                                     |
-| ``***`` | food business owner  | delete a delivery                                          | Remove dud deliveries                                                   |
+| ``***`` | food business owner  | delete a delivery                                          | remove dud deliveries                                                   |
 | ``***`` | food business owner  | search clients by name/phone/email                         | find a client quickly                                                   |
 | ``***`` | food business owner  | search deliveries by date, client, tag                     | track all jobs of a a particular type (e.g. deliveries on the same day) |
 | ``**`` | food business owner  | undo a recent change                                       | recover from mistakes                                                   |
@@ -205,7 +237,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 -   **1a. Any field is invalid** → System shows a specific error. → Use case resumes at Step 1.
 
--   **1b. Duplicate client detected** → System warns that a similar client already exists and offers options (cancel or modify details). → Use case resumes at Step 1.
+-   **1b. Duplicate client detected** → System warns that a similar client already exists. → Use case resumes at Step 1.
 
 
 ----------
@@ -244,11 +276,11 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 **MSS:**
 
-1.  User selects the client and provides delivery details (date/time, items/remarks, cost).
+1.  User selects the client and provides delivery details (date/time, remarks, cost).
 
-2.  System validates details and creates the delivery with a unique identifier.
+2.  System validates details and creates the delivery.
 
-3.  System confirms success and displays the delivery identifier. **Use case ends.**
+3.  System confirms success. **Use case ends.**
 
 
 **Extensions:**
@@ -295,7 +327,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 1.  User requests to undo the most recent change.
 
-2.  System reverts the change (e.g., status back to pending, record restored) and confirms. **Use case ends.**
+2.  System reverts the change (e.g. status back to pending, record restored) and confirms. **Use case ends.**
 
 
 **Extensions:**
@@ -380,7 +412,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 2.  System shows current delivery details.
 
-3.  User provides updated details (e.g., date/time, remarks, cost).
+3.  User provides updated details (e.g. date/time, remarks, cost).
 
 4.  System validates and updates the delivery.
 
@@ -399,7 +431,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 ### Non-Functional Requirements
 
 #### Performance
-1. **Commands** should complete within **1 second** for up to **5,000 clients** and **20,000 deliveries**.
+1. **Commands** should complete within **1 second** for up to **500 clients** and **2000 deliveries**.
 2. **Search/filter** should return results in **< 500 ms** on typical laptops.
 
 #### Usability
@@ -430,7 +462,6 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 - **Delivery** — A scheduled job tied to a client (date/time/remarks/price).
 - **Delivery ID** — Unique identifier assigned by the system to a delivery.
 - **High-priority** — Tag indicating preferred servicing order.
-- **Capacity** — Daily/route limit to prevent overbooking.
 - **Validation** — Input checks (format/range/consistency) performed before saving.
 - **Micro-F&B food owners:** Owner-run food businesses with 1–5 staff
     (hawker stalls, home kitchens, kiosks, single cafés), doing roughly SGD 5k–50k/month, 10–150 orders/day, and 50–600
@@ -476,7 +507,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 *Expected:* All deliveries with unique IDs.
 
-**A6. Edit one delivery (replace X with an actual ID)**
+**A6. Edit one delivery (replace X with an actual Delivery ID, as obtained when adding deliveries in step A4)**
 - `edit_delivery X d/11/11/2025 tm/1830 r/Customer requested later pickup`
 
 *Expected:* Delivery X updated.
@@ -489,7 +520,7 @@ _(For all use cases below, the System is FoodBook and the Actor is the user unle
 
 ### B. Mark / Unmark
 
-**B1. Toggle status (replace X)**
+**B1. Toggle status (replace X with an actual Delivery ID, as obtained when adding deliveries in step A4)**
 - `mark X`
 - `unmark X`
 
@@ -518,7 +549,7 @@ Lists revenue of all uncompleted deliveries.
 
 ### D. Undo
 
-Try one destructive change then `undo`:
+Try one destructive change then `undo` (replace X with an actual Delivery ID, as obtained when adding deliveries in step A4):
 1. `edit_delivery X c/999.99`
 2. `undo`
 

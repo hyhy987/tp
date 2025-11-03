@@ -20,7 +20,7 @@ public class FindClientCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all clients whose name contains "
             + "the specified name keyword, phone contains the specified phone digits, "
-            + "or email contains the specified email keyword (all case-insensitive) "
+            + "and email contains the specified email keyword (all case-insensitive) "
             + "and displays them as a list with index numbers.\n"
             + "At least one search parameter must be provided.\n"
             + "Parameters: "
