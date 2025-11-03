@@ -67,14 +67,14 @@ Shows the help window with a quick reference.
 <a id="listing-all-clients--list_client"></a>
 ### Listing all clients : `list_client`
 
-Displays all clients currently stored in FoodBook. Each client is shown with their name, phone number, email, address, and any tags. This provides a complete overview of your client database.
+Displays all clients currently stored in FoodBook. Each client is shown with their name, phone number, email, address, and their tags (if any). This provides a complete overview of your client database.
 
 **Format:** `list_client`
 
 **What you'll see:**
 - Client name and contact information
 - Physical address for deliveries  
-- Tags for easy categorization (e.g., "regular", "corporate")
+- Tags for easy categorization
 
 ![List](images/list_client.png)
 
@@ -83,7 +83,7 @@ Displays all clients currently stored in FoodBook. Each client is shown with the
 <a id="adding-a-client--add_client"></a>
 ### Adding a client : `add_client`
 
-Adds a new client to FoodBook with their contact and delivery information. Each client must have a unique name - you cannot add two clients with the same name.
+Adds a new client to FoodBook with their contact and delivery information. Each client must have a case-insensitive unique name - you cannot add two clients with the same name (even if the cases differ).
 
 **Format:**
 ```
@@ -106,12 +106,12 @@ add_client n/Acme Catering p/65123456 e/sales@acme.com a/10 Science Park Dr t/co
 ![add](images/add_client.png)
 
 **Important Notes:**
-- Client names must be unique across your database
+- Client names must be unique across your database (case-insensitive)
 - Phone numbers must be at least 3 digits long (no letters or special characters)
 - Email addresses are validated for proper format
 - Tags help organize clients but are completely optional
 - All fields except tags are required
-- There can be a maximum of 3 tags
+- There can be a maximum of 3 tags per client
 
 ---
 
@@ -126,7 +126,7 @@ edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]
 ```
 
 **How it works:**
-- Specify the client's **exact current name** (case-sensitive)
+- Specify the client's **exact current name** (case-insensitive)
 - Provide at least one field to update
 - Only the fields you specify will be changed
 - All existing linked deliveries will reflect the updated information
@@ -139,19 +139,20 @@ edit_client May Chen p/95551234 a/11 Holland Dr #02-15, 270011 t/URGENT
 ![List](images/edit_client.png)
 
 **Important Notes:**
-- The current name must match **exactly** (including spaces and capitalization)
+- The current name must be an **exact** case-insensitive match
 - At least one optional field must be provided
-- If changing the name, the new name must not already exist
+- If changing the name, the new name must not already exist in the FoodBook
 - When editing tags, existing tags are completely replaced (not added to)
 - You can remove all tags by typing `t/` without any value
-- Phone and email validation rules still apply
+- Phone and email validation rules from ```add_client```still apply
 
 ---
 
 <a id="locating-clients--find_client"></a>
 ### Locating clients : `find_client`
 
-Searches for clients based on name keywords, phone numbers, or email addresses. You can search by any combination of these fields, and clients matching **any** of the provided criteria will be shown.
+Searches for clients based on name keywords, phone numbers, or email addresses.
+You can search by any combination of these fields, and clients matching **all** of the provided criteria will be shown.
 
 **Format:**
 ```
@@ -159,26 +160,27 @@ find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]
 ```
 
 **Search Behavior:**
-- `n/NAME_KEYWORDS`: Searches within client names (case-insensitive, partial matches)
-- `p/PHONE`: Searches for exact phone number matches
-- `e/EMAIL`: Searches within email addresses (partial matches allowed)
+- `n/NAME_KEYWORDS`: Searches within client names (case-insensitive, partial matches allowed)
+- `p/PHONE`: Searches within client phone numbers (partial matches allowed)
+- `e/EMAIL`: Searches within email addresses (case-insensitive, partial matches allowed)
 - At least one search field must be provided
 
 **Examples:**
 ```
-find_client n/May                   // Finds "May Chen", "Maya Restaurant", etc.
-find_client p/81234567              // Finds exact phone match
+find_client n/May                   // Finds "May Chen", "May Tan", etc.
+find_client p/81234567              // Finds a phone match
 find_client e/@acme.com             // Finds emails containing "@acme.com"
-find_client n/chen e/mayc           // Finds clients with "chen" in name OR "mayc" in email
+find_client n/chen e/mayc           // Finds clients with "chen" in name AND "mayc" in email
 ```
 
 ![find](images/find_client.png)
 
 **Search Tips:**
 - Name searches are case-insensitive and match partial words
-- Phone searches require exact matches of the full number
-- Email searches can match domains (e.g., "@gmail.com") or usernames
-- Results show all clients matching any of your criteria
+- Phone searches allow for partial matching
+- Emails searches are case-insensitive and match partial addresses. This can be used to match domains (e.g., "@gmail.com") or usernames
+- Results show all clients matching all of your provided criteria
+- To ignore any criteria, simply do not pass in the corresponding parameter
 
 ---
 
@@ -206,13 +208,12 @@ delete_client Acme Pte Ltd
 
 **Important Warnings:**
 - **This action is irreversible** (except via `undo`)
-- The client name must match **exactly** (case-sensitive)
+- The client name must match **exactly** (case-insensitive)
 - All associated delivery records will be permanently lost
-- Revenue calculations will be affected if you delete clients with completed deliveries
 - Consider using `undo` immediately if you delete the wrong client
 
 **Before deleting:**
-- Double-check the client name spelling and capitalization
+- Double-check the client name spelling
 - Consider if you want to keep delivery history for business records
 - Use `find_delivery n/CLIENT_NAME` to see what deliveries will be lost
 
@@ -229,12 +230,15 @@ Displays all delivery records in FoodBook, showing comprehensive information abo
 
 **What you'll see:**
 - Unique delivery ID for easy reference
-- Client name and associated client information
+- Client name and address
 - Delivery date and time in a clear format
 - Delivery cost and any special remarks
 - Completion status (Delivered: True/False)
 
-![List Delivery](images/list_delivery.png)
+![list_delivery.png](images/list_delivery.png)
+
+
+**NOTE**: The Delivery ID section of each delivery is very important, and will be used for the majority of upcoming commands to identify specific deliveries. Its value can be read directly from the UI form the corresponding delivery's panel.
 
 ---
 
@@ -249,12 +253,12 @@ add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]
 ```
 
 **Parameter Details:**
-- `n/CLIENT_NAME`: Must match an existing client's name exactly (case-sensitive)
+- `n/CLIENT_NAME`: Must match an existing client's name exactly (case-insensitive)
 - `d/DATE`: Delivery date in `d/M/yyyy` format (e.g., `4/11/2025`, `25/12/2025`)
 - `tm/TIME`: Delivery time in 24-hour `HHmm` format (e.g., `1430` for 2:30 PM)
-- `c/COST`: Delivery cost as decimal number (e.g., `28.50`, `420.00`)
-- `r/REMARKS`: Special instructions or notes
-- `t/TAG`: Optional label for categorization (alphanumeric only)
+- `c/COST`: Delivery cost as decimal number (e.g., `28.50`, `420.00`). Note a maximum of 2 decimal places is allowed
+- `r/REMARKS`: Order details, special instructions or notes
+- `t/TAG`: Optional label for categorization (alphanumeric only). Each delivery can only have upto 1 tag
 
 **Examples:**
 ```
@@ -267,18 +271,17 @@ add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00 r/Nil
 
 **Important Notes:**
 - **Client must exist first** - add the client before creating deliveries
-- Client name matching is **case-sensitive** and must be exact
-- Date format is flexible: `4/11/2025` or `04/11/2025` both work
+- Client name matching is **case-insensitive**
 - Time must be in 24-hour format (no AM/PM)
-- Cost must be a valid number (can include decimals)
-- New deliveries start as "not delivered" - use `mark` command to change status
+- Cost must be a valid positive number (can include decimals, with up to 2 decimal places)
+- New deliveries start as "not delivered" - use `mark` (see below) command to change status
 
 ---
 
 <a id="editing-a-delivery--edit_delivery"></a>
 ### Editing a delivery : `edit_delivery`
 
-Updates an existing delivery record by specifying the unique delivery ID. You can change any combination of delivery details.
+Updates an existing delivery record by specifying the unique delivery ID.
 
 **Format:**
 ```
@@ -288,14 +291,14 @@ edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST] [t/
 **How it works:**
 - Finds the delivery specified by the delivery ID to edit
 - Updates only the fields you specify
-- If changing client name, the new client must already exist
+- If changing the associated client name, the new client must already exist in FoodBook
 - At least one field must be provided to update
 
 **Parameter Details:**
 - `DELIVERY_ID`: Unique delivery ID (must currently exist)
 - `n/NEW_NAME`: Transfer delivery to a different existing client
 - `d/DATE tm/TIME`: New delivery date and time (must provide both together)
-- `r/REMARKS`: Update or replace special instructions
+- `r/REMARKS`: Update or replace order details
 - `c/COST`: Change the delivery cost
 - `t/TAG`: Change the delivery tag
 
@@ -306,15 +309,20 @@ edit_delivery 2 n/Acme Pte Ltd d/4/11/2025 tm/1830 c/450.00 t/Personal
 edit_delivery 4 n/John Doe n/Jane Doe r/Address changed to office
 ```
 
-![Edit Delivery](images/edit_delivery.png)
+![edit_delivery.png](images/edit_delivery.png)
+
+**Finding Delivery IDs:**
+- Use `list_delivery` to see all deliveries with their IDs
+- IDs are unique numbers assigned automatically when deliveries are created
+- Each delivery card displays its ID prominently
 
 **Important Notes:**
 - **Targets the specified delivery ID** supplied to edit 
-- Client name must match exactly (case-sensitive)
+- Client name must match exactly (case-insensitive)
 - When changing schedule, you **must provide both date and time** together
-- New client name (if changing) must already exist in your client list
+- New client (if changing) must already exist in your client list
 - Use `list_delivery` to see delivery IDs if they currently exist
-- The delivery's completion status (delivered/not delivered) is not affected
+- The delivery's completion status (delivered/not delivered) is not affected by this command
 
 ---
 
@@ -342,7 +350,7 @@ unmark 3        # Marks delivery #3 as not delivered
 mark 15         # Marks delivery #15 as completed
 ```
 
-![Mark Delivery](images/mark_delivery.png)
+![mark_delivery.png](images/mark_delivery.png)
 
 **Finding Delivery IDs:**
 - Use `list_delivery` to see all deliveries with their IDs
@@ -358,7 +366,7 @@ mark 15         # Marks delivery #15 as completed
 ---
 
 <a id="locating-deliveries--find_delivery"></a>
-### Locating deliveries : `find_delivery`
+### Finding specific deliveries : `find_delivery`
 
 Searches for deliveries based on client name, delivery date, or tags. You can combine multiple search criteria to narrow down results. The command uses **AND** logic - deliveries must match **all** provided criteria to be shown.
 
@@ -372,7 +380,8 @@ find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]
 - `d/DATE`: Finds deliveries on a specific date in `d/M/yyyy` format  
 - `t/TAG`: Searches for deliveries with matching tags (partial match, case-insensitive)
 - **At least one** search parameter must be provided
-- Multiple criteria must **all** match (AND logic)
+- If multiple criteria are provided, resultant deliveries must match **all** (AND logic)
+- To ignore any criteria, simply do not pass in the corresponding parameter
 
 **Examples:**
 ```
@@ -380,7 +389,7 @@ find_delivery d/4/11/2025
 find_delivery n/Acme Pte Ltd                       
 ```
 
-![Find Delivery](images/find_delivery.png)
+![find_delivery.png](images/find_delivery.png)
 
 **Search Tips:**
 - Client name searches are case-insensitive and allow partial matches
@@ -439,7 +448,7 @@ delete_delivery 203      # Deletes delivery with ID 203
 <a id="revenue--list_revenue"></a>
 ## Revenue : `list_revenue`
 
-Generates comprehensive revenue reports based on your delivery records. Both **completed (marked) and uncompleted (unmarked)** deliveries are included in revenue calculations. You can filter by date range, specific clients, tags, or delivery status to get detailed financial insights.
+Generates revenue data based on your delivery records. Both **completed (marked) and uncompleted (unmarked)** deliveries are included in revenue calculations. You can filter by date range, specific clients, tags, or delivery status to get detailed financial insights.
 
 **Format:**
 ```
@@ -469,18 +478,17 @@ list_revenue t/Corporate sd/1/11/2025 ed/30/11/2025  # Corporate deliveries in N
 list_revenue s/not_delivered                   # Pending revenue (undelivered orders)
 ```
 
-![List Revenue](images/list_revenue.png)
+![list_revenue.png](images/list_revenue.png)
 
 **What you'll see:**
 - Total revenue amount for the filtered period/criteria
 - Number of deliveries included in the calculation
-- Average delivery value
-- Breakdown by completion status if relevant
 
 **Important Notes:**
 - Use date filters for monthly, weekly, or daily revenue reports
-- Combine filters for detailed analysis (e.g., corporate clients in a specific month)
-
+- Combine filters for detailed analysis (e.g. corporate clients in a specific month)
+- **NOTE**: If multiple criteria are provided, **AND** logic will be used, i.e. only deliveries that satisfy **ALL** provided
+criteria will be included in the calculation
 ---
 
 <a id="undo--undo"></a>
@@ -500,8 +508,7 @@ Reverses the most recent change made to your FoodBook data, restoring clients an
 **How it works:**
 - You may undo a maximum of **5** times consecutively.
 - Restores the complete previous state of your database
-- Works immediately after the unwanted action
-- Cannot undo multiple actions in sequence
+
 
 **Examples:**
 ```
@@ -539,8 +546,7 @@ Removes all data from FoodBook.
 
 **What gets deleted:**
 - **All client records** (names, contacts, addresses, tags)
-- **All existing delivery records** 
-- **All revenue history** and financial data
+- **All existing delivery records**
 - **Everything** - your database becomes completely empty
 
 **Before using `clear`:**
