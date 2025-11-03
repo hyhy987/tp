@@ -194,7 +194,7 @@ delete_client NAME
 
 **What gets deleted:**
 - The client's complete record (name, phone, email, address, tags)
-- **All past deliveries** linked to this client
+- **All existing deliveries** linked to this client
 - All revenue records from those deliveries
 
 **Example:**
@@ -539,7 +539,7 @@ Remove all data from FoodBook.
 
 **What gets deleted:**
 - **All client records** (names, contacts, addresses, tags)
-- **All delivery records** (past, present, and future deliveries)
+- **All existing delivery records** 
 - **All revenue history** and financial data
 - **Everything** - your database becomes completely empty
 
