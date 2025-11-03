@@ -533,7 +533,7 @@ undo                      # Restores everything
 <a id="clearing-all-entries--clear"></a>
 ## Clearing all entries : `clear`
 
-Remove all data from FoodBook.
+Removes all data from FoodBook.
 
 **Format:** `clear`
 
@@ -630,21 +630,21 @@ Data are stored as JSON at:
 
 ## Command Summary
 
-| Action | Format |
-|--------|--------|
-| **List Clients** | `list_client` |
-| **Add Client** | `add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]` |
-| **Edit Client** | `edit_client n/CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]` |
-| **Delete Client** | `delete_client NAME` |
-| **Find Client** | `find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]` |
-| **List Deliveries** | `list_delivery` |
-| **Add Delivery** | `add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]` |
-| **Edit Delivery** | `edit_delivery CLIENT_NAME [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]` |
-| **Delete Delivery** | `delete_delivery ID` |
-| **Mark / Unmark** | `mark ID` / `unmark ID` |
-| **Find Delivery** | `find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]` |
+| Action | Format                                                                                |
+|--------|---------------------------------------------------------------------------------------|
+| **List Clients** | `list_client`                                                                         |
+| **Add Client** | `add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]`                                 |
+| **Edit Client** | `edit_client CURRENT_NAME [n/NEW_NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]`       |
+| **Delete Client** | `delete_client NAME`                                                                  |
+| **Find Client** | `find_client [n/NAME_KEYWORDS] [p/PHONE] [e/EMAIL]`                                   |
+| **List Deliveries** | `list_delivery`                                                                       |
+| **Add Delivery** | `add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]`                  |
+| **Edit Delivery** | `edit_delivery DELIVERY_ID [n/NEW_NAME] [d/DATE tm/HHmm] [r/REMARKS] [c/COST]`        |
+| **Delete Delivery** | `delete_delivery ID`                                                                  |
+| **Mark / Unmark** | `mark ID` / `unmark ID`                                                               |
+| **Find Delivery** | `find_delivery [n/CLIENT_NAME] [d/DATE] [t/TAG]`                                      |
 | **List Revenue** | `list_revenue [sd/DATE] [ed/DATE] [n/CLIENT_NAME] [t/tag] [s/delivered\|not_delivered]` |
-| **Undo** | `undo` |
-| **Help** | `help` |
-| **Clear** | `clear` |
-| **Exit** | `exit` |
+| **Undo** | `undo`                                                                                |
+| **Help** | `help`                                                                                |
+| **Clear** | `clear`                                                                               |
+| **Exit** | `exit`                                                                                |
