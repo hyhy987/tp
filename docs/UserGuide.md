@@ -237,7 +237,7 @@ Creates a new delivery record linked to an existing client. The client must alre
 
 **Format:**
 ```
-add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST [r/REMARKS] [t/TAG]
+add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST r/REMARKS [t/TAG]
 ```
 
 **Parameter Details:**
@@ -245,14 +245,14 @@ add_delivery n/CLIENT_NAME d/DATE tm/TIME c/COST [r/REMARKS] [t/TAG]
 - `d/DATE`: Delivery date in `d/M/yyyy` format (e.g., `4/11/2025`, `25/12/2025`)
 - `tm/TIME`: Delivery time in 24-hour `HHmm` format (e.g., `1430` for 2:30 PM)
 - `c/COST`: Delivery cost as decimal number (e.g., `28.50`, `420.00`)
-- `r/REMARKS`: Optional special instructions or notes
+- `r/REMARKS`: Special instructions or notes
 - `t/TAG`: Optional label for categorization (alphanumeric only)
 
 **Examples:**
 ```
 add_delivery n/May Chen d/4/11/2025 tm/1430 c/28.50 r/2x laksa, leave at reception t/Personal
 add_delivery n/Acme Pte Ltd d/4/11/2025 tm/1800 c/420.00 r/Company buffet t/Corporate
-add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00
+add_delivery n/John Doe d/15/3/2025 tm/0900 c/15.00 r/Nil
 ```
 
 ![Add Delivery](images/add_delivery.png)
