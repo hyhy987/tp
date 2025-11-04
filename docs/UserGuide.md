@@ -323,7 +323,7 @@ edit_delivery 4 n/John Doe n/Jane Doe r/Address changed to office
 - New client (if changing) must already exist in your client list
 - Use `list_delivery` to see delivery IDs if they currently exist
 - The delivery's completion status (delivered/not delivered) is not affected by this command
-
+- A delivery ID exceeding the Java maximum integer value will result in an invalid command format message
 ---
 
 <a id="marking--unmarking--mark--unmark"></a>
@@ -437,6 +437,8 @@ delete_delivery 203      # Deletes delivery with ID 203
 - Revenue totals will be recalculated after deletion
 - The associated client remains in your system (only the delivery is removed)
 - Double-check the ID before confirming deletion
+- A delivery ID exceeding the Java maximum integer value will result in an invalid command format message
+
 
 **Before deleting:**
 - Verify you have the correct delivery ID using `list_delivery`

@@ -84,6 +84,16 @@ public class ListRevenueCommandParser implements Parser<ListRevenueCommand> {
             finalEndDate = startDateString;
         }
 
+        if (startDateString.isPresent() && endDateString.isPresent()) {
+            DateTime startDateTime = new DateTime(finalStartDate.get(), "0000");
+            DateTime endDateTime = new DateTime(finalEndDate.get(), "2359");
+
+            if (startDateTime.isAfter(endDateTime)) {
+                throw new ParseException("Start date cannot be later than end date.");
+            }
+        }
+
+
         DeliveryPredicate predicate = new DeliveryPredicate(finalStartDate, finalEndDate,
                 clientName, tag, isDelivered);
         return new ListRevenueCommand(predicate);
