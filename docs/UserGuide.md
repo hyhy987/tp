@@ -362,6 +362,8 @@ mark 15         # Marks delivery #15 as completed
 - You can mark/unmark deliveries multiple times as needed
 - The delivery ID must exist - you'll get an error for invalid IDs
 - Useful for tracking which deliveries have been successfully completed
+- A delivery ID exceeding the Java maximum integer value will result in an invalid command format message
+
 
 ---
 
