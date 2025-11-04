@@ -91,7 +91,7 @@ add_client n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]
 ```
 
 **Parameter Details:**
-- `n/NAME`: Full client name (must be unique, cannot be empty)
+- `n/NAME`: Full client name (must be unique, cannot be empty, alphanumeric with the exception of / used only in s/o, d/o, S/O, or D/O).
 - `p/PHONE`: Contact number (minimum 3 digits, numbers only)
 - `e/EMAIL`: Valid email address (must contain @ symbol)
 - `a/ADDRESS`: Full delivery address (cannot be empty)  
@@ -362,6 +362,8 @@ mark 15         # Marks delivery #15 as completed
 - You can mark/unmark deliveries multiple times as needed
 - The delivery ID must exist - you'll get an error for invalid IDs
 - Useful for tracking which deliveries have been successfully completed
+- A delivery ID exceeding the Java maximum integer value will result in an invalid command format message
+
 
 ---
 
